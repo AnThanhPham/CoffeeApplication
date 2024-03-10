@@ -15,8 +15,8 @@ public class ValidateUtils {
 		return matcher.matches();
 	}
 	
-	public static boolean checkNotEmptyAndNotNull(String text) {
-		if(text.trim() != "" && text.trim() != null) {
+	public static boolean checkEmptyAndNull(String text) {
+		if(text.trim().equals("") || text.trim() == null) {
 			return true;
 		}
 		return false;

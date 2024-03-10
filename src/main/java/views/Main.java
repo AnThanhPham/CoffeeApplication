@@ -6,7 +6,6 @@ import java.awt.Component;
 import java.awt.Font;
 import java.awt.Toolkit;
 
-import javax.swing.AbstractButton;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.ImageIcon;
@@ -19,6 +18,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import controller.MainController;
+import model.UserModel;
 import views.menu.PanelBill;
 import views.menu.PanelCategory;
 import views.menu.PanelCustomer;
@@ -218,7 +218,7 @@ public class Main extends JFrame {
 		panelCard.setLayout(cardLayout);
 	}
 	
-	public Main() {
+	public Main(UserModel user) {
 		init();
 		
 		viewPanelShop();
@@ -245,8 +245,8 @@ public class Main extends JFrame {
 		panelCard.add(panelStatistical, "panelStatistical");
 		panelCard.add(panelOrderTable, "panelOrderTable");
 		panelCard.add(panelEmployee, "panelEmployee");
-
-		mainController = new MainController(this);
+		
+		mainController = new MainController(this,user);
 	}
 
 	public void viewPanelShop() {
