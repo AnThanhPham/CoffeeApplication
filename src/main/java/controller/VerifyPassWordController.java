@@ -33,11 +33,14 @@ public class VerifyPassWordController {
 				String code = verifyPassWordView.getTxtCode().getText();
 				System.out.println(user.getCode());
 				if(userDao.verifyCodeWithUser(user.getID(), code)) {
+					if(user.getStatus() != null && user.getStatus().equals("Verified")){
+						userDao.changePassword(user.getEmail(), user.getPassword());						
+					}
 					userDao.doneVerify(user.getID());
 					JOptionPane.showMessageDialog(verifyPassWordView, "Thành công");
 					verifyPassWordView.dispose();
 				}else {
-					System.out.println("Không khớp");
+					JOptionPane.showMessageDialog(verifyPassWordView, "Không khớp");
 				}
 			}
 		});

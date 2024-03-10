@@ -1,20 +1,21 @@
 package views;
 
+import java.awt.CardLayout;
+
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
+
+import org.jdesktop.animation.timing.Animator;
+import org.jdesktop.animation.timing.TimingTarget;
+import org.jdesktop.animation.timing.TimingTargetAdapter;
+
 import controller.LoginController;
-import java.awt.CardLayout;
-import java.awt.Font;
-import java.awt.Color;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import net.miginfocom.swing.MigLayout;
+
 
 public class Login extends JFrame {
 	private JLabel jLabel1;
@@ -31,7 +32,7 @@ public class Login extends JFrame {
 		initComponents();
 		loginController = new LoginController(this);
 	}
-
+	
 	private void initComponents() {
 		jPanel1 = new JPanel();
 		jPanel2 = new JPanel();
@@ -80,7 +81,7 @@ public class Login extends JFrame {
 	}
 
 	public void viewLogin() {
-		jPanel3 = new LoginViews();
+		jPanel3 = new LoginViews(this);
 		
 	}
 

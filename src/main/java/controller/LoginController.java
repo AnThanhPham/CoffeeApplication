@@ -7,6 +7,7 @@ import java.awt.event.WindowEvent;
 
 import views.Login;
 
+
 public class LoginController {
 	private Login login;
 
@@ -35,6 +36,7 @@ public class LoginController {
 				login.getCard().show(login.getjPanel2(), "viewLogin");
 			}
 		});
+		
 		
 	}
 	

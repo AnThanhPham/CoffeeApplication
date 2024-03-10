@@ -40,7 +40,27 @@
 			<artifactId>AbsoluteLayout</artifactId>
 			<version>RELEASE200</version>
 		</dependency>
-		
+
+		<dependency>
+			<groupId>net.java.dev.timingframework</groupId>
+			<artifactId>timingframework</artifactId>
+			<version>1.0</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/javax.mail/mail -->
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>mail</artifactId>
+			<version>1.5.0-b01</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/com.miglayout/miglayout-swing -->
+		<dependency>
+			<groupId>com.miglayout</groupId>
+			<artifactId>miglayout-swing</artifactId>
+			<version>4.2</version>
+		</dependency>
+
 
 	</dependencies>
 </project>
