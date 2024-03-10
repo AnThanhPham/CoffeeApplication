@@ -18,6 +18,8 @@ import javax.swing.border.EmptyBorder;
 import controller.LoginViewController;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class LoginViews extends JPanel {
 
@@ -37,9 +39,31 @@ public class LoginViews extends JPanel {
 	private JLabel SignUp;
 	private JLabel jLabel14;
 	private LoginViewController loginViewController;
+	private JLabel RenamePassword;
 
-	public LoginViews() {
+	public LoginViews(Login login) {
 		init();
+		loginViewController = new LoginViewController(this,login);
+	}
+	
+	public void init() {
+		Close = new JLabel();
+		jLabel3 = new JLabel();
+		jLabel4 = new JLabel();
+		LabelUserName = new JLabel();
+		InputUserName = new JTextField();
+		jLabel6 = new JLabel(); 
+		LabelImageUser = new JLabel();
+		LabelPassWord = new JLabel();
+		InputPassWord = new JPasswordField();
+		jLabel9 = new JLabel();
+		disable = new JLabel();
+		show = new JLabel();
+		ButtonLogin = new JButton();
+		SignUp = new JLabel();
+		jLabel14 = new JLabel();
+		RenamePassword = new JLabel();
+		
 		setBackground(new java.awt.Color(25, 118, 211));
 		setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -109,6 +133,13 @@ public class LoginViews extends JPanel {
 		show.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 		
 		add(show, new org.netbeans.lib.awtextra.AbsoluteConstraints(335, 216, 40, 40));
+		
+		RenamePassword.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
+		RenamePassword.setForeground(new java.awt.Color(199, 226, 255));
+		RenamePassword.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+		RenamePassword.setText("Đổi mật khẩu?");
+		RenamePassword.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        add(RenamePassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(254, 261, 121, 27));
 
 		ButtonLogin.setBackground(new java.awt.Color(255, 255, 255));
 		ButtonLogin.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -128,26 +159,6 @@ public class LoginViews extends JPanel {
 		jLabel14.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabel14.setText("Don't have an account?");
 		add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(34, 357, 213, -1));
-		
-		loginViewController = new LoginViewController(this);
-	}
-	
-	public void init() {
-		Close = new JLabel();
-		jLabel3 = new JLabel();
-		jLabel4 = new JLabel();
-		LabelUserName = new JLabel();
-		InputUserName = new JTextField();
-		jLabel6 = new JLabel(); 
-		LabelImageUser = new JLabel();
-		LabelPassWord = new JLabel();
-		InputPassWord = new JPasswordField();
-		jLabel9 = new JLabel();
-		disable = new JLabel();
-		show = new JLabel();
-		ButtonLogin = new JButton();
-		SignUp = new JLabel();
-		jLabel14 = new JLabel();
 	}
 
 	public JLabel getClose() {
@@ -268,6 +279,14 @@ public class LoginViews extends JPanel {
 
 	public void setjLabel14(JLabel jLabel14) {
 		this.jLabel14 = jLabel14;
+	}
+
+	public JLabel getForgotPassword() {
+		return RenamePassword;
+	}
+
+	public void setForgotPassword(JLabel forgotPassword) {
+		RenamePassword = forgotPassword;
 	}
 
 	
