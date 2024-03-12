@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.Random;
 
+import javax.swing.JOptionPane;
+
 import dao.UserDAO;
 import model.UserModel;
 import util.Email;
@@ -39,11 +41,12 @@ public class RegisterViewController {
 				String email = registerView.getInputEmail_Register().getText();
 				String password = String.valueOf(registerView.getInputPassWord_Register().getPassword());
 				String confirmPass = String.valueOf(registerView.getInputConfirmPassword().getPassword());
-				password = Encryption.getSHAHash(password);
-				confirmPass = Encryption.getSHAHash(confirmPass);
+				StringBuilder messageError = new StringBuilder("");
 				
-				if(validateForm(userName, email, password, confirmPass)) {
+				if(validateForm(userName, email, password, confirmPass,messageError)) {
 					UserModel user = new UserModel();
+					password = Encryption.getSHAHash(password);
+					confirmPass = Encryption.getSHAHash(confirmPass);
 					user.setUserName(userName);
 					user.setPassword(password);
 					user.setEmail(email);
@@ -55,6 +58,8 @@ public class RegisterViewController {
 					VerifyPassWordView verifyPassWordView = new VerifyPassWordView(user);
 					verifyPassWordView.setLocationRelativeTo(null);
 					verifyPassWordView.setVisible(true);
+				}else {
+					JOptionPane.showMessageDialog(registerView, messageError.toString());
 				}
 			}
 		});
@@ -70,22 +75,48 @@ public class RegisterViewController {
         return code;
     }
 	
-	public boolean validateForm(String userName,String email,String password,String confirmPass) {
-		if(ValidateUtils.checkNotEmptyAndNotNull(userName) && ValidateUtils.checkNotEmptyAndNotNull(email) 
-				&& ValidateUtils.checkNotEmptyAndNotNull(password) && ValidateUtils.checkNotEmptyAndNotNull(confirmPass)) {
-			if(ValidateUtils.checkEmail(email)) {
-				if(checkPassword(password, confirmPass)) {
-					return true;
-				}else {
-					return false;
-				}
-			}else {
-				return false;
-			}
-		}else {
+	public boolean validateForm(String userName,String email,String password,String confirmPass,StringBuilder res) {	
+		if(ValidateUtils.checkEmptyAndNull(userName)) {
+			res.append("Username không được để trống\n");
 			return false;
 		}
 		
+		if(ValidateUtils.checkEmptyAndNull(email)) {
+			res.append("Email không được để trống\n");
+			return false;
+		}
+		
+		if(ValidateUtils.checkEmptyAndNull(password)) {
+			res.append("Password không được để trống\n");
+			return false;
+		}
+		
+		if(ValidateUtils.checkEmptyAndNull(confirmPass)) {
+			res.append("Password nhập lại không được để trống\n");
+			return false;
+		}
+		
+		if(!ValidateUtils.checkEmail(email)) {
+			res.append("Email không hợp lệ\n");		
+			return false;
+		}
+		
+		if(!checkPassword(password, confirmPass)) {
+			res.append("Password nhập lại không khớp\n");
+			return false;
+		}
+		
+		if(userDao.checkDuplicateUser(userName)) {
+			res.append("UserName bạn nhập đã tồn tại\n");
+			return false;
+		}
+		
+		if(userDao.checkDuplicateEmail(email)) {
+			res.append("Email bạn nhập đã tồn tại\\n");
+			return false;
+		}
+		
+		return true;
 	}
 	
 	public boolean checkPassword(String password,String confirmPass) {

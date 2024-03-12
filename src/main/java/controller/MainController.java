@@ -3,14 +3,31 @@ package controller;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import model.UserModel;
 import views.Main;
 
 public class MainController {
 	private Main main;
 
-	public MainController(Main main) {
+	public MainController(Main main,UserModel user) {
 		this.main = main;
 		addEvent();
+		authorization(user);
+	}
+	
+	void authorization(UserModel user) {
+		if(user.getRole().getRoleName().equals("Admin")) {
+			// admin
+		}else if(user.getRole().getRoleName().equals("Employee")) {
+			//employee		
+			main.getBtnManageCustomer().setVisible(false);
+			main.getBtnManageEmployee().setVisible(false);
+			main.getBtnStatistical().setVisible(false);
+			main.getBtnManageProduct().setVisible(false);
+			main.getBtnCategories().setVisible(false);
+			main.getBtnBill().setBounds(0, 158, 286, 66);
+			main.getBtnOrderTable().setBounds(0, 248, 286, 66);
+		}
 	}
 
 	private void addEvent() {
