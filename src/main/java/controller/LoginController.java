@@ -1,15 +1,26 @@
 package controller;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+
+import dao.UserDAO;
+import model.UserModel;
+import util.Encryption;
 import views.Login;
+import views.Main;
+import views.VerifyPassWordView;
 
 
 public class LoginController {
 	private Login login;
+	private UserDAO userDao = new UserDAO();
 
 	public LoginController(Login login) {
 		this.login = login;
@@ -37,7 +48,31 @@ public class LoginController {
 			}
 		});
 		
-		
+		login.getjPanel3().getButtonLogin().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String userName = login.getjPanel3().getInputUserName().getText();
+				String password = String.valueOf(login.getjPanel3().getInputPassWord().getPassword());
+				password = Encryption.getSHAHash(password);
+				
+				UserModel user = userDao.findByUserNameAndPassword(userName, password);
+				if(user != null) {
+					System.out.println(user.getCode());
+					if(!user.getCode().equals("")) {
+						JOptionPane.showMessageDialog(login.getjPanel3(), "Tài khoản của bạn chưa xác nhận");
+						VerifyPassWordView verifyPassWordView = new VerifyPassWordView(user);
+						verifyPassWordView.setLocationRelativeTo(null);
+						verifyPassWordView.setVisible(true);
+					}else {
+						JOptionPane.showMessageDialog(login.getjPanel3(), "Đăng nhập thành công");
+						login.dispose();
+						Main main = new Main(user);
+						main.setVisible(true);
+					}
+				}else {
+					JOptionPane.showMessageDialog(login, "Đăng nhập thất bại");
+				}
+			}
+		});
 	}
 	
 	private void formWindowOpened(WindowEvent evt) {// GEN-FIRST:event_formWindowOpened
