@@ -14,13 +14,13 @@ public class PanelEmployee extends JPanel {
 
 	public PanelEmployee() {
 		setLayout(null);
-		setBackground(Color.WHITE);
-		setBounds(287,0,1634,1061);
-//		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		setBackground(Color.GRAY);
+		setBounds(287, 0, 1063, 826);
 
 		lblEmployee = new JLabel("Employee");
+		lblEmployee.setBackground(Color.GRAY);
 		lblEmployee.setFont(new Font("SansSerif", Font.PLAIN, 14));
-		lblEmployee.setBounds(686, 432, 91, 71);
+		lblEmployee.setBounds(972, 771, 91, 71);
 		add(lblEmployee);
 	}
 

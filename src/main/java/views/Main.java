@@ -3,17 +3,17 @@ package views;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
 
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
@@ -27,11 +27,6 @@ import views.menu.PanelOrderTable;
 import views.menu.PanelProduct;
 import views.menu.PanelShop;
 import views.menu.PanelStatistical;
-import javax.swing.JMenuBar;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class Main extends JFrame {
 
@@ -64,14 +59,14 @@ public class Main extends JFrame {
 
 	void init() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		//setBounds(100, 100, 1002, 570);
-		this.setExtendedState(JFrame.MAXIMIZED_BOTH); 
+		this.setSize(new Dimension(1366,900));
+		setLocationRelativeTo(null);
 
 		getContentPane().setLayout(null);
 		getContentPane().setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize());
 
 		pnlMenu = new JPanel();
-		pnlMenu.setBounds(0, 0, 286, 1061);
+		pnlMenu.setBounds(0, 0, 286, 826);
 		pnlMenu.setBackground(new java.awt.Color(239, 238, 244));
 		pnlMenu.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 5, 0, 0, new java.awt.Color(239, 238, 244)));
 		getContentPane().add(pnlMenu);
@@ -169,7 +164,7 @@ public class Main extends JFrame {
 
 		panelCard = new JPanel();
 		panelCard.setBackground(Color.WHITE);
-		panelCard.setBounds(287, 0, 1634, 1061);
+		panelCard.setBounds(287, 0, 1063, 826);
 		getContentPane().add(panelCard);
 		cardLayout = new CardLayout();
 		panelCard.setLayout(cardLayout);
