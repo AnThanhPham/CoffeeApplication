@@ -26,6 +26,7 @@ public class PanelShop extends JPanel {
 	public void init() {
 		setBackground(Color.GRAY);
 		setLayout(null);
+		setBounds(287, 0, 1063, 826);
 
 		lblNewLabel = new JLabel("shop");
 		lblNewLabel.setFont(new Font("SansSerif", Font.PLAIN, 14));

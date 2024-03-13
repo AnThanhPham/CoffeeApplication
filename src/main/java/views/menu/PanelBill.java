@@ -39,6 +39,7 @@ public class PanelBill extends JPanel {
 	
 	public PanelBill() {
 		setLayout(null);
+<<<<<<< HEAD
 		setBackground(new Color(255, 243, 199));
 		
 		FLabel = new Font("SansSerif", Font.BOLD, 14);
@@ -47,6 +48,15 @@ public class PanelBill extends JPanel {
 		
 		CreateHeader();
 		CreateBody();
+=======
+		setBackground(Color.WHITE);
+		setBounds(287, 0, 1063, 826);
+
+		lblBill = new JLabel("Bill");
+		lblBill.setFont(new Font("SansSerif", Font.PLAIN, 14));
+		lblBill.setBounds(279, 160, 91, 71);
+		add(lblBill);
+>>>>>>> 69cc4800f9d4dfd3eb78fa63e8415707dda70106
 	}
 	public void CreateHeader() {
 		jlabel = new JLabel("Mã HĐ");

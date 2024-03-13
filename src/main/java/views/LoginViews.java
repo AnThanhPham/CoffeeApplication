@@ -39,11 +39,10 @@ public class LoginViews extends JPanel {
 	private JLabel SignUp;
 	private JLabel jLabel14;
 	private LoginViewController loginViewController;
-	private JLabel RenamePassword;
 
-	public LoginViews(Login login) {
+	public LoginViews() {
 		init();
-		loginViewController = new LoginViewController(this,login);
+		loginViewController = new LoginViewController(this);
 	}
 	
 	public void init() {
@@ -62,7 +61,6 @@ public class LoginViews extends JPanel {
 		ButtonLogin = new JButton();
 		SignUp = new JLabel();
 		jLabel14 = new JLabel();
-		RenamePassword = new JLabel();
 		
 		setBackground(new java.awt.Color(25, 118, 211));
 		setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -133,13 +131,6 @@ public class LoginViews extends JPanel {
 		show.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 		
 		add(show, new org.netbeans.lib.awtextra.AbsoluteConstraints(335, 216, 40, 40));
-		
-		RenamePassword.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
-		RenamePassword.setForeground(new java.awt.Color(199, 226, 255));
-		RenamePassword.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-		RenamePassword.setText("Đổi mật khẩu?");
-		RenamePassword.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        add(RenamePassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(254, 261, 121, 27));
 
 		ButtonLogin.setBackground(new java.awt.Color(255, 255, 255));
 		ButtonLogin.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -280,14 +271,4 @@ public class LoginViews extends JPanel {
 	public void setjLabel14(JLabel jLabel14) {
 		this.jLabel14 = jLabel14;
 	}
-
-	public JLabel getForgotPassword() {
-		return RenamePassword;
-	}
-
-	public void setForgotPassword(JLabel forgotPassword) {
-		RenamePassword = forgotPassword;
-	}
-
-	
 }
