@@ -16,6 +16,7 @@ public class PanelBill extends JPanel {
 	public PanelBill() {
 		setLayout(null);
 		setBackground(Color.WHITE);
+		setBounds(287, 0, 1063, 826);
 
 		lblBill = new JLabel("Bill");
 		lblBill.setFont(new Font("SansSerif", Font.PLAIN, 14));

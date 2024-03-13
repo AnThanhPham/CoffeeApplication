@@ -17,6 +17,7 @@ public class PanelCategory extends JPanel {
 	public PanelCategory() {
 		setLayout(null);
 		setBackground(Color.WHITE);
+		setBounds(287, 0, 1063, 826);
 
 		lblCategory = new JLabel("Category");
 		lblCategory.setFont(new Font("SansSerif", Font.PLAIN, 14));

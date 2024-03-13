@@ -17,6 +17,7 @@ public class PanelStatistical extends JPanel {
 	public PanelStatistical() {
 		setLayout(null);
 		setBackground(Color.WHITE);
+		setBounds(287, 0, 1063, 826);
 
 		lblStatistical = new JLabel("Statistical");
 		lblStatistical.setFont(new Font("SansSerif", Font.PLAIN, 14));
