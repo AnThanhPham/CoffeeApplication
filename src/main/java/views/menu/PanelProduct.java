@@ -12,6 +12,7 @@ public class PanelProduct extends JPanel {
 	public PanelProduct() {
 		setLayout(null);
 		setBackground(Color.WHITE);
+		setBounds(287, 0, 1063, 826);
 
 		lblProduct = new JLabel("Product");
 		lblProduct.setFont(new Font("SansSerif", Font.PLAIN, 14));

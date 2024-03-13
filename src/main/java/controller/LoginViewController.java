@@ -19,12 +19,10 @@ import views.VerifyPassWordView;
 
 public class LoginViewController {
 	private LoginViews loginView;
-	private Login login;
 	private UserDAO userDao = new UserDAO();
 
-	public LoginViewController(LoginViews loginView,Login login) {
+	public LoginViewController(LoginViews loginView) {
 		this.loginView = loginView;
-		this.login = login;
 		addEvent();
 	}
 
@@ -47,41 +45,14 @@ public class LoginViewController {
 			}
 		});
 		
-		loginView.getForgotPassword().addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				ChangePasswordView changePasswordView = new ChangePasswordView();
-				changePasswordView.setVisible(true);
-			}
-		});
-		
-		loginView.getButtonLogin().addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String userName = loginView.getInputUserName().getText();
-				String password = String.valueOf(loginView.getInputPassWord().getPassword());
-				password = Encryption.getSHAHash(password);
-				
-				UserModel user = userDao.findByUserNameAndPassword(userName, password);
-				if(user != null) {
-					System.out.println(user.getCode());
-					if(!user.getCode().equals("")) {
-						JOptionPane.showMessageDialog(loginView, "Tài khoản của bạn chưa xác nhận");
-						VerifyPassWordView verifyPassWordView = new VerifyPassWordView(user);
-						verifyPassWordView.setLocationRelativeTo(null);
-						verifyPassWordView.setVisible(true);
-					}else {
-						JOptionPane.showMessageDialog(loginView, "Đăng nhập thành công");
-						login.dispose();
-						Main main = new Main(user);
-						main.setExtendedState(JFrame.MAXIMIZED_BOTH);
-						main.getLabelWelcome().setText(user.getUserName());
-						main.setVisible(true);
-					}
-				}else {
-					JOptionPane.showMessageDialog(loginView, "Đăng nhập thất bại");
-				}
-			}
-		});
+//		loginView.getForgotPassword().addMouseListener(new MouseAdapter() {
+//			@Override
+//			public void mouseClicked(MouseEvent e) {
+//				ChangePasswordView changePasswordView = new ChangePasswordView();
+//				changePasswordView.setLocationRelativeTo(null);
+//				changePasswordView.setVisible(true);
+//			}
+//		});
 	}
 	
 	private void CloseMouseClicked(MouseEvent evt) {

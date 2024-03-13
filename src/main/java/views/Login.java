@@ -81,7 +81,7 @@ public class Login extends JFrame {
 	}
 
 	public void viewLogin() {
-		jPanel3 = new LoginViews(this);
+		jPanel3 = new LoginViews();
 		
 	}
 

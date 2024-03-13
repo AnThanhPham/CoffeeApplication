@@ -3,17 +3,17 @@ package views;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
 
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
@@ -30,9 +30,6 @@ import views.menu.PanelStatistical;
 
 public class Main extends JFrame {
 
-	private JPanel panelNavigation;
-	private JButton btnMenu;
-	private JLabel LabelWelcome;
 	private JPanel pnlMenu;
 	private JButton btnShop;
 	private JButton btnManageProduct;
@@ -54,67 +51,22 @@ public class Main extends JFrame {
 	private JButton btnManageEmployee;
 	private JButton btnOrderTable;
 	private CardLayout cardLayout;
+	private JMenuItem logout;
+	private JMenuItem changePass;
+	private JMenuBar menuBar;
+	private JMenu option;
 	
 
 	void init() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1002, 570);
+		this.setSize(new Dimension(1366,900));
+		setLocationRelativeTo(null);
 
 		getContentPane().setLayout(null);
 		getContentPane().setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize());
 
-		panelNavigation = new JPanel();
-		panelNavigation.setBackground(new java.awt.Color(38, 86, 186));
-		panelNavigation.setBounds(0, 0, 1921, 82);
-		getContentPane().add(panelNavigation);
-
-		btnMenu = new JButton("");
-		btnMenu.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/menu.png"))); // NOI18N
-		btnMenu.setBorder(null);
-		btnMenu.setContentAreaFilled(false);
-		btnMenu.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-
-		LabelWelcome = new JLabel("Welcome");
-		LabelWelcome.setBackground(new java.awt.Color(255, 255, 255));
-		LabelWelcome.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-		LabelWelcome.setForeground(new java.awt.Color(255, 255, 255));
-
-		btnNewButton = new JButton("");
-		btnNewButton.setBorder(null);
-		btnNewButton.setIcon(new ImageIcon(Main.class.getResource("/icon/Close.png")));
-
-		GroupLayout gl_panelNavigation = new GroupLayout(panelNavigation);
-		gl_panelNavigation.setHorizontalGroup(
-			gl_panelNavigation.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panelNavigation.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(btnMenu)
-					.addGap(18)
-					.addComponent(LabelWelcome)
-					.addPreferredGap(ComponentPlacement.RELATED, 1702, Short.MAX_VALUE)
-					.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 52, GroupLayout.PREFERRED_SIZE)
-					.addGap(27))
-		);
-		gl_panelNavigation.setVerticalGroup(
-			gl_panelNavigation.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panelNavigation.createSequentialGroup()
-					.addGap(20)
-					.addGroup(gl_panelNavigation.createParallelGroup(Alignment.TRAILING)
-						.addGroup(gl_panelNavigation.createSequentialGroup()
-							.addComponent(btnMenu, GroupLayout.DEFAULT_SIZE, 51, Short.MAX_VALUE)
-							.addContainerGap())
-						.addGroup(gl_panelNavigation.createSequentialGroup()
-							.addComponent(btnNewButton, 0, 0, Short.MAX_VALUE)
-							.addGap(20))))
-				.addGroup(Alignment.TRAILING, gl_panelNavigation.createSequentialGroup()
-					.addContainerGap(32, Short.MAX_VALUE)
-					.addComponent(LabelWelcome)
-					.addGap(28))
-		);
-		panelNavigation.setLayout(gl_panelNavigation);
-
 		pnlMenu = new JPanel();
-		pnlMenu.setBounds(0, 82, 286, 979);
+		pnlMenu.setBounds(0, 0, 286, 826);
 		pnlMenu.setBackground(new java.awt.Color(239, 238, 244));
 		pnlMenu.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 5, 0, 0, new java.awt.Color(239, 238, 244)));
 		getContentPane().add(pnlMenu);
@@ -212,10 +164,30 @@ public class Main extends JFrame {
 
 		panelCard = new JPanel();
 		panelCard.setBackground(Color.WHITE);
-		panelCard.setBounds(287, 82, 1634, 979);
+		panelCard.setBounds(287, 0, 1063, 826);
 		getContentPane().add(panelCard);
 		cardLayout = new CardLayout();
 		panelCard.setLayout(cardLayout);
+		
+		menuBar = new JMenuBar();
+		setJMenuBar(menuBar);
+		
+		option = new JMenu("OPTION");
+		option.setIcon(new ImageIcon(Main.class.getResource("/icon/Option 3@0.3x.png")));
+		option.setFont(new Font("SansSerif", Font.BOLD, 14));
+		menuBar.add(option);
+		
+		logout = new JMenuItem("Log Out");
+		logout.setIcon(new ImageIcon(Main.class.getResource("/icon/Open Pane@0.2x.png")));
+		logout.setFont(new Font("SansSerif", Font.PLAIN, 12));
+		logout.setBorder(null);
+		option.add(logout);
+		
+		changePass = new JMenuItem("Change Password");
+		changePass.setIcon(new ImageIcon(Main.class.getResource("/icon/Password Reset@0.2x.png")));
+		changePass.setFont(new Font("SansSerif", Font.PLAIN, 12));
+		changePass.setBorder(null);
+		option.add(changePass);
 	}
 	
 	public Main(UserModel user) {
@@ -247,6 +219,22 @@ public class Main extends JFrame {
 		panelCard.add(panelEmployee, "panelEmployee");
 		
 		mainController = new MainController(this,user);
+	}
+	
+	public JMenuItem getChangePass() {
+		return changePass;
+	}
+
+	public void setChangePass(JMenuItem changePass) {
+		this.changePass = changePass;
+	}
+
+	public JMenuItem getLogout() {
+		return logout;
+	}
+
+	public void setLogout(JMenuItem logout) {
+		this.logout = logout;
 	}
 
 	public void viewPanelShop() {
@@ -280,14 +268,6 @@ public class Main extends JFrame {
 
 	public void viewPanelCustomer() {
 		panelCustomer = new PanelCustomer();
-	}
-
-	public JButton getBtnMenu() {
-		return btnMenu;
-	}
-
-	public void setBtnMenu(JButton btnMenu) {
-		this.btnMenu = btnMenu;
 	}
 
 	public JButton getBtnShop() {
@@ -378,14 +358,6 @@ public class Main extends JFrame {
 		this.btnOrderTable = btnOrderTable;
 	}
 
-	public JLabel getLabelWelcome() {
-		return LabelWelcome;
-	}
-
-	public void setLabelWelcome(JLabel labelWelcome) {
-		LabelWelcome = labelWelcome;
-	}
-
 	public JPanel getPnlMenu() {
 		return pnlMenu;
 	}
@@ -393,5 +365,4 @@ public class Main extends JFrame {
 	public void setPnlMenu(JPanel pnlMenu) {
 		this.pnlMenu = pnlMenu;
 	}
-	
 }

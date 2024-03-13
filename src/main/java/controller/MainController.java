@@ -2,8 +2,12 @@ package controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import model.UserModel;
+import views.ChangePasswordView;
+import views.Login;
 import views.Main;
 
 public class MainController {
@@ -78,11 +82,21 @@ public class MainController {
 				main.getCardLayout().show(main.getPanelCard(), "panelEmployee");
 			}
 		});
-		
-		main.getBtnMenu().addActionListener(new ActionListener() {
+			
+		main.getLogout().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				main.dispose();
+				new Login().setVisible(true);
 			}
 		});
+			
+		main.getChangePass().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ChangePasswordView changePasswordView = new ChangePasswordView();
+				changePasswordView.setLocationRelativeTo(null);
+				changePasswordView.setVisible(true);
+			}
+		});
+
 	}
 }

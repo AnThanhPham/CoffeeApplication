@@ -17,6 +17,7 @@ public class PanelCustomer extends JPanel {
 	public PanelCustomer() {
 		setLayout(null);
 		setBackground(Color.WHITE);
+		setBounds(287, 0, 1063, 826);
 
 		lblEmployee = new JLabel("Employee");
 		lblEmployee.setFont(new Font("SansSerif", Font.PLAIN, 14));

@@ -17,6 +17,7 @@ public class PanelOrderTable extends JPanel {
 	public PanelOrderTable() {
 		setLayout(null);
 		setBackground(Color.WHITE);
+		setBounds(287, 0, 1063, 826);
 
 		lblOrdertable = new JLabel("OrderTable");
 		lblOrdertable.setFont(new Font("SansSerif", Font.PLAIN, 14));
