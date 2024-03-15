@@ -9,6 +9,10 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.JSlider;
+import javax.swing.JSeparator;
+import javax.swing.JProgressBar;
+import javax.swing.JEditorPane;
 
 public class PanelStatistical extends JPanel {
 
@@ -24,5 +28,4 @@ public class PanelStatistical extends JPanel {
 		lblStatistical.setBounds(279, 160, 91, 71);
 		add(lblStatistical);
 	}
-
 }

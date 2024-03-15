@@ -9,9 +9,12 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-
+import javax.swing.table.*;
+import javax.swing.JList;
+import javax.swing.JScrollPane;
 
 public class PanelBill extends JPanel {
 	private JLabel jlabel;
@@ -36,6 +39,9 @@ public class PanelBill extends JPanel {
 	private JTextField FBillForm;
 	private JTextField FBillTo;
 	private JTextField FMaHD;
+	
+	private JTable TableBill;
+	private JScrollPane scrollPaneTable;
 	
 	public PanelBill() {
 		setLayout(null);
@@ -205,7 +211,157 @@ public class PanelBill extends JPanel {
 		FMaHD.setBounds(920,240,150,30);
 		FMaHD.setFont(FLabelText);
 		add(FMaHD);
-	
 		
+		scrollPaneTable = new JScrollPane();
+		scrollPaneTable.setBounds(70, 352, 894, 275);
+		add(scrollPaneTable);
+		
+		TableBill = new JTable();
+		scrollPaneTable.setViewportView(TableBill);
+		TableBill.setColumnSelectionAllowed(true);
+		TableBill.setModel(new DefaultTableModel(
+			new Object[][] {
+				{null, null, null, null, null},
+			},
+			new String[] {
+					"Mã Hóa Đơn", "Mã Khách Hàng", "Mã Nhân Viên", "Ngày Hóa Đơn", "Tổng Tiền"
+					//"Mã Hóa Đơn", "Mã Khách Hàng", "Mã Nhân Viên", "Ngày Hóa Đơn", "Tổng Tiền"
+			}
+		) {
+			Class[] columnTypes = new Class[] {
+				String.class, String.class, String.class, String.class, Object.class
+			};
+			public Class getColumnClass(int columnIndex) {
+				return columnTypes[columnIndex];
+			}
+		});
+		TableBill.getColumnModel().getColumn(0).setPreferredWidth(100);
+		TableBill.getColumnModel().getColumn(1).setPreferredWidth(100);
+		TableBill.getColumnModel().getColumn(2).setPreferredWidth(100);
+		TableBill.getColumnModel().getColumn(3).setPreferredWidth(100);
+		TableBill.getColumnModel().getColumn(4).setPreferredWidth(100);
 	}
+	
+	public JLabel getJlabel() {
+		return jlabel;
+	}
+	public void setJlabel(JLabel jlabel) {
+		this.jlabel = jlabel;
+	}
+	public JLabel getMaHD() {
+		return MaHD;
+	}
+	public void setMaHD(JLabel maHD) {
+		MaHD = maHD;
+	}
+	public JLabel getMaKH() {
+		return MaKH;
+	}
+	public void setMaKH(JLabel maKH) {
+		MaKH = maKH;
+	}
+	public JLabel getMaNV() {
+		return MaNV;
+	}
+	public void setMaNV(JLabel maNV) {
+		MaNV = maNV;
+	}
+	public JLabel getNgayHD() {
+		return NgayHD;
+	}
+	public void setNgayHD(JLabel ngayHD) {
+		NgayHD = ngayHD;
+	}
+	public JLabel getTongTien() {
+		return TongTien;
+	}
+	public void setTongTien(JLabel tongTien) {
+		TongTien = tongTien;
+	}
+	public JButton getAddBill() {
+		return AddBill;
+	}
+	public void setAddBill(JButton addBill) {
+		AddBill = addBill;
+	}
+	public JButton getDeleteBill() {
+		return DeleteBill;
+	}
+	public void setDeleteBill(JButton deleteBill) {
+		DeleteBill = deleteBill;
+	}
+	public JButton getDetailsBill() {
+		return DetailsBill;
+	}
+	public void setDetailsBill(JButton detailsBill) {
+		DetailsBill = detailsBill;
+	}
+	public Font getFLabel() {
+		return FLabel;
+	}
+	public void setFLabel(Font fLabel) {
+		FLabel = fLabel;
+	}
+	public Font getFLabelText() {
+		return FLabelText;
+	}
+	public void setFLabelText(Font fLabelText) {
+		FLabelText = fLabelText;
+	}
+	public Font getFBtnBill() {
+		return FBtnBill;
+	}
+	public void setFBtnBill(Font fBtnBill) {
+		FBtnBill = fBtnBill;
+	}
+	public JComboBox<String> getFDay() {
+		return FDay;
+	}
+	public void setFDay(JComboBox<String> fDay) {
+		FDay = fDay;
+	}
+	public JComboBox<String> getFMonth() {
+		return FMonth;
+	}
+	public void setFMonth(JComboBox<String> fMonth) {
+		FMonth = fMonth;
+	}
+	public JComboBox<String> getFYear() {
+		return FYear;
+	}
+	public void setFYear(JComboBox<String> fYear) {
+		FYear = fYear;
+	}
+	public JTextField getFBillForm() {
+		return FBillForm;
+	}
+	public void setFBillForm(JTextField fBillForm) {
+		FBillForm = fBillForm;
+	}
+	public JTextField getFBillTo() {
+		return FBillTo;
+	}
+	public void setFBillTo(JTextField fBillTo) {
+		FBillTo = fBillTo;
+	}
+	public JTextField getFMaHD() {
+		return FMaHD;
+	}
+	public void setFMaHD(JTextField fMaHD) {
+		FMaHD = fMaHD;
+	}
+	public JTable getTableBill() {
+		return TableBill;
+	}
+	public void setTableBill(JTable tableBill) {
+		TableBill = tableBill;
+	}
+	public JScrollPane getScrollPaneTable() {
+		return scrollPaneTable;
+	}
+	public void setScrollPaneTable(JScrollPane scrollPaneTable) {
+		this.scrollPaneTable = scrollPaneTable;
+	}
+	
+	
 }
