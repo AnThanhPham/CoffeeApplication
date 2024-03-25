@@ -9,6 +9,8 @@ public class BillDAO extends DAO implements AbstractDAO<BillModel>{
 	public BillDAO() {
 		super();
 	}
+	
+	//public static BillModel 
 	/*
 	public static BillModel getRoleByID(int id) {
 		BillModel res = new BillModel();

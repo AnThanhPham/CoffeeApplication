@@ -13,7 +13,10 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.table.*;
-import javax.swing.JList;
+
+import controller.PanelBillController;
+import model.BillModel;
+
 import javax.swing.JScrollPane;
 
 public class PanelBill extends JPanel {
@@ -43,6 +46,8 @@ public class PanelBill extends JPanel {
 	private JTable TableBill;
 	private JScrollPane scrollPaneTable;
 	
+	private PanelBillController panelBillController;
+	
 	public PanelBill() {
 		setLayout(null);
 		setBackground(new Color(255, 243, 199));
@@ -53,6 +58,8 @@ public class PanelBill extends JPanel {
 		
 		CreateHeader();
 		CreateBody();
+		
+		panelBillController = new PanelBillController(this);
 	}
 	public void CreateHeader() {
 		jlabel = new JLabel("Mã HĐ");
@@ -142,7 +149,7 @@ public class PanelBill extends JPanel {
 	}
 	
 	 @Override
-	    protected void paintComponent(Graphics g) {
+	protected void paintComponent(Graphics g) {
 	        super.paintComponent(g);
 
 	        Graphics g2 = (Graphics) g;
@@ -211,31 +218,29 @@ public class PanelBill extends JPanel {
 		FMaHD.setBounds(920,240,150,30);
 		FMaHD.setFont(FLabelText);
 		add(FMaHD);
-		
-		scrollPaneTable = new JScrollPane();
-		scrollPaneTable.setBounds(70, 352, 894, 275);
-		add(scrollPaneTable);
+	
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(70, 304, 884, 332);
+		add(scrollPane);
 		
 		TableBill = new JTable();
-		scrollPaneTable.setViewportView(TableBill);
-		TableBill.setColumnSelectionAllowed(true);
+		scrollPane.setViewportView(TableBill);
 		TableBill.setModel(new DefaultTableModel(
 			new Object[][] {
 				{null, null, null, null, null},
+				{null, null, null, null, null},
 			},
 			new String[] {
-					"Mã Hóa Đơn", "Mã Khách Hàng", "Mã Nhân Viên", "Ngày Hóa Đơn", "Tổng Tiền"
-					//"Mã Hóa Đơn", "Mã Khách Hàng", "Mã Nhân Viên", "Ngày Hóa Đơn", "Tổng Tiền"
+				"M\u00E3 H\u00F3a \u0110\u01A1n", "M\u00E3 Kh\u00E1ch H\u00E0ng", "M\u00E3 Nh\u00E2n Vi\u00EAn", "Ng\u00E0y H\u00F3a \u0110\u01A1n", "T\u1ED5ng Ti\u1EC1n"
 			}
 		) {
 			Class[] columnTypes = new Class[] {
-				String.class, String.class, String.class, String.class, Object.class
+				String.class, String.class, String.class, String.class, String.class
 			};
 			public Class getColumnClass(int columnIndex) {
 				return columnTypes[columnIndex];
 			}
 		});
-		TableBill.getColumnModel().getColumn(0).setPreferredWidth(100);
 		TableBill.getColumnModel().getColumn(1).setPreferredWidth(100);
 		TableBill.getColumnModel().getColumn(2).setPreferredWidth(100);
 		TableBill.getColumnModel().getColumn(3).setPreferredWidth(100);
@@ -362,6 +367,4 @@ public class PanelBill extends JPanel {
 	public void setScrollPaneTable(JScrollPane scrollPaneTable) {
 		this.scrollPaneTable = scrollPaneTable;
 	}
-	
-	
 }
