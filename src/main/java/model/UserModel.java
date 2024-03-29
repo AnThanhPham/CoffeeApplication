@@ -15,13 +15,16 @@ public class UserModel {
 	private String code;
 	private String status;
 	private String email;
+	private String gender;
+	private String image;
+	private Integer roleID;
 	
 	public UserModel() {
 		
 	}
 	
 	public UserModel(Integer iD, String userName, String phone, String address, Date dateWork, Date createDate,
-			String password, String fullName, RoleModel role, String code, String status,String email) {
+			String password, String fullName, RoleModel role, String code, String status,String email,String gender,String image) {
 		ID = iD;
 		this.userName = userName;
 		this.phone = phone;
@@ -34,6 +37,8 @@ public class UserModel {
 		this.code = code;
 		this.status = status;
 		this.email = email;
+		this.gender = gender;
+		this.image = image;
 	}
 	
 	public Integer getID() {
@@ -111,4 +116,31 @@ public class UserModel {
 		this.email = email;
 	}
 
+	public String getGender() {
+		return gender;
+	}
+
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+
+	public void setID(Integer iD) {
+		ID = iD;
+	}
+
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
+	}
+
+	public Integer getRoleID() {
+		return roleID;
+	}
+
+	public void setRoleID(Integer roleID) {
+		this.roleID = roleID;
+	}
 }

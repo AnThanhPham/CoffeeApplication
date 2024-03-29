@@ -57,7 +57,7 @@ public class LoginController {
 				UserModel user = userDao.findByUserNameAndPassword(userName, password);
 				if(user != null) {
 					System.out.println(user.getCode());
-					if(!user.getCode().equals("")) {
+					if(user.getCode() == null || !user.getCode().equals("")) {
 						JOptionPane.showMessageDialog(login.getjPanel3(), "Tài khoản của bạn chưa xác nhận");
 						VerifyPassWordView verifyPassWordView = new VerifyPassWordView(user);
 						verifyPassWordView.setLocationRelativeTo(null);
