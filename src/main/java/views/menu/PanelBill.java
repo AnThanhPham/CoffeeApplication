@@ -240,12 +240,19 @@ public class PanelBill extends JPanel {
 			public Class getColumnClass(int columnIndex) {
 				return columnTypes[columnIndex];
 			}
+			public boolean isCellEditable(int row, int column) {
+				return false;
+			}
 		});
 		TableBill.getColumnModel().getColumn(1).setPreferredWidth(100);
 		TableBill.getColumnModel().getColumn(2).setPreferredWidth(100);
 		TableBill.getColumnModel().getColumn(3).setPreferredWidth(100);
 		TableBill.getColumnModel().getColumn(4).setPreferredWidth(100);
+		
 	}
+	
+	
+	
 	
 	public JLabel getJlabel() {
 		return jlabel;

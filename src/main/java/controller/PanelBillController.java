@@ -71,6 +71,7 @@ public class PanelBillController {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				int selectRow = panelBill.getTableBill().getSelectedRow();
+				//panelBill.getTableBill().setEditingRow(selectRow);
 				if(selectRow == -1)
 					JOptionPane.showMessageDialog(panelBill, "Bạn chưa chọn dữ liệu muốn xóa");
 				else {
@@ -84,7 +85,8 @@ public class PanelBillController {
 		panelBill.getDetailsBill().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int selectRow =  panelBill.getTableBill().getSelectedRow();
-				System.out.println(selectRow);
+				//panelBill.getTableBill().setEditingRow(selectRow);
+				
 				String MaHD = (String) panelBill.getTableBill().getValueAt(selectRow, 0);
 				String MaKH = (String) panelBill.getTableBill().getValueAt(selectRow, 1);
 				String MaNV = (String) panelBill.getTableBill().getValueAt(selectRow, 2);
