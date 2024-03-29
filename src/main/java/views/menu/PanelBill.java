@@ -23,5 +23,4 @@ public class PanelBill extends JPanel {
 		lblBill.setBounds(279, 160, 91, 71);
 		add(lblBill);
 	}
-
 }
