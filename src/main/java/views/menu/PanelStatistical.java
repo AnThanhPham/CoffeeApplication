@@ -1,28 +1,37 @@
 package views.menu;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.EventQueue;
-import java.awt.Font;
-
-import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.category.DefaultCategoryDataset;
 
 public class PanelStatistical extends JPanel {
 
-	private JLabel lblStatistical;
+    public PanelStatistical() {
+        super();
 
-	public PanelStatistical() {
-		setLayout(null);
-		setBackground(Color.WHITE);
-		setBounds(287, 0, 1063, 826);
+        // Sample data (replace with your actual data source)
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        dataset.setValue(25, "Series 1", "Category A");
+        dataset.setValue(30, "Series 1", "Category B");
+        dataset.setValue(45, "Series 2", "Category A");
+        dataset.setValue(10, "Series 2", "Category B");
 
-		lblStatistical = new JLabel("Statistical");
-		lblStatistical.setFont(new Font("SansSerif", Font.PLAIN, 14));
-		lblStatistical.setBounds(279, 160, 91, 71);
-		add(lblStatistical);
-	}
+        // Create a bar chart
+        JFreeChart chart = ChartFactory.createBarChart(
+                "Sample Statistical Chart",
+                "Category",
+                "Value",
+                dataset,
+                PlotOrientation.VERTICAL,
+                true, // Include legend
+                true, // Include tooltips
+                false  // No URL generation
+        );
 
+        // Add the chart to the panel
+        add(new ChartPanel(chart));
+    }
 }
