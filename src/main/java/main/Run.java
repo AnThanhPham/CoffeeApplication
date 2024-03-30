@@ -14,7 +14,6 @@ public class Run {
                     break;
                 }
             }
-//			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception ex) {
         	ex.printStackTrace();
         }

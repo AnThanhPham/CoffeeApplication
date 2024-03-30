@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.Date;
 import java.text.DecimalFormat;
 import java.util.Random;
 
@@ -49,7 +50,11 @@ public class RegisterViewController {
 					user.setUserName(userName);
 					user.setPassword(password);
 					user.setEmail(email);
-					user.setCode(generateVerifyCode());		
+					user.setCode(generateVerifyCode());	
+					user.setRoleID(2);
+					Date currentDate = new Date(System.currentTimeMillis());
+            	    java.sql.Date sqlDate2 = new java.sql.Date(currentDate.getTime());
+            		user.setCreateDate(sqlDate2);
 					userDao.insert(user);
 					
 					Email.sendEmail(user.getEmail(), "Mã xác thực tài khoản", user.getCode());
