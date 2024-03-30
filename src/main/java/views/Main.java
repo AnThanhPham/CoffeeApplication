@@ -15,6 +15,8 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 
 import controller.MainController;
@@ -219,6 +221,7 @@ public class Main extends JFrame {
 		panelCard.add(panelEmployee, "panelEmployee");
 		
 		mainController = new MainController(this,user);
+		
 	}
 	
 	public JMenuItem getChangePass() {

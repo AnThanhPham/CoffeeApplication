@@ -41,4 +41,10 @@ public class BillDAO extends DAO implements AbstractDAO<BillModel>{
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void update(BillModel t) {
+		// TODO Auto-generated method stub
+		
+	}
 }

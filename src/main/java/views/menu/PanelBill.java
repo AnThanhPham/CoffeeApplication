@@ -61,6 +61,7 @@ public class PanelBill extends JPanel {
 		
 		panelBillController = new PanelBillController(this);
 	}
+
 	public void CreateHeader() {
 		jlabel = new JLabel("Mã HĐ");
 		jlabel.setBounds(70,70,60,30);
@@ -374,4 +375,5 @@ public class PanelBill extends JPanel {
 	public void setScrollPaneTable(JScrollPane scrollPaneTable) {
 		this.scrollPaneTable = scrollPaneTable;
 	}
+
 }

@@ -262,10 +262,12 @@ CREATE TABLE `user` (
   `code` varchar(45) DEFAULT NULL,
   `status` varchar(45) DEFAULT NULL,
   `email` varchar(45) NOT NULL,
+  `gender` varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+  `image` text,
   PRIMARY KEY (`ID`),
   KEY `FK_Role` (`RoleID`),
   CONSTRAINT `FK_Role` FOREIGN KEY (`RoleID`) REFERENCES `role` (`RoleID`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -274,7 +276,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (10,'trongan',NULL,NULL,NULL,NULL,'567541f86690e8419d974d4c1ddc411f0e5c10c1',NULL,2,'','Verified','tronganfwork@gmail.com'),(17,'thanhan',NULL,NULL,NULL,NULL,'567541f86690e8419d974d4c1ddc411f0e5c10c1',NULL,1,'','Verified','anthanhpham2403@gmail.com'),(19,'an',NULL,NULL,NULL,NULL,'0358090c3c6527d222784821c5546cfc2734cc97',NULL,2,'','Verified','ananh1973@gmail.com');
+INSERT INTO `user` VALUES (10,'trongan','094324332','Hồ Chí Minh','2021-07-12',NULL,'578822517693fd9ea381851d92b10886224a0aa5','Hoàng Trọng An',2,'','Verified','tronganfwork@gmail.com','Female','F:\\wordspace-estate-api\\CoffeeApplication\\src\\main\\java\\img\\portrait2.jpg'),(19,'an','08123123','Hà Nội','2020-01-16',NULL,'0358090c3c6527d222784821c5546cfc2734cc97','Phạm Thành An',2,'','Verified','ananh1973@gmail.com','Male',NULL),(26,'thanhan','0923712','Hà Nội','2020-03-24',NULL,'567541f86690e8419d974d4c1ddc411f0e5c10c1','Phạm Thành An',1,'','Verified','anthanhpham2403@gmail.com','Male',NULL),(34,'thanhhuyen','09231323','BN',NULL,'2024-03-29','0358090c3c6527d222784821c5546cfc2734cc97','Lê Thanh Huyền',2,'','Verified','1632004huyen@gmail.com','Female','F:\\wordspace-estate-api\\CoffeeApplication\\src\\main\\java\\img\\portrait2.jpg');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -287,4 +289,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-03-10  9:23:16
+-- Dump completed on 2024-03-29 22:08:55

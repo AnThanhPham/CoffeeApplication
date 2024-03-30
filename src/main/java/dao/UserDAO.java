@@ -1,8 +1,12 @@
 package dao;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 import model.UserModel;
 
@@ -10,17 +14,47 @@ public class UserDAO extends DAO implements AbstractDAO<UserModel> {
 	public UserDAO() {
 		super();
 	}
-
+	
+	public ArrayList<UserModel> findAll(){
+		ArrayList<UserModel> res = new ArrayList<>();
+    	try {
+    		String sql = "select * from user";
+    		PreparedStatement ps = conn.prepareStatement(sql);
+    		ResultSet rs = ps.executeQuery();
+    		while(rs.next()) {
+    			UserModel tmp = new UserModel();
+    			tmp.setID(rs.getInt(1));
+    			tmp.setUserName(rs.getString(2));
+    			tmp.setPhone(rs.getString(3));
+    			tmp.setAddress(rs.getString(4));
+    			if(rs.getString(5)!=null) {
+    				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    				java.util.Date utilDate = dateFormat.parse(rs.getString(5));
+    				java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
+    				tmp.setDateWork(sqlDate);    				
+    			}
+    			tmp.setPassword(rs.getString(7));
+    			tmp.setFullName(rs.getString(8));
+    			tmp.setRole(RoleDAO.getRoleByID(rs.getInt(9)));
+    			tmp.setCode(rs.getString(10));
+    			tmp.setStatus(rs.getString(11));
+    			tmp.setEmail(rs.getString(12));
+    			tmp.setGender(rs.getString(13));
+    			tmp.setImage(rs.getString(14));
+    			res.add(tmp);
+    		}
+    	}catch(Exception ex) {
+    		ex.printStackTrace();
+    	}
+    	return res;
+	}
+	
 	@Override
 	public void insert(UserModel t) {
-		String sql = "insert into user(username,password,roleID,code,email) values (?,?,?,?,?)";
+		String sql = AbstractImpl.buildSqlInsertUser(t);
+		System.out.println(sql);
 		try {
 			PreparedStatement ps = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
-			ps.setString(1, t.getUserName());
-			ps.setString(2, t.getPassword());
-			ps.setInt(3, 2);
-			ps.setString(4, t.getCode());
-			ps.setString(5, t.getEmail());
 			ps.executeUpdate();
 			ResultSet rs = ps.getGeneratedKeys();
 			rs.first();
@@ -30,13 +64,12 @@ public class UserDAO extends DAO implements AbstractDAO<UserModel> {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-
 	}
 	
 	public boolean checkDuplicateUser(String user){
         boolean duplicate = false;
         try {
-			PreparedStatement ps = conn.prepareStatement("select ID from user where UserName=? and Status='Verified' limit 1");
+			PreparedStatement ps = conn.prepareStatement("select ID from user where UserName=? limit 1");
 			ps.setString(1, user);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
@@ -53,7 +86,7 @@ public class UserDAO extends DAO implements AbstractDAO<UserModel> {
     public boolean checkDuplicateEmail(String user){
         boolean duplicate = false;
         try {
-			PreparedStatement ps = conn.prepareStatement("select ID from user where Email=? and Status='Verified' limit 1");
+			PreparedStatement ps = conn.prepareStatement("select ID from user where Email=? limit 1");
 			ps.setString(1, user);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
@@ -168,14 +201,95 @@ public class UserDAO extends DAO implements AbstractDAO<UserModel> {
     			tmp.setUserName(rs.getString(2));
     			tmp.setPhone(rs.getString(3));
     			tmp.setAddress(rs.getString(4));
+    			if(rs.getString(5)!=null) {
+    				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    				java.util.Date utilDate = dateFormat.parse(rs.getString(5));
+    				java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
+    				tmp.setDateWork(sqlDate);    				
+    			}
+    			tmp.setPassword(rs.getString(7));
     			tmp.setFullName(rs.getString(8));
     			tmp.setRole(RoleDAO.getRoleByID(rs.getInt(9)));
-    			tmp.setEmail(rs.getString(12));
     			tmp.setCode(rs.getString(10));
     			tmp.setStatus(rs.getString(11));
+    			tmp.setEmail(rs.getString(12));
+    			tmp.setGender(rs.getString(13));
+    			tmp.setImage(rs.getString(14));
     		}
     		if(tmp.getID()!=null) {
     			res = tmp;
+    		}
+    	}catch(Exception ex) {
+    		ex.printStackTrace();
+    	}
+    	return res;
+    }
+    
+    public UserModel findByID(String id) {
+    	UserModel res = null;
+    	try {
+    		String sql = "select * from user where id = ? limit 1";
+    		PreparedStatement ps = conn.prepareStatement(sql);
+    		ps.setString(1, id);
+    		ResultSet rs = ps.executeQuery();
+    		UserModel tmp = new UserModel();
+    		if(rs.next()) {
+    			tmp.setID(rs.getInt(1));
+    			tmp.setUserName(rs.getString(2));
+    			tmp.setPhone(rs.getString(3));
+    			tmp.setAddress(rs.getString(4));
+    			if(rs.getString(5)!=null) {
+    				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    				java.util.Date utilDate = dateFormat.parse(rs.getString(5));
+    				java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
+    				tmp.setDateWork(sqlDate);    				
+    			}
+    			tmp.setPassword(rs.getString(7));
+    			tmp.setFullName(rs.getString(8));
+    			tmp.setRole(RoleDAO.getRoleByID(rs.getInt(9)));
+    			tmp.setCode(rs.getString(10));
+    			tmp.setStatus(rs.getString(11));
+    			tmp.setEmail(rs.getString(12));
+    			tmp.setGender(rs.getString(13));
+    			tmp.setImage(rs.getString(14));
+    		}
+    		if(tmp.getID()!=null) {
+    			res = tmp;
+    		}
+    	}catch(Exception ex) {
+    		ex.printStackTrace();
+    	}
+    	return res;
+    }
+    
+    public ArrayList<UserModel> findByFullname(String fullname) {
+    	ArrayList<UserModel> res = new ArrayList<>();
+    	try {
+    		String sql = "select * from user where fullname like CONCAT('%',?,'%')";
+    		PreparedStatement ps = conn.prepareStatement(sql);
+    		ps.setString(1, fullname);
+    		ResultSet rs = ps.executeQuery();
+    		while(rs.next()) {
+    			UserModel tmp = new UserModel();
+    			tmp.setID(rs.getInt(1));
+    			tmp.setUserName(rs.getString(2));
+    			tmp.setPhone(rs.getString(3));
+    			tmp.setAddress(rs.getString(4));
+    			if(rs.getString(5)!=null) {
+    				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    				java.util.Date utilDate = dateFormat.parse(rs.getString(5));
+    				java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
+    				tmp.setDateWork(sqlDate);    				
+    			}
+    			tmp.setPassword(rs.getString(7));
+    			tmp.setFullName(rs.getString(8));
+    			tmp.setRole(RoleDAO.getRoleByID(rs.getInt(9)));
+    			tmp.setCode(rs.getString(10));
+    			tmp.setStatus(rs.getString(11));
+    			tmp.setEmail(rs.getString(12));
+    			tmp.setGender(rs.getString(13));
+    			tmp.setImage(rs.getString(14));
+    			res.add(tmp);
     		}
     	}catch(Exception ex) {
     		ex.printStackTrace();
@@ -213,7 +327,26 @@ public class UserDAO extends DAO implements AbstractDAO<UserModel> {
     
 	@Override
 	public void delete(UserModel t) {
+		try {
+    		String sql = "delete from user where id = ?";
+    		PreparedStatement ps = conn.prepareStatement(sql);
+    		ps.setInt(1, t.getID());
+    		ps.executeUpdate();
+    	}catch(Exception ex) {
+    		ex.printStackTrace();
+    	}
+	}
 
+	@Override
+	public void update(UserModel t) {
+		try {
+    		String sql = AbstractImpl.buildSqlUpdateUser(t);
+    		System.out.println(sql);
+    		PreparedStatement ps = conn.prepareStatement(sql);
+    		ps.executeUpdate();
+    	}catch(Exception ex) {
+    		ex.printStackTrace();
+    	}
 	}
 
 }
