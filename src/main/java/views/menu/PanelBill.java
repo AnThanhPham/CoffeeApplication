@@ -30,6 +30,13 @@ public class PanelBill extends JPanel {
 	private JButton AddBill;
 	private JButton DeleteBill;
 	private JButton DetailsBill;
+	private JButton EditBill;
+	
+	private JButton Page1;
+	private JButton Page2;
+	private JButton Page3;
+	private JButton PageNext;
+	private JButton PageBefore;
 	
 	private Font FLabel;
 	private Font FLabelText;
@@ -60,6 +67,7 @@ public class PanelBill extends JPanel {
 		CreateBody();
 		
 		panelBillController = new PanelBillController(this);
+
 	}
 
 	public void CreateHeader() {
@@ -124,7 +132,7 @@ public class PanelBill extends JPanel {
 		add(TongTien);
 		
 		AddBill = new JButton(); // thêm hóa đơn
-		AddBill.setBounds(650,70,200,50);
+		AddBill.setBounds(550,70,180,50);
 		AddBill.setFont(FBtnBill);
 		AddBill.setBackground(Color.GREEN);
 		AddBill.setOpaque(true);
@@ -132,7 +140,7 @@ public class PanelBill extends JPanel {
 		add(AddBill);
 		
 		DeleteBill = new JButton(); // xóa hóa đơn
-		DeleteBill.setBounds(650,130,200,50);
+		DeleteBill.setBounds(550,130,180,50);
 		DeleteBill.setFont(FBtnBill);
 		DeleteBill.setBackground(Color.RED);
 		DeleteBill.setOpaque(true);
@@ -140,16 +148,23 @@ public class PanelBill extends JPanel {
 		add(DeleteBill);
 		
 		DetailsBill = new JButton(); // hóa đơn chi tiết 
-		DetailsBill.setBounds(900,70,200,50);
+		DetailsBill.setBounds(780,70,180,50);
 		DetailsBill.setFont(FBtnBill);
 		DetailsBill.setBackground(Color.YELLOW);
 		DetailsBill.setOpaque(true);
 		DetailsBill.setText("Chi Tiết Hóa Đơn");
 		add(DetailsBill);
 		
+		EditBill = new JButton(); // hóa đơn chi tiết 
+		EditBill.setBounds(780,130,180,50);
+		EditBill.setFont(FBtnBill);
+		EditBill.setBackground(Color.WHITE);
+		EditBill.setOpaque(true);
+		EditBill.setText("Chỉnh Sửa Hóa Đơn");
+		add(EditBill);
 	}
-	
-	 @Override
+
+	@Override
 	protected void paintComponent(Graphics g) {
 	        super.paintComponent(g);
 
@@ -190,38 +205,38 @@ public class PanelBill extends JPanel {
 		
 		// Giá
 		jlabel = new JLabel("Giá (VNĐ):");
-		jlabel.setBounds(450,240,100,30);
+		jlabel.setBounds(410,240,100,30);
 		jlabel.setFont(FLabel);
 		add(jlabel);
 		
 		FBillForm = new JTextField();
-		FBillForm.setBounds(550,240,100,30);
+		FBillForm.setBounds(500,241,100,30);
 		FBillForm.setFont(FLabelText);
 		add(FBillForm);
 		
 		jlabel = new JLabel("-",SwingConstants.CENTER);
-		jlabel.setBounds(650,240,30,30);
+		jlabel.setBounds(610,240,22,30);
 		jlabel.setFont(FLabel);
 		add(jlabel);
 		
 		FBillTo = new JTextField();
-		FBillTo.setBounds(680,240,100,30);
+		FBillTo.setBounds(642,241,100,30);
 		FBillTo.setFont(FLabelText);
 		add(FBillTo);
 		
 		// lọc mã
 		jlabel = new JLabel("Mã HĐ");
-		jlabel.setBounds(850,240,70,30);
+		jlabel.setBounds(780,240,54,30);
 		jlabel.setFont(FLabel);
 		add(jlabel);
 		
 		FMaHD = new JTextField() ;
-		FMaHD.setBounds(920,240,150,30);
+		FMaHD.setBounds(844,241,116,30);
 		FMaHD.setFont(FLabelText);
 		add(FMaHD);
 	
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(70, 304, 884, 332);
+		scrollPane.setBounds(70, 304, 884, 290);
 		add(scrollPane);
 		
 		TableBill = new JTable();
@@ -241,18 +256,40 @@ public class PanelBill extends JPanel {
 			public Class getColumnClass(int columnIndex) {
 				return columnTypes[columnIndex];
 			}
+			
 			public boolean isCellEditable(int row, int column) {
 				return false;
 			}
 		});
-		TableBill.getColumnModel().getColumn(1).setPreferredWidth(100);
-		TableBill.getColumnModel().getColumn(2).setPreferredWidth(100);
-		TableBill.getColumnModel().getColumn(3).setPreferredWidth(100);
-		TableBill.getColumnModel().getColumn(4).setPreferredWidth(100);
+		TableBill.getColumnModel().getColumn(0).setPreferredWidth(110);
+		TableBill.getColumnModel().getColumn(1).setPreferredWidth(110);
+		TableBill.getColumnModel().getColumn(2).setPreferredWidth(110);
+		TableBill.getColumnModel().getColumn(3).setPreferredWidth(110);
+		TableBill.getColumnModel().getColumn(4).setPreferredWidth(110);
+		TableBill.setRowHeight(20);
 		
+		
+		// Page
+		PageBefore = new JButton("Trang trước");
+		PageBefore.setBounds(270, 640, 100, 30);
+		add(PageBefore);
+		
+		Page1 = new JButton("1");
+		Page1.setBounds(390, 640, 60, 30);
+		add(Page1);
+		
+		Page2 = new JButton("2");
+		Page2.setBounds(470, 640, 60, 30);
+		add(Page2);
+		
+		Page3 = new JButton("3");
+		Page3.setBounds(550, 640, 60, 30);
+		add(Page3);
+		
+		PageNext = new JButton("Trang kế tiếp");
+		PageNext.setBounds(630, 640, 100, 30);
+		add(PageNext);
 	}
-	
-	
 	
 	
 	public JLabel getJlabel() {
@@ -309,6 +346,13 @@ public class PanelBill extends JPanel {
 	public void setDetailsBill(JButton detailsBill) {
 		DetailsBill = detailsBill;
 	}
+	 public JButton getEditBill() {
+			return EditBill;
+		}
+
+	public void setEditBill(JButton editBill) {
+			EditBill = editBill;
+		}
 	public Font getFLabel() {
 		return FLabel;
 	}
@@ -375,5 +419,4 @@ public class PanelBill extends JPanel {
 	public void setScrollPaneTable(JScrollPane scrollPaneTable) {
 		this.scrollPaneTable = scrollPaneTable;
 	}
-
 }

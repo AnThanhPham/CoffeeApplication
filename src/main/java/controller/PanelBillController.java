@@ -1,8 +1,11 @@
 package controller;
 
+import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -29,7 +32,7 @@ public class PanelBillController {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
-				JPanel panel = new JPanel(new GridLayout(4, 2, 5, 5)); // 4 rows, 2 columns, 5px gap
+				JPanel panel = new JPanel(new GridLayout(5, 2, 5, 5)); // 4 rows, 2 columns, 5px gap
 
 				// Thêm các JLabel và JTextField
 				panel.add(new JLabel("Mã Hóa Đơn:"));
@@ -37,10 +40,16 @@ public class PanelBillController {
 
 				panel.add(new JLabel("Mã Khách Hàng:"));
 				panel.add(new JTextField(20));
-
+				
 				panel.add(new JLabel("Mã Nhân Viên:"));
 				panel.add(new JTextField(20));
-
+				
+				LocalDateTime current = LocalDateTime.now();
+			    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+			    String formatted = current.format(formatter);
+				panel.add(new JLabel("Ngày Hóa Đơn: "));
+				panel.add(new JTextField(formatted,20));
+				
 				panel.add(new JLabel("Tổng Tiền:"));
 				panel.add(new JTextField(20));
 				
@@ -55,12 +64,11 @@ public class PanelBillController {
 					    String MaHD = ((JTextField) panel.getComponent(1)).getText();
 					    String MaKH = ((JTextField) panel.getComponent(3)).getText();
 					    String MaNV = ((JTextField) panel.getComponent(5)).getText();
-					    String TongTien = ((JTextField) panel.getComponent(7)).getText();
-					    
-					    Object[] rowData= {MaHD,MaKH,MaNV,"fdfd",TongTien};
+					    String NgayHD = ((JTextField) panel.getComponent(7)).getText();
+					    String TongTien = ((JTextField) panel.getComponent(9)).getText();
+					    Object[] rowData= {MaHD,MaKH,MaNV,NgayHD,TongTien};
 					    table.addRow(rowData);
 					    table.fireTableDataChanged(); // update data table
-					   System.out.println(table.getRowCount()); 
 					}
 			}
 		});
@@ -83,6 +91,7 @@ public class PanelBillController {
 		
 		// hiển thị chi tiết
 		panelBill.getDetailsBill().addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				int selectRow =  panelBill.getTableBill().getSelectedRow();
 				//panelBill.getTableBill().setEditingRow(selectRow);
@@ -110,5 +119,54 @@ public class PanelBillController {
 				}
 			}
 		});
+		
+		
+		panelBill.getEditBill().addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int selectRow = panelBill.getTableBill().getSelectedColumn();
+				String MaHD = (String) panelBill.getTableBill().getValueAt(selectRow, 0);
+				String MaKH = (String) panelBill.getTableBill().getValueAt(selectRow, 1); 
+				String MaNV = (String) panelBill.getTableBill().getValueAt(selectRow, 2); 
+				String NgayHD = (String) panelBill.getTableBill().getValueAt(selectRow, 3);
+				String TongTien= (String) panelBill.getTableBill().getValueAt(selectRow, 4);
+				
+				JPanel panel = new JPanel(new GridLayout(5,2,5,5));
+				
+				panel.add(new JLabel("Mã Hóa Đơn"));
+				panel.add(new JTextField(MaHD,20));
+				
+				panel.add(new JLabel("Mã Khách Hàng"));
+				panel.add(new JTextField(MaKH,20));
+				
+				panel.add(new JLabel("Mã Nhân Viên"));
+				panel.add(new JTextField(MaNV,20));
+				
+				panel.add(new JLabel("Ngày Hóa Đơn"));
+				panel.add(new JTextField(NgayHD,20));
+				
+				panel.add(new JLabel("Tổng Tiền"));
+				panel.add(new JTextField(TongTien,20));
+				
+				int result = JOptionPane.showConfirmDialog(null, 
+					    panel, 
+					    "Nhập thông tin hóa đơn", 
+					    JOptionPane.OK_CANCEL_OPTION);
+				
+				DefaultTableModel table = (DefaultTableModel) panelBill.getTableBill().getModel();
+				if (result == JOptionPane.OK_OPTION) {
+				    // Lấy dữ liệu từ các JTextField
+				    String MahdTable = ((JTextField) panel.getComponent(1)).getText();
+				    String MakhTable = ((JTextField) panel.getComponent(3)).getText();
+				    String ManvTable = ((JTextField) panel.getComponent(5)).getText();
+				    String NgayhdTable = ((JTextField) panel.getComponent(7)).getText();
+				    String TongtienTable = ((JTextField) panel.getComponent(9)).getText();
+				    Object[] rowData= {MahdTable,MakhTable,ManvTable,NgayhdTable,TongtienTable};
+				    table.addRow(rowData);
+				    table.fireTableDataChanged(); // update data table
+				}
+			}
+		});
+	
 	}
 }
