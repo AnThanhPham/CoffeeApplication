@@ -20,6 +20,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import model.CategoryModel;
 import model.ProductModel;
 
 public class PanelProduct extends JPanel {
@@ -142,7 +143,7 @@ public class PanelProduct extends JPanel {
 
 		// set centerCenterpanel
 		centerCenterPanel.setLayout(new GridLayout(2,4));
-		ProductModel testProductModel = new ProductModel(1, "cafe", 10000, "cafe cho son", "src/main/java/img/product/img1.png", 1);
+		ProductModel testProductModel = new ProductModel(1,  10000f,"cafe", "cafe cho son", "src/main/java/img/product/img1.png", new CategoryModel(1,"cafe","cafe"));
 		ItemProduct product1= new ItemProduct(testProductModel);
 		ItemProduct product2= new ItemProduct(testProductModel);
 		ItemProduct product3= new ItemProduct(testProductModel);
