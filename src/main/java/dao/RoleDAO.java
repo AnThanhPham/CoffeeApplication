@@ -38,4 +38,10 @@ public class RoleDAO extends DAO implements AbstractDAO<RoleModel>{
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void update(RoleModel t) {
+		// TODO Auto-generated method stub
+		
+	}
 }

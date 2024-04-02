@@ -216,4 +216,10 @@ public class UserDAO extends DAO implements AbstractDAO<UserModel> {
 
 	}
 
+	@Override
+	public void update(UserModel t) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
