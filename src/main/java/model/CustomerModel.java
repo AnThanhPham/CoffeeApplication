@@ -1,119 +1,62 @@
 package model;
 
-import java.util.Objects;
-
 public class CustomerModel {
 	private int ID;
-	private String FullName,Address,PhoneNumber,Email;
+	private String name;
+	private String phone;
+	private String address;
+	private String email;
+
 	
-	public CustomerModel() {
-		
+	public CustomerModel(int iD, String name, String phone, String address, String email) {
+		ID = iD;
+		this.name = name;
+		this.phone = phone;
+		this.address = address;
+		this.email = email;
 	}
-	
+
+	public CustomerModel() {}
+
 	public int getID() {
 		return ID;
 	}
 
-	public void setID(int ID) {
-		this.ID = ID;
+	public void setID(int iD) {
+		ID = iD;
 	}
 
-
-	public String getFullName() {
-		return FullName;
+	public String getName() {
+		return name;
 	}
 
-	public void setFullName(String FullName) {
-		this.FullName = FullName;
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
 	}
 
 	public String getAddress() {
-		return Address;
+		return address;
 	}
 
 	public void setAddress(String address) {
-		Address = address;
-	}
-
-	public String getPhoneNumber() {
-		return PhoneNumber;
-	}
-
-	public void setPhoneNumber(String phoneNumber) {
-		PhoneNumber = phoneNumber;
+		this.address = address;
 	}
 
 	public String getEmail() {
-		return Email;
+		return email;
 	}
 
 	public void setEmail(String email) {
-		Email = email;
-	}
-
-	public CustomerModel(int ID, String ho, String FullName, String address, String phoneNumber, String email) {
-		this.ID = ID;
-		this.FullName = FullName;
-		Address = address;
-		PhoneNumber = phoneNumber;
-		Email = email;
+		this.email = email;
 	}
 	
-	@Override
-	public String toString() {
-		return "Customer [ID=" + ID+ ",FullNameCustomer=" + FullName +
-				",Diachi="+ Address +",SoDT="+ PhoneNumber +",Email"+ Email +"]";
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(ID,FullName,Address,PhoneNumber,Email);
-	}
-
-//		private ArrayList<Customer> list;
-//		private String Choice;
-//
-//		public void insert(Customer Customer) {
-//			this.list.add(Customer);
-//		}
-//		
-//		public void delete(Customer Customer) {
-//			this.list.remove(Customer);
-//		}
-//		
-//		public void modify(Customer Customer) {
-//			this.list.remove(Customer);
-//			this.list.add(Customer);
-//		}
-//
-//		public CustomerModel(ArrayList<Customer> list, String choice) {
-//			this.list = list;
-//			Choice = choice;
-//		}
-//
-//		public String getChoice() {
-//			return Choice;
-//		}
-//
-//		public void setChoice(String Choice) {
-//			this.Choice = Choice;
-//		}
-//		public ArrayList getlist() {
-//			return list;
-//		}
-//		public CustomerModel(ArrayList list) {
-//			this.list=list;
-//		}
-
-//		public boolean kiemTraTonTai(Customer kh) {
-//			for(Customer Customer: list) {
-//				if(Customer.getMaKH() == kh.getMaKH())
-//					return true;
-//			}
-//			return false;
-//		}
-		
-	}
-		
-
 	
+}

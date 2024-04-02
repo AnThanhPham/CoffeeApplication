@@ -16,7 +16,7 @@ public class ValidateUtils {
 	}
 	
 	public static boolean checkEmptyAndNull(String text) {
-		if(text.trim().equals("") || text.trim() == null) {
+		if(text == null || text.trim().equals("")) {
 			return true;
 		}
 		return false;
