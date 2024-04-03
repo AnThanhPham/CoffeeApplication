@@ -1,14 +1,14 @@
 package controller;
 
-import java.awt.BorderLayout;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Vector;
 
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -22,15 +22,18 @@ import javax.swing.table.DefaultTableModel;
 
 import org.apache.pivot.wtk.Mouse;
 
-import model.BillDetailsModel;
+import dao.BillDAO;
+import model.BillModel;
 import views.menu.PanelBill;
 
 public class PanelBillController {
 	private PanelBill panelBill;
-	private BillDetailsModel billDetailsModel;
+	private BillDAO billDao = new BillDAO();
 	
 	public PanelBillController(PanelBill panelBill) {
 		this.panelBill = panelBill;
+		ArrayList<BillModel> rowData = billDao.findAll();
+		renderTable(rowData);
 		addEvent();
 	}
 	
@@ -39,7 +42,7 @@ public class PanelBillController {
 		panelBill.getAddBill().addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				JPanel panel = new JPanel(new GridLayout(5, 2, 5, 5)); // 4 rows, 2 columns, 5px gap
+				JPanel panel = new JPanel(new GridLayout(6, 2, 5, 5)); // 4 rows, 2 columns, 5px gap
 
 				// Thêm các JLabel và JTextField
 				panel.add(new JLabel("Mã Hóa Đơn:"));
@@ -52,12 +55,15 @@ public class PanelBillController {
 				panel.add(new JTextField(20));
 				
 				LocalDateTime current = LocalDateTime.now();
-			    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+			    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 			    String formatted = current.format(formatter);
 				panel.add(new JLabel("Ngày Hóa Đơn: "));
 				panel.add(new JTextField(formatted,20));
 				
-				panel.add(new JLabel("Tổng Tiền:"));
+				panel.add(new JLabel("Mã Sản Phẩm:"));
+				panel.add(new JTextField(20));
+				
+				panel.add(new JLabel("Số Lượng :"));
 				panel.add(new JTextField(20));
 				
 				int result = JOptionPane.showConfirmDialog(null, 
@@ -72,8 +78,17 @@ public class PanelBillController {
 					    String MaKH = ((JTextField) panel.getComponent(3)).getText();
 					    String MaNV = ((JTextField) panel.getComponent(5)).getText();
 					    String NgayHD = ((JTextField) panel.getComponent(7)).getText();
-					    String TongTien = ((JTextField) panel.getComponent(9)).getText();
-					    Object[] rowData= {MaHD,MaKH,MaNV,NgayHD,TongTien};
+					    String MaSP = ((JTextField) panel.getComponent(9)).getText();
+					    String SoLuong = ((JTextField) panel.getComponent(11)).getText();
+					    // cần query ra số tiền sản phẩm
+					    
+					    float Tongtien = 1;
+					    Vector<String> rowData = new Vector<String>();
+					    rowData.add(MaHD);
+					    rowData.add(MaKH);
+					    rowData.add(MaNV);
+					    rowData.add(NgayHD);
+					    rowData.add(Float.toString(Tongtien));
 					    table.addRow(rowData);
 					    table.fireTableDataChanged(); // update data table
 					}
@@ -189,5 +204,26 @@ public class PanelBillController {
 			}
 		});
 	
+	}
+
+	public void renderTable(ArrayList<BillModel> rowData) {
+		for(BillModel x: rowData) {
+			Vector<String> row = new Vector<>();
+			row.add(Integer.toString(x.getID()));
+			row.add(Integer.toString(x.getCustomer().getID()));
+			row.add(Integer.toString(x.getUser().getID()));
+			if(x.getBillDate() != null) {
+				SimpleDateFormat outputDateFormat = new SimpleDateFormat("dd-MM-yyyy", new java.util.Locale("vi", "VN"));
+				String formattedDate = outputDateFormat.format(x.getBillDate());
+				row.add(formattedDate);	
+			} else {
+				row.add(null);
+			}
+			row.add(Float.toString(x.getBillTotal()));
+			
+			DefaultTableModel table = (DefaultTableModel) panelBill.getTableBill().getModel();
+		    table.addRow(row);
+		    table.fireTableDataChanged();
+		}
 	}
 }

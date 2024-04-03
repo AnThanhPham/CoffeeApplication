@@ -2,26 +2,31 @@ package dao;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
 
 import model.PaymentModel;
 
 public class PaymentDAO extends DAO implements AbstractDAO<PaymentModel>{
-	public static PaymentModel findPaymentID(int id) {
-		PaymentModel res = new PaymentModel();
-		try {
-			String sql = "select * from payment where ID = ? limit 1";
-			PreparedStatement ps = conn.prepareStatement(sql);
-			ps.setInt(1, id);
-			ResultSet rs = ps.executeQuery();
-			if(rs.next()) {
-				res.setID(rs.getInt(1));
-				res.setPaymentName((rs.getString(2)));
-			}
-		}catch(Exception ex) {
-			ex.printStackTrace();
-		}
-		return res;
-	}
+	public PaymentModel findPaymentByID(String id) {
+    	PaymentModel res = null;
+    	try {
+    		String sql = "select * from payment where id = ? limit 1";
+    		PreparedStatement ps = conn.prepareStatement(sql);
+    		ps.setString(1, id);
+    		ResultSet rs = ps.executeQuery();
+    		PaymentModel tmp = new PaymentModel();
+    		if(rs.next()) {
+    			tmp.setID(rs.getInt(1));
+    			tmp.setPaymentName(rs.getString(2));
+    		}
+    		if(Integer.toString(tmp.getID()) != null) {
+    			res = tmp;
+    		}
+    	}catch(Exception ex) {
+    		ex.printStackTrace();
+    	}
+    	return res;
+    }
 
 	@Override
 	public void insert(PaymentModel t) {

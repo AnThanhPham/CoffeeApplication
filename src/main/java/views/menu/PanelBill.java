@@ -247,10 +247,7 @@ public class PanelBill extends JPanel {
 		scrollPane.setViewportView(TableBill);
 		TableBill.setModel(new DefaultTableModel(
 			new Object[][] {
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-			}
-			,
+			},
 			new String[] {
 				"M\u00E3 H\u00F3a \u0110\u01A1n", "M\u00E3 Kh\u00E1ch H\u00E0ng", "M\u00E3 Nh\u00E2n Vi\u00EAn", "Ng\u00E0y H\u00F3a \u0110\u01A1n", "T\u1ED5ng Ti\u1EC1n"
 			}
@@ -261,10 +258,9 @@ public class PanelBill extends JPanel {
 			public Class getColumnClass(int columnIndex) {
 				return columnTypes[columnIndex];
 			}
-			
 			public boolean isCellEditable(int row, int column) {
 				return false;
-			}
+			}		
 		});
 		TableBill.getColumnModel().getColumn(0).setPreferredWidth(110);
 		TableBill.getColumnModel().getColumn(1).setPreferredWidth(110);
