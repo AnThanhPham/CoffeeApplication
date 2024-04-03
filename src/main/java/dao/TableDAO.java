@@ -10,22 +10,28 @@ public class TableDAO extends DAO implements AbstractDAO<TableModel>{
 	public TableDAO() {
 		super();
 	}
-	public static TableModel findTableID(int id) {
-		TableModel res = new TableModel();
-		try {
-			String sql = "select * from tablee where ID = ? limit 1";
-			PreparedStatement ps = conn.prepareStatement(sql);
-			ps.setInt(1, id);
-			ResultSet rs = ps.executeQuery();
-			if(rs.next()) {
-				res.setID(rs.getInt(1));
-				res.setTableNumber(rs.getString(3));
-			}
-		}catch(Exception ex) {
-			ex.printStackTrace();
-		}
-		return res;
-	}
+	public TableModel findByID(String id) {
+    	TableModel res = null;
+    	try {
+    		String sql = "select * from customer where id = ? limit 1";
+    		PreparedStatement ps = conn.prepareStatement(sql);
+    		ps.setString(1, id);
+    		ResultSet rs = ps.executeQuery();
+    		TableModel tmp = new TableModel();
+    		if(rs.next()) {
+    			tmp.setID(rs.getInt(1));
+    			tmp.setTableNumber(rs.getString(2));
+    			tmp.setStatus(rs.getString(3));
+    			tmp.setQuantityCustomer(rs.getInt(4));
+    		}
+    		if(Integer.toString(tmp.getID()) != null) {
+    			res = tmp;
+    		}
+    	}catch(Exception ex) {
+    		ex.printStackTrace();
+    	}
+    	return res;
+    }
 	
 	@Override
 	public void insert(TableModel t) {

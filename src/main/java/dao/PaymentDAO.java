@@ -7,7 +7,7 @@ import java.text.SimpleDateFormat;
 import model.PaymentModel;
 
 public class PaymentDAO extends DAO implements AbstractDAO<PaymentModel>{
-	public PaymentModel findPaymentByID(String id) {
+	public PaymentModel findByID(String id) {
     	PaymentModel res = null;
     	try {
     		String sql = "select * from payment where id = ? limit 1";

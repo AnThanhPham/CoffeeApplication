@@ -52,10 +52,10 @@ public class BillDAO extends DAO implements AbstractDAO<BillModel>{
 				}
 				billModel.setBillTotal(rs.getFloat(3));
 				billModel.setStatus(rs.getString(4));
-				billModel.setCustomer(customerDao.findCustomerID(rs.getInt(5)));
+				billModel.setCustomer(customerDao.findByID(rs.getInt(5)+""));
 				billModel.setUser(userDao.findByID(rs.getInt(6)+""));
-				billModel.setTable(tableDao.findTableID(rs.getInt(7)));
-				billModel.setPayment(paymentDao.findPaymentID(rs.getInt(8)));
+				billModel.setTable(tableDao.findByID(rs.getInt(7)+""));
+				billModel.setPayment(paymentDao.findByID(rs.getInt(8)+""));
 				data.add(billModel);
 			}
 		}catch(Exception ex) {
