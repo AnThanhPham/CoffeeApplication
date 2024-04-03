@@ -5,3 +5,4 @@ public interface AbstractDAO<T> {
 	public void delete(T t);
 	public void update(T t);
 }
+
