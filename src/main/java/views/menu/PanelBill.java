@@ -4,6 +4,7 @@ package views.menu;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -15,6 +16,8 @@ import javax.swing.SwingConstants;
 import javax.swing.table.*;
 
 import controller.PanelBillController;
+import dao.BillDAO;
+import model.BillDetailsModel;
 import model.BillModel;
 
 import javax.swing.JScrollPane;
@@ -54,6 +57,7 @@ public class PanelBill extends JPanel {
 	private JScrollPane scrollPaneTable;
 	
 	private PanelBillController panelBillController;
+	private BillDetailsModel billDetailsModel;
 	
 	public PanelBill() {
 		setLayout(null);
@@ -245,7 +249,8 @@ public class PanelBill extends JPanel {
 			new Object[][] {
 				{null, null, null, null, null},
 				{null, null, null, null, null},
-			},
+			}
+			,
 			new String[] {
 				"M\u00E3 H\u00F3a \u0110\u01A1n", "M\u00E3 Kh\u00E1ch H\u00E0ng", "M\u00E3 Nh\u00E2n Vi\u00EAn", "Ng\u00E0y H\u00F3a \u0110\u01A1n", "T\u1ED5ng Ti\u1EC1n"
 			}
