@@ -40,6 +40,7 @@ import javax.swing.Box;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.BevelBorder;
 import javax.swing.JList;
+import java.awt.SystemColor;
 
 public class PanelCustomer extends JPanel {
 	private CustomerModel model;
@@ -61,6 +62,7 @@ public class PanelCustomer extends JPanel {
 	private JButton btnFix;
 	private JButton btnDelete;
 	private JButton btn_Save;
+	private JTextField textField_Find;
 	public PanelCustomer() {
 		setBorder(new EtchedBorder(EtchedBorder.RAISED, null, null));
 		setBackground(Color.WHITE);
@@ -68,7 +70,7 @@ public class PanelCustomer extends JPanel {
 		setLayout(null);
 		
 		setSize(new Dimension(2, 2));
-		setBackground(new Color(250, 235, 215));
+		setBackground(Color.LIGHT_GRAY);
 		setBounds(287, 0, 1063, 826);
 		setLayout(null);
 		
@@ -124,7 +126,7 @@ public class PanelCustomer extends JPanel {
 		
 		btn_Add = new JButton("Add");
 		btn_Add.setBounds(873, 36, 129, 48);
-		btn_Add.setBackground(new Color(0, 191, 255));
+		btn_Add.setBackground(Color.WHITE);
 		btn_Add.setFont(new Font("Times New Roman", Font.PLAIN, 25));
 		add(btn_Add);
 		
@@ -132,21 +134,21 @@ public class PanelCustomer extends JPanel {
 		
 		btnFix = new JButton("Modify");
 		btnFix.setBounds(873, 124, 129, 48);
-		btnFix.setBackground(new Color(0, 191, 255));
+		btnFix.setBackground(Color.WHITE);
 		btnFix.setFont(new Font("Times New Roman", Font.PLAIN, 25));
 		add(btnFix);
 
 		
 		btnDelete = new JButton("Delete");
 		btnDelete.setBounds(873, 208, 129, 48);
-		btnDelete.setBackground(new Color(0, 191, 255));
+		btnDelete.setBackground(Color.WHITE);
 		btnDelete.setFont(new Font("Times New Roman", Font.PLAIN, 25));
 		add(btnDelete);
 
 		
 		btn_Save = new JButton("Save");
 		btn_Save.setFont(new Font("Times New Roman", Font.PLAIN, 25));
-		btn_Save.setBackground(new Color(0, 191, 255));
+		btn_Save.setBackground(Color.WHITE);
 		btn_Save.setBounds(676, 208, 129, 48);
 		add(btn_Save);
 
@@ -169,11 +171,17 @@ public class PanelCustomer extends JPanel {
 		add(scrollPane);
 		
 		cus_Table = new JTable();
+		cus_Table.setRowHeight(40);
 		cus_Table.setFont(new Font("SansSerif", Font.PLAIN, 14));
 //		
 		scrollPane.setViewportView(cus_Table);
 		
 		panelCustomerController =new PanelCustomerController(this);
+		
+		textField_Find = new JTextField();
+		textField_Find.setBounds(202, 217, 401, 39);
+		add(textField_Find);
+		textField_Find.setColumns(10);
 	}
 
 	public CustomerModel getModel() {
@@ -320,35 +328,4 @@ public class PanelCustomer extends JPanel {
 	}
 	
 	
-	
-	
-	
-	
- 
-//	public void Save_KH(){
-//		int maKH = Integer.valueOf(this.textField_Ma.getText());
-//		String Ho=this.textfield_Email.getText();
-//		String Ten=this.textfield_Name.getText();
-//		String address=this.textfield_Address.getText();
-//		String PhoneNumber=this.textfield_PN.getText();
-//		String email=this.textfield_Email.getText();
-//		
-//		Customer cus= new Customer(maKH, Ho, Ten, address, PhoneNumber, email);
-//		this.final_Save(cus);
-//	}
-//	public void final_Save(Customer cus) {
-//		DefaultTableModel model=(DefaultTableModel) table.getModel();
-//		this.model.insert(cus);
-//	}
-//
-//
-//	public void Modify_KH(KhachHang kh) {
-//		// TODO Auto-generated method stub
-//		
-//	}
-//
-//	public void Delete_KH(KhachHang kh) {
-//		// TODO Auto-generated method stub
-//		
-//	}
 }

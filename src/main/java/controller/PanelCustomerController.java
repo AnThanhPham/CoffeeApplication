@@ -13,11 +13,12 @@ import javax.swing.table.DefaultTableModel;
 import dao.CustomerDao;
 import model.CustomerModel;
 import util.MapUtil;
+import util.ValidateUtils;
 import views.menu.PanelCustomer;
 
 public class PanelCustomerController{
 	private PanelCustomer panelCustomer;
-	private CustomerDao customerdao;
+	private CustomerDao customerdao= new CustomerDao();
 	
 	public PanelCustomerController(PanelCustomer panelCustomer) {
 		this.panelCustomer = panelCustomer;
@@ -36,8 +37,8 @@ public class PanelCustomerController{
 		for(CustomerModel x : rowData) {
 			Vector<String> row = new Vector<>();
 			row.add(Integer.toString(x.getID()));
-			row.add(x.getFullName());
-			row.add(x.getPhoneNumber());
+			row.add(x.getName());
+			row.add(x.getPhone());
 			row.add(x.getAddress());
 			row.add(x.getEmail());
 
@@ -46,27 +47,28 @@ public class PanelCustomerController{
 		panelCustomer.getTable().setModel(model);
 	}
 	private void addEvent() {
-		panelCustomer.getTable().getSelectionModel().addListSelectionListener(new ListSelectionListener(){
-	        public void valueChanged(ListSelectionEvent event){
-	        	int rowSelect = panelCustomer.getTable().getSelectedRow();
-	        	
-	        	if(rowSelect != -1) {
-	        		String id = MapUtil.convertObjectToString(panelCustomer.getTable().getValueAt(rowSelect, 0));
-	        		String name = MapUtil.convertObjectToString(panelCustomer.getTable().getValueAt(rowSelect, 1));
-	        		String phone = MapUtil.convertObjectToString(panelCustomer.getTable().getValueAt(rowSelect, 2));
-	        		String address = MapUtil.convertObjectToString(panelCustomer.getTable().getValueAt(rowSelect, 3));
-	        		String Email = MapUtil.convertObjectToString(panelCustomer.getTable().getValueAt(rowSelect, 4));
-	        		
-	        		
-	        		panelCustomer.getTextField_ID().setText(id);
-	        		panelCustomer.getTextfield_Name().setText(name);
-	        		panelCustomer.getTextfield_PN().setText(phone);
-	        		panelCustomer.getTextfield_Address().setText(address);
-	        		panelCustomer.getTextfield_Email().setText(Email);
-	       
-	        	}
-	        }
-		});
+			DisableInput();
+			panelCustomer.getTable().getSelectionModel().addListSelectionListener(new ListSelectionListener(){
+		        public void valueChanged(ListSelectionEvent event){
+		        	int rowSelect = panelCustomer.getTable().getSelectedRow();
+		        	
+		        	if(rowSelect != -1) {
+		        		String id = MapUtil.convertObjectToString(panelCustomer.getTable().getValueAt(rowSelect, 0));
+		        		String name = MapUtil.convertObjectToString(panelCustomer.getTable().getValueAt(rowSelect, 1));
+		        		String phone = MapUtil.convertObjectToString(panelCustomer.getTable().getValueAt(rowSelect, 2));
+		        		String address = MapUtil.convertObjectToString(panelCustomer.getTable().getValueAt(rowSelect, 3));
+		        		String Email = MapUtil.convertObjectToString(panelCustomer.getTable().getValueAt(rowSelect, 4));
+		        		
+		        		
+		        		panelCustomer.getTextField_ID().setText(id);
+		        		panelCustomer.getTextfield_Name().setText(name);
+		        		panelCustomer.getTextfield_PN().setText(phone);
+		        		panelCustomer.getTextfield_Address().setText(address);
+		        		panelCustomer.getTextfield_Email().setText(Email);
+		       
+		        	}
+		        }
+			});
 	       
 	        
 	        panelCustomer.getBtn_Add().addActionListener(new ActionListener() {
@@ -79,7 +81,7 @@ public class PanelCustomerController{
 			
 	        panelCustomer.getBtn_Save().addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					int id = Integer.parseInt(panelCustomer.getTextField_ID().getText());
+					String id = panelCustomer.getTextField_ID().getText();
 	        		String fullName = panelCustomer.getTextfield_Name().getText();
 	        		String phone =panelCustomer.getTextfield_PN().getText();
 	        		String address = panelCustomer.getTextfield_Address().getText();
@@ -88,16 +90,29 @@ public class PanelCustomerController{
 	        		
 	        		CustomerModel tmp = new CustomerModel();
 	        		tmp.setAddress(address);
-	        		tmp.setFullName(fullName);
-	        		tmp.setPhoneNumber(phone);
+	        		tmp.setName(fullName);
+	        		tmp.setPhone(phone);
 	        		tmp.setEmail(email);
-	        		tmp.setID(id);
-	        		try {
-					} catch (Exception e1) {
-						e1.printStackTrace();
-					}    	
+	        		StringBuilder messageError = new StringBuilder("");
 	        		
-	     
+	        		if(ValidateUtils.checkEmptyAndNull(id)) {
+	        			// them moi
+	            		if(validateForm(tmp, messageError)) {
+	            			customerdao.insert(tmp);
+	            			renderTable(CustomerDao.CustomerList());            			
+	            		}else {
+	            			JOptionPane.showMessageDialog(panelCustomer, messageError.toString());
+	            		}
+	        		}else {
+	        			// chinh sua
+	        			tmp.setID(Integer.parseInt(id));
+	        			if(validateForm2(tmp, messageError)) {
+	        				customerdao.update(tmp);
+	        				renderTable(CustomerDao.CustomerList());
+	        			}else {
+	        				JOptionPane.showMessageDialog(panelCustomer, messageError.toString());
+	        			}
+	        		}
 				}
 			});
 			
@@ -110,24 +125,84 @@ public class PanelCustomerController{
 				}
 			});
 			
-//			panelCustomer.getBtnDelete().addActionListener(new ActionListener() {
-//				public void actionPerformed(ActionEvent e) {
-//					int[] rowSelects = panelCustomer.getTable().getSelectedRows();
-//					if(rowSelects.length >0) {
-//						int result = JOptionPane.showConfirmDialog(panelCustomer, "Bạn có chắc chắn muốn xóa?");
-//						if(result == JOptionPane.OK_OPTION) {
-//							for(int x : rowSelects) {
-//								String id = MapUtil.convertObjectToString(panelCustomer.getTable().getValueAt(x, 0));
-//								CustomerModel customer =CustomerDao.findByID(id);
-//								customerdao.delete(customer);
-//							}
-//							renderTable(CustomerDao.CustomerList());
-//							resetInput();
-//						}
-//					}
-//				}
-//			});
+			
+			panelCustomer.getBtnDelete().addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					int[] rowSelects = panelCustomer.getTable().getSelectedRows();
+					if(rowSelects.length >0) {
+						int result = JOptionPane.showConfirmDialog(panelCustomer, "Bạn có chắc chắn muốn xóa?");
+						if(result == JOptionPane.OK_OPTION) {
+							for(int x : rowSelects) {
+								String id = MapUtil.convertObjectToString(panelCustomer.getTable().getValueAt(x, 0));
+								CustomerModel customer =customerdao.findByID(id);
+								customerdao.delete(customer);
+							}
+							renderTable(CustomerDao.CustomerList());
+							resetInput();
+						}
+					}
+				}
+			});
 		}
+
+	public boolean validateForm(CustomerModel cus,StringBuilder res) {			
+		if(ValidateUtils.checkEmptyAndNull(cus.getName())){
+			res.append("Họ và tên không được để trống\n");
+			return false;
+		}
+		
+		if(ValidateUtils.checkEmptyAndNull(cus.getPhone())) {
+			res.append("Phone không được để trống\n");
+			return false;
+		}
+		
+		if(ValidateUtils.checkEmptyAndNull(cus.getAddress())) {
+			res.append("Địa chỉ không được để trống\n");
+			return false;
+		}
+		
+		
+		if(ValidateUtils.checkEmptyAndNull(cus.getEmail())) {
+			res.append("Email không được để trống\n");
+			return false;
+		}
+		
+		
+		if(!ValidateUtils.checkEmail(cus.getEmail())) {
+			res.append("Email không hợp lệ\n");		
+			return false;
+		}
+		
+		if(customerdao.checkDuplicateEmail(cus.getEmail())) {
+			res.append("Email bạn nhập đã tồn tại\\n");
+			return false;
+		}
+		return true;
+	}
+	public boolean validateForm2(CustomerModel Customer,StringBuilder res) {			
+		if(ValidateUtils.checkEmptyAndNull(Customer.getName())) {
+			res.append("Họ và tên không được để trống\n");
+			return false;
+		}
+		
+		if(ValidateUtils.checkEmptyAndNull(Customer.getPhone())) {
+			res.append("Phone không được để trống\n");
+			return false;
+		}
+		
+		if(ValidateUtils.checkEmptyAndNull(Customer.getAddress())) {
+			res.append("Địa chỉ không được để trống\n");
+			return false;
+		}
+		
+		if(ValidateUtils.checkEmptyAndNull(Customer.getEmail())) {
+			res.append("Email không được để trống\n");
+			return false;
+		}
+		
+		return true;
+	}
+	
 		
 	public void resetInput() {
 		// TODO Auto-generated method stub
@@ -141,9 +216,16 @@ public class PanelCustomerController{
 		panelCustomer.getTextfield_Address().setEnabled(true);
 		panelCustomer.getTextfield_Name().setEnabled(true);
 		panelCustomer.getTextfield_PN().setEnabled(true);
-		panelCustomer.getTextField_ID().setEnabled(true);
+//		panelCustomer.getTextField_ID().setEnabled(true);
 		panelCustomer.getTextfield_Email().setEnabled(true);
 		
+	}
+	public void DisableInput() {
+		panelCustomer.getTextfield_Address().setEnabled(false);
+		panelCustomer.getTextField_ID().setEnabled(false);
+		panelCustomer.getTextfield_PN().setEnabled(false);
+		panelCustomer.getTextfield_Email().setEnabled(false);
+		panelCustomer.getTextfield_Name().setEnabled(false);
 	}
 }
 	
