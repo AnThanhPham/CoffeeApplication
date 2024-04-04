@@ -13,7 +13,7 @@ public class TableDAO extends DAO implements AbstractDAO<TableModel>{
 	public TableModel findByID(String id) {
     	TableModel res = null;
     	try {
-    		String sql = "select * from customer where id = ? limit 1";
+    		String sql = "select * from tablee where id = ? limit 1";
     		PreparedStatement ps = conn.prepareStatement(sql);
     		ps.setString(1, id);
     		ResultSet rs = ps.executeQuery();

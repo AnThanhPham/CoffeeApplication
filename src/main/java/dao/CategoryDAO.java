@@ -11,10 +11,9 @@ import model.CustomerModel;
 public class CategoryDAO extends DAO implements AbstractDAO<CategoryModel>{
 	public CategoryDAO() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 	
-	public static ArrayList<CategoryModel> CategoryList(){
+	public ArrayList<CategoryModel> CategoryList(){
 		ArrayList<CategoryModel> res = new ArrayList<>();
 		try {
 			String sql = "select * from category";
@@ -33,7 +32,7 @@ public class CategoryDAO extends DAO implements AbstractDAO<CategoryModel>{
 		return res;
 	}
 	
-	public static CategoryModel findByID(String id) {
+	public CategoryModel findByID(String id) {
 		CategoryModel res = null;
     	try {
     		String sql = "select * from category where id = ? limit 1";
@@ -54,6 +53,7 @@ public class CategoryDAO extends DAO implements AbstractDAO<CategoryModel>{
     	}
     	return res;
     }
+	
 	@Override
 	public void insert(CategoryModel t) {
 		// TODO Auto-generated method stub

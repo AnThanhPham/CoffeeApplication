@@ -23,22 +23,30 @@ import javax.swing.table.DefaultTableModel;
 import org.apache.pivot.wtk.Mouse;
 
 import dao.BillDAO;
+import dao.BillDetailsDAO;
+import dao.ProductDAO;
+import model.BillDetailsModel;
 import model.BillModel;
+import model.ProductModel;
 import views.menu.PanelBill;
 
 public class PanelBillController {
 	private PanelBill panelBill;
 	private BillDAO billDao = new BillDAO();
+	private BillDetailsDAO billDetailsDao = new BillDetailsDAO();
+	private ProductDAO productDao = new ProductDAO();
 	
 	public PanelBillController(PanelBill panelBill) {
 		this.panelBill = panelBill;
 		ArrayList<BillModel> rowData = billDao.findAll();
 		renderTable(rowData);
+		addLabel();
 		addEvent();
 	}
 	
 	public void addEvent() {
 		// add data - cần xem thêm
+		
 		panelBill.getAddBill().addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -46,7 +54,7 @@ public class PanelBillController {
 
 				// Thêm các JLabel và JTextField
 				panel.add(new JLabel("Mã Hóa Đơn:"));
-				panel.add(new JTextField(20));
+				panel.add(new JTextField((billDao.CountID()+1)+"",20));
 
 				panel.add(new JLabel("Mã Khách Hàng:"));
 				panel.add(new JTextField(20));
@@ -79,16 +87,22 @@ public class PanelBillController {
 					    String MaNV = ((JTextField) panel.getComponent(5)).getText();
 					    String NgayHD = ((JTextField) panel.getComponent(7)).getText();
 					    String MaSP = ((JTextField) panel.getComponent(9)).getText();
-					    String SoLuong = ((JTextField) panel.getComponent(11)).getText();
+					    String NhapSoLuong = ((JTextField) panel.getComponent(11)).getText();
 					    // cần query ra số tiền sản phẩm
+					   
+					    BillDetailsModel billDetails = billDetailsDao.findByID(MaSP);
+					    ProductModel product = productDao.findByID(billDetails.getProduct().getID()+"");
+					    int soluong = Integer.parseInt(NhapSoLuong); 
 					    
-					    float Tongtien = 1;
+					    System.out.println(soluong);
+					    System.out.println(product.getPrice());
+					    System.out.println(product.getID());
 					    Vector<String> rowData = new Vector<String>();
 					    rowData.add(MaHD);
 					    rowData.add(MaKH);
 					    rowData.add(MaNV);
 					    rowData.add(NgayHD);
-					    rowData.add(Float.toString(Tongtien));
+					    rowData.add(soluong*product.getPrice()+"");
 					    table.addRow(rowData);
 					    table.fireTableDataChanged(); // update data table
 					}
@@ -205,7 +219,11 @@ public class PanelBillController {
 		});
 	
 	}
-
+	
+	public void addLabel() {
+		panelBill.getMaHD().setText(billDao.CountID()+"");
+	}
+	
 	public void renderTable(ArrayList<BillModel> rowData) {
 		for(BillModel x: rowData) {
 			Vector<String> row = new Vector<>();

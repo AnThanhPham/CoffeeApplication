@@ -3,9 +3,13 @@ package dao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import model.ProductModel;
-import dao.CategoryDAO;
 
 public class ProductDAO extends DAO implements AbstractDAO<ProductModel>{
+	private static  CategoryDAO categoryDao = new CategoryDAO();
+	
+	public ProductDAO() {
+		super();
+	}
 	public ProductModel findByID(String id) {
     	ProductModel res = null;
     	try {
@@ -20,7 +24,7 @@ public class ProductDAO extends DAO implements AbstractDAO<ProductModel>{
     			tmp.setName(rs.getString(3));
     			tmp.setDescription(rs.getString(4));
     			tmp.setImage(rs.getString(5));
-    			tmp.setCategory(CategoryDAO.findByID((Integer.toString(rs.getInt(6)))));
+    			tmp.setCategory(categoryDao.findByID(rs.getInt(6)+""));
     		}
     		if(Integer.toString(tmp.getID())!=null) {
     			res = tmp;

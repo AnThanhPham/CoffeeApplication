@@ -56,7 +56,7 @@ public class PanelBill extends JPanel {
 	private JTable TableBill;
 	private JScrollPane scrollPaneTable;
 	
-	private PanelBillController panelBillController;
+    private PanelBillController panelBillController;
 	private BillDetailsModel billDetailsModel;
 	
 	public PanelBill() {
