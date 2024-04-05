@@ -12,6 +12,8 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Menu;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.MouseEvent;
@@ -26,6 +28,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -246,7 +249,7 @@ class ItemProduct extends JPanel {
 				JDialog dialog= new JDialog();
 				JLabel topDialog = new JLabel();
 				JLabel centerDialog = new JLabel();
-				JLabel bottomDialog = new JLabel();
+				JPanel bottomDialog = new JPanel();
 				dialog.setVisible(true);
 				dialog.setMinimumSize(new Dimension(400,400));
 				dialog.setLayout(new BorderLayout());	
@@ -268,35 +271,36 @@ class ItemProduct extends JPanel {
 				GridBagConstraints gbc=new GridBagConstraints();
 				JLabel idProduct= new JLabel("ID");
 				idProduct.setFont(centerFont);
-				JTextField idField= new JTextField();
-				JLabel priceProduct= new JLabel("Giá");
-				priceProduct.setFont(centerFont);
-				JTextField priceField= new JTextField();
+				JTextField idField= new JTextField(model.getID()+"");
+				idField.setEditable(false);//ko đc sửa
 				JLabel nameProduct= new JLabel("Tên");
 				nameProduct.setFont(centerFont);
-				JTextField nameField= new JTextField();
+				JTextField nameField= new JTextField( model.getName());
+				JLabel priceProduct= new JLabel("Giá");
+				priceProduct.setFont(centerFont);
+				JTextField priceField= new JTextField(model.getPrice()+"");
 				JLabel desProduct= new JLabel("Mô Tả");
 				desProduct.setFont(centerFont);
-				JTextField desField= new JTextField();
+				JTextField desField= new JTextField(model.getDescription());
 				JLabel imgProduct= new JLabel("Link Ảnh");
 				imgProduct.setFont(centerFont);
-				JTextField imgField= new JTextField();
+				JTextField imgField= new JTextField(model.getImage());
 				JLabel categoryProduct= new JLabel("Loại");
 				categoryProduct.setFont(centerFont);
-				JTextField categoryField= new JTextField();
+				JTextField categoryField= new JTextField(model.getCategory().getID()+"");
 			// cot trai	
-				gbc.insets= new Insets(0, 10,0,10);
-				gbc.weightx= 0.3;
-				gbc.ipadx=60;
-				gbc.ipady= 10;
-				gbc.anchor= GridBagConstraints.LINE_START; // căn vị trí
+				gbc.insets= new Insets(0, 10,0,10);   // set padding
+				gbc.weightx= 0.3;  // set ti le cho ben trai ( con lai la ti le thua)
+				gbc.ipadx=60;		// tang chieu rong cua 1 ô 
+				gbc.ipady= 10;		// tang chieu cao của cả ô
+				gbc.anchor= GridBagConstraints.LINE_START; // căn vị trí của component( tất cả các loại J)so với ô- cụ thể đây là căn đầu dòng
 				gbc.gridx= 0;
 				gbc.gridy= 0;
 				centerDialog.add(idProduct,gbc);
 				gbc.gridy= 1;
-				centerDialog.add(priceProduct,gbc);
-				gbc.gridy= 2;
 				centerDialog.add(nameProduct,gbc);
+				gbc.gridy= 2;
+				centerDialog.add(priceProduct,gbc);
 				gbc.gridy= 3;
 				centerDialog.add(desProduct,gbc);
 				gbc.gridy= 4;
@@ -307,23 +311,49 @@ class ItemProduct extends JPanel {
 			// set size cho cot trai center
 				
 			// cot phai
-				gbc.fill= GridBagConstraints.HORIZONTAL;
-				gbc.ipadx= 160;
+				
+				gbc.fill= GridBagConstraints.HORIZONTAL;  // lap đầy component trong ô
+				gbc.ipadx= 160;   
 				gbc.weightx= 0.7;
 				
 				gbc.gridx= 1;
 				gbc.gridy= 0;
 				centerDialog.add(idField,gbc);
 				gbc.gridy= 1;
-				centerDialog.add(priceField,gbc);
-				gbc.gridy= 2;
 				centerDialog.add(nameField,gbc);
+				gbc.gridy= 2;
+				centerDialog.add(priceField,gbc);
 				gbc.gridy= 3;
 				centerDialog.add(desField,gbc);
 				gbc.gridy= 4;
 				centerDialog.add(imgField,gbc);
 				gbc.gridy= 5;
 				centerDialog.add(categoryField,gbc);
+// set soundDialog
+				Font fontSound= new Font(Font.SANS_SERIF,Font.BOLD,14);
+				bottomDialog.setPreferredSize(new Dimension(100,60));
+				JButton edit= new JButton("Sửa");
+				edit.setFont(fontSound);
+				
+				JButton delete= new JButton("Xóa");
+				delete.addActionListener(new ActionListener() {
+					
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						// TODO Auto-generated method stub
+						new ProductDAO().delete(model); 
+						
+						JOptionPane.showMessageDialog(dialog, "Xóa thành công","Thông báo",JOptionPane.INFORMATION_MESSAGE);
+						
+					}
+				});
+				delete.setFont(fontSound);
+				JButton cancel= new JButton("Thoát");
+				cancel.setFont(fontSound);
+				bottomDialog.add(edit);
+				bottomDialog.add(delete);
+				bottomDialog.add(cancel);
+				
 				
 				
 				

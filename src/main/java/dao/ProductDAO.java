@@ -18,6 +18,15 @@ public class ProductDAO extends DAO implements AbstractDAO<ProductModel> {
 	@Override
 	public void delete(ProductModel t) {
 		// TODO Auto-generated method stub
+		try {
+			Statement stm1= conn.createStatement();
+			String sqlCommand= " delete from product where id = "+ t.getID();
+			stm1.execute(sqlCommand);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		
 	}
 
