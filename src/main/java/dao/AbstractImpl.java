@@ -134,12 +134,20 @@ public class AbstractImpl {
 				Object value = field.get(t);
 				String fieldName = field.getName();
 				if(value != null) {
-						if(!fieldName.equalsIgnoreCase("id")) {
-							if(field.getType().getName().equals("java.lang.String")) {
-								res.append(fieldName+" = '"+value+"' ,");
-							}else if(field.getType().getName().equals("java.lang.Integer")) {
-								res.append(fieldName+" = "+value+" ,");
-							}
+					if(!fieldName.equalsIgnoreCase("Customer") 
+							&& !fieldName.equalsIgnoreCase("User")
+							&& !fieldName.equalsIgnoreCase("Table")
+							&& !fieldName.equalsIgnoreCase("Payment")
+							&& !fieldName.equalsIgnoreCase("TableID")
+							&& !fieldName.equalsIgnoreCase("PaymentID")
+							&& !fieldName.equalsIgnoreCase("status")) {
+						if(field.getType().getName().equals("java.lang.String")) {
+							res.append(fieldName+" = '"+value+"' ,");
+						}else if(field.getType().getName().equals("java.lang.Integer")) {
+							res.append(fieldName+" = "+value+" ,");
+						}else if(field.getType().getName().equals("java.sql.Date")) {
+							res.append(fieldName+" = '"+value+"' ,");
+						}
 					}
 				}
 			}
@@ -152,8 +160,8 @@ public class AbstractImpl {
 		return res.toString();
 	}
 	
-	public static String buildSqlInsertBill(CustomerModel t) {
-		StringBuilder res = new StringBuilder("insert into customer(");
+	public static String buildSqlInsertBill(BillModel t) {
+		StringBuilder res = new StringBuilder("insert into bill(");
 		StringBuilder sql2 = new StringBuilder("values (");
 		try {
 			Field[] fields = t.getClass().getDeclaredFields();
@@ -161,8 +169,14 @@ public class AbstractImpl {
 				field.setAccessible(true);
 				Object value = field.get(t);
 				if(value != null) {
+					if(!field.getName().equalsIgnoreCase("Customer")
+						&& !field.getName().equalsIgnoreCase("User")
+						&& !field.getName().equalsIgnoreCase("Table")
+						&& !field.getName().equalsIgnoreCase("Payment")
+						) {
 						res.append(field.getName()+",");
 						sql2.append("'"+value+"',");
+					}
 				}
 			}
 		} catch (Exception e) {

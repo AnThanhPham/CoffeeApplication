@@ -16,6 +16,7 @@ import model.BillDetailsModel;
 import model.BillModel;
 import model.CustomerModel;
 import model.PaymentModel;
+import model.ProductModel;
 import model.TableModel;
 import model.BillModel;
 import model.BillModel;
@@ -26,6 +27,7 @@ public class BillDAO extends DAO implements AbstractDAO<BillModel>{
 	private CustomerDao customerDao = new CustomerDao();
 	private PaymentDAO paymentDao = new PaymentDAO();
 	private TableDAO tableDao = new TableDAO();
+	private CategoryDAO categoryDao = new CategoryDAO();
 	
 	public static BillDAO getInstance(){
 		return new BillDAO();
@@ -67,6 +69,31 @@ public class BillDAO extends DAO implements AbstractDAO<BillModel>{
 			
 	}
 	
+	public ArrayList<ProductModel> findProductAll() {
+		ArrayList<ProductModel> data = new ArrayList<ProductModel>();
+		try {
+			String sql = "select * from product";
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()){
+				ProductModel product = new ProductModel();
+				
+				product.setID(rs.getInt(1));
+				product.setPrice(rs.getFloat(2));
+				product.setName(rs.getString(3));
+				product.setDescription(rs.getString(4));
+				product.setImage(rs.getString(5));
+				product.setCategory(categoryDao.findByID(rs.getInt(6)+""));
+				data.add(product);
+			}
+		}catch(Exception ex) {
+	    		ex.printStackTrace();
+	    	}
+	    return data;
+			
+	}
+	
 	 public BillModel findByID(String id) {
 	    	BillModel res = null;
 	    	try {
@@ -99,25 +126,77 @@ public class BillDAO extends DAO implements AbstractDAO<BillModel>{
 	    	return res;
 	 }
 	 
-	 public int CountID() {
-		int count =0;;
-		try {
-	    		String sql = "select * from bill";
-	    		PreparedStatement ps = conn.prepareStatement(sql);
-	    		ResultSet rs = ps.executeQuery();
-	    		while(rs.next()) {
-	    			 count++;
-	    		}
-	    	}catch(Exception ex) {
-	    		ex.printStackTrace();
-	    	}
-		return count;
+	 public boolean checkUser(String id) {
+		 boolean result = false;
+		 try {
+				PreparedStatement ps = conn.prepareStatement("select ID from user where id=? limit 1");
+				ps.setString(1, id);
+				ResultSet rs = ps.executeQuery();
+				if (rs.next()) {
+				    result = true;
+				}
+				rs.close();
+				ps.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		 return result;
+	 }
+	 
+	 public boolean checkTable(String id) {
+		 boolean result = false;
+		 try {
+				PreparedStatement ps = conn.prepareStatement("select ID from tablee where id=? limit 1");
+				ps.setString(1, id);
+				ResultSet rs = ps.executeQuery();
+				if (rs.next()) {
+				    result = true;
+				}
+				rs.close();
+				ps.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		 return result;
+	 }
+	 
+	 public boolean checkPayment(String id) {
+		 boolean result = false;
+		 try {
+				PreparedStatement ps = conn.prepareStatement("select ID from payment where id=? limit 1");
+				ps.setString(1, id);
+				ResultSet rs = ps.executeQuery();
+				if (rs.next()) {
+				    result = true;
+				}
+				rs.close();
+				ps.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		 return result;
+	 }
+	 
+	 public boolean checkCustomer(String id) {
+		 boolean result = false;
+		 try {
+				PreparedStatement ps = conn.prepareStatement("select ID from customer where id=? limit 1");
+				ps.setString(1, id);
+				ResultSet rs = ps.executeQuery();
+				if (rs.next()) {
+				    result = true;
+				}
+				rs.close();
+				ps.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		 return result;
 	 }
 	 
 	@Override
 	public void insert(BillModel t) {
-		/*
-		String sql = AbstractImpl.buildSqlInsertCustomer(t);
+		String sql = AbstractImpl.buildSqlInsertBill(t);
 		System.out.println(sql);
 		try {
 			PreparedStatement ps = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
@@ -130,18 +209,31 @@ public class BillDAO extends DAO implements AbstractDAO<BillModel>{
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		*/
 	}
 
 	@Override
 	public void delete(BillModel t) {
-		// TODO Auto-generated method stub
+		try {
+    		String sql = "delete from bill where id = ?";
+    		PreparedStatement ps = conn.prepareStatement(sql);
+    		ps.setInt(1, t.getID());
+    		ps.executeUpdate();
+    	}catch(Exception ex) {
+    		ex.printStackTrace();
+    	}
 		
 	}
 
 	@Override
 	public void update(BillModel t) {
-		// TODO Auto-generated method stub
+		try {
+    		String sql = AbstractImpl.buildSqlUpdateBill(t);
+    		System.out.println(sql);
+    		PreparedStatement ps = conn.prepareStatement(sql);
+    		ps.executeUpdate();
+    	}catch(Exception ex) {
+    		ex.printStackTrace();
+    	}
 		
 	}
 
