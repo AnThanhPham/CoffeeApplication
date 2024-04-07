@@ -126,6 +126,31 @@ public class BillDAO extends DAO implements AbstractDAO<BillModel>{
 	    	return res;
 	 }
 	 
+	 public ProductModel findProductByName(String name) {
+	    	ProductModel res = null;
+	    	try {
+	    		String sql = "select * from product where name = ? limit 1";
+	    		PreparedStatement ps = conn.prepareStatement(sql);
+	    		ps.setString(1, name);
+	    		ResultSet rs = ps.executeQuery();
+	    		ProductModel tmp = new ProductModel();
+	    		if(rs.next()) {
+	    			tmp.setID(rs.getInt(1));
+	    			tmp.setPrice(rs.getFloat(2));
+	    			tmp.setName(rs.getString(3));
+	    			tmp.setDescription(rs.getString(4));
+	    			tmp.setImage(rs.getString(5));
+	    			tmp.setCategory(categoryDao.findByID(rs.getInt(6)+""));
+	    		}
+	    		if(Integer.toString(tmp.getID())!=null) {
+	    			res = tmp;
+	    		}
+	    	}catch(Exception ex) {
+	    		ex.printStackTrace();
+	    	}
+	    	return res;
+	    }
+	 
 	 public boolean checkUser(String id) {
 		 boolean result = false;
 		 try {
@@ -142,6 +167,23 @@ public class BillDAO extends DAO implements AbstractDAO<BillModel>{
 			}
 		 return result;
 	 }
+	 public boolean checkProductName(String id) {
+		 boolean result = false;
+		 try {
+				PreparedStatement ps = conn.prepareStatement("select Name from product where id=? limit 1");
+				ps.setString(1, id);
+				ResultSet rs = ps.executeQuery();
+				if (rs.next()) {
+				    result = true;
+				}
+				rs.close();
+				ps.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		 return result;
+	 }
+	 
 	 
 	 public boolean checkTable(String id) {
 		 boolean result = false;
