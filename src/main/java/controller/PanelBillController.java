@@ -1,5 +1,6 @@
 package controller;
 
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.sql.Date;
 import java.util.Vector;
 import java.util.concurrent.Executors;
@@ -21,6 +23,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
@@ -44,6 +47,7 @@ import model.PaymentModel;
 import model.ProductModel;
 import model.TableModel;
 import model.UserModel;
+import util.MapUtil;
 import util.ValidateUtils;
 import views.menu.PanelBill;
 
@@ -100,7 +104,29 @@ public class PanelBillController {
 			@Override
 		public void valueChanged(ListSelectionEvent e) {
 				// TODO Auto-generated method stub
-				
+				/*
+				 int rowSelect = panelBill.getTableBill().getSelectedRow();
+				int columnSelect = panelBill.getTableBill().getSelectedColumn();
+	        	panelBill.getTableBill().isCellEditable(rowSelect, columnSelect);
+	        	if(rowSelect != -1) {
+	        		
+	        		String id = MapUtil.convertObjectToString(panelBill.getTableBill().getValueAt(rowSelect, 0));
+	        		String CusID = MapUtil.convertObjectToString(panelBill.getTableBill().getValueAt(rowSelect, 1));
+	        		String UserID = MapUtil.convertObjectToString(panelBill.getTableBill().getValueAt(rowSelect, 2));
+	        		//String DateTime  = MapUtil.convertObjectToString(panelBill.getTableBill().getValueAt(rowSelect, 3));
+	        		/*
+	        		BillDetailsModel billdet = billDetailsDao.findByBillID(id);
+	             	BillModel bill = billDao.findByID(id);
+	        		panelBill.getBill_ID().setText(id);
+	        		//panelBill.getDatetime().setText(DateTime);
+	        		panelBill.getCustomer_ID().setText(CusID);
+	        		panelBill.getUser_ID().setText(UserID);
+	        		panelBill.getQuantity().setText(billdet.getQuantityProduct()+"");
+	        	//	panelBill.getPayment_ID().setText(bill.getPayment().getID()+"");
+	        		//panelBill.getTable_ID().setText(bill.getTable().getID()+"");
+	        		panelBill.getStatus_item().setSelectedItem(bill.getStatus());
+	        		//panelBill.getProducts_item().setSelectedItem(billdet.getProduct().getName());
+				 */
 			}
 		});
 		panelBill.getAddBill().addActionListener(new ActionListener() {		
@@ -123,13 +149,8 @@ public class PanelBillController {
 				String Status = (String) panelBill.getStatus_item().getSelectedItem();
 				String dateWork = panelBill.getDatetime().getText();
 				
+				//System.out.println( Bill_ID + " "+Customer_ID+" "+User_ID+" "+Quantity+" "+Table_ID+" "+Payment_ID+" "+Status );
 				BillModel tmp = new BillModel();
-				//tmp.setID(Integer.parseInt(Bill_ID));
-				/*
-				Date currentDate = new Date(System.currentTimeMillis());
-        	    java.sql.Date sqlDate2 = (java.sql.Date) new Date(currentDate.getTime());
-			    tmp.setBillDate(sqlDate2); 
-				*/
 				int productIdx = (int) panelBill.getProducts_item().getSelectedIndex();
 				ProductModel product = productDao.findByID( (productIdx+1) +  "") ;
 				tmp.setBillTotal(Integer.parseInt(Quantity)*product.getPrice());
@@ -170,7 +191,7 @@ public class PanelBillController {
         			// them moi
             		
             		if(validateForm(tmp, messageError)) {
-            			tmp.setID(billDao.findAll().size()+1);
+            			tmp.setID(billDao.findAll().getLast().getID()+1);
             			billDao.insert(tmp);
             			renderTable(billDao.findAll());            			
             		}else {
@@ -190,81 +211,81 @@ public class PanelBillController {
 			}
 		});
 		
-		// remote data
-		panelBill.getDeleteBill().addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				  if (e.getClickCount() == 1 && SwingUtilities.isLeftMouseButton(e)) {
-					  int selectRow = panelBill.getTableBill().getSelectedRow();
-						//panelBill.getTableBill().setEditingRow(selectRow);
-					  if(selectRow >=0) {
-					  DefaultTableModel table = (DefaultTableModel) panelBill.getTableBill().getModel();
-					  table.removeRow(selectRow);
-					  }
-					  else {
-						  JOptionPane.showMessageDialog(panelBill, "Bạn chưa chọn dữ liệu muốn xóa");
-		                }
-				  }
+		panelBill.getEditBill().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int rowSelect = panelBill.getTableBill().getSelectedRow();
+				if(rowSelect != -1) {
+					EnableInput();					
+				}
 			}
 		});
 		
-		// chinh sua hoa don
-		panelBill.getEditBill().addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				  if (e.getClickCount() == 1 && SwingUtilities.isLeftMouseButton(e)) {
-					  int selectRow = panelBill.getTableBill().getSelectedRow();
-						
-					    if(selectRow >=0) {
-					    String MaHD = (String) panelBill.getTableBill().getValueAt(selectRow, 0);
-						String MaKH = (String) panelBill.getTableBill().getValueAt(selectRow, 1); 
-						String MaNV = (String) panelBill.getTableBill().getValueAt(selectRow, 2); 
-						String NgayHD = (String) panelBill.getTableBill().getValueAt(selectRow, 3);
-						String TongTien= (String) panelBill.getTableBill().getValueAt(selectRow, 4);
-						
-						JPanel panel = new JPanel(new GridLayout(5,2,5,5));
-						
-						panel.add(new JLabel("Mã Hóa Đơn"));
-						panel.add(new JTextField(MaHD,20));
-						
-						panel.add(new JLabel("Mã Khách Hàng"));
-						panel.add(new JTextField(MaKH,20));
-						
-						panel.add(new JLabel("Mã Nhân Viên"));
-						panel.add(new JTextField(MaNV,20));
-						
-						panel.add(new JLabel("Ngày Hóa Đơn"));
-						panel.add(new JTextField(NgayHD,20));
-						
-						panel.add(new JLabel("Tổng Tiền"));
-						panel.add(new JTextField(TongTien,20));
-						
-						int result = JOptionPane.showConfirmDialog(null, 
-							    panel, 
-							    "Nhập thông tin hóa đơn", 
-							    JOptionPane.OK_CANCEL_OPTION);
-						
-						DefaultTableModel table = (DefaultTableModel) panelBill.getTableBill().getModel();
-						if (result == JOptionPane.OK_OPTION) {
-						    // Lấy dữ liệu từ các JTextField
-						    String MahdTable = ((JTextField) panel.getComponent(1)).getText();
-						    String MakhTable = ((JTextField) panel.getComponent(3)).getText();
-						    String ManvTable = ((JTextField) panel.getComponent(5)).getText();
-						    String NgayhdTable = ((JTextField) panel.getComponent(7)).getText();
-						    String TongtienTable = ((JTextField) panel.getComponent(9)).getText();
-						    Object[] rowData= {MahdTable,MakhTable,ManvTable,NgayhdTable,TongtienTable};
-						    table.removeRow(selectRow);
-						    table.insertRow(selectRow, rowData);
-						    table.fireTableDataChanged(); // update data table
+		panelBill.getDeleteBill().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int[] rowSelects = panelBill.getTableBill().getSelectedRows();
+				if(rowSelects.length >0) {
+					int result = JOptionPane.showConfirmDialog(panelBill, "Bạn có chắc chắn muốn xóa?");
+					if(result == JOptionPane.OK_OPTION) {
+						for(int x : rowSelects) {
+							String id = MapUtil.convertObjectToString(panelBill.getTableBill().getValueAt(x, 0));
+							BillModel bill = billDao.findByID(id);
+							ArrayList<BillDetailsModel> billdet = billDetailsDao.findByBillID(bill.getID()+"");
+							for(BillDetailsModel tmp: billdet) {
+								billDetailsDao.delete(tmp);
+							}
+							billDao.delete(bill);
 						}
-					  }
-					    else {
-							JOptionPane.showMessageDialog(panelBill, "Bạn chưa chọn dữ liệu muốn chỉnh sửa");
-					  }
-				  }
+						renderTable(billDao.findAll());
+						resetInput();
+					}
+				}
 			}
 		});
-	
+		
+		LinkedHashMap<String, String> ProductList = new LinkedHashMap<String, String>();
+		panelBill.getAddProduct().addActionListener(new ActionListener() {			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// ktra xem sản phẩm đã tồn tại chưa
+				String productChoose = (String) panelBill.getProducts_item().getSelectedItem();
+			    String QuantityProductChoose = panelBill.getQuantity().getText();
+			    if(ValidateUtils.checkEmptyAndNull(QuantityProductChoose)) {
+			    	JOptionPane.showMessageDialog(panelBill, "Bạn chưa Nhập vào số lượng sản phẩm");
+			    }
+			    else {
+			    	if(ProductList.containsKey(productChoose)) {
+				    	int productChooseValue = Integer.parseInt(ProductList.get(productChoose)) + Integer.parseInt(QuantityProductChoose)  ;
+				    	ProductList.replace(productChoose, productChooseValue+"");
+				    }
+				    else {
+				    	 ProductList.put(productChoose, QuantityProductChoose);
+				    }
+			    }
+			    
+			    System.out.println(ProductList.size());
+			}
+		});
+		
+		panelBill.getEditProduct().addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JFrame FrameProduct = new JFrame();
+				FrameProduct.setLayout(new FlowLayout());
+				
+				JScrollPane scrollPaneProduct = new JScrollPane();
+				//scrollPaneProduct.setBounds(60, 340, 894, 290);
+				FrameProduct.add(scrollPaneProduct);
+				
+				JTable tableCart = new JTable();
+				scrollPaneProduct.setViewportView(tableCart);
+				tableCart.setRowHeight(20);
+				
+				FrameProduct.setSize(500, 500);
+				FrameProduct.setLocationRelativeTo(null);
+				FrameProduct.setVisible(true);
+			}
+		});
 	}
 		
 	

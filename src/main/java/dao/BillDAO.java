@@ -97,7 +97,7 @@ public class BillDAO extends DAO implements AbstractDAO<BillModel>{
 	 public BillModel findByID(String id) {
 	    	BillModel res = null;
 	    	try {
-	    		String sql = "select * from user where id = ? limit 1";
+	    		String sql = "select * from bill where id = ? limit 1";
 	    		PreparedStatement ps = conn.prepareStatement(sql);
 	    		ps.setString(1, id);
 	    		ResultSet rs = ps.executeQuery();
