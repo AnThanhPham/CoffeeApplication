@@ -37,6 +37,7 @@ public class PanelBill extends JPanel {
 	private JButton Page3; 
 	private JButton PageBefore;
 	private JButton PageNext; 
+	private JButton PageFirst;
 	
 	private Font FLabel;
 	private Font FLabelText;
@@ -307,23 +308,27 @@ public class PanelBill extends JPanel {
 		
 		// Page
 		PageBefore = new JButton("Trang trước");
-		PageBefore.setBounds(270, 640, 100, 30);
+		PageBefore.setBounds(315, 640, 100, 30);
 		add(PageBefore);
 		
+		PageFirst = new JButton("Trang Đầu");
+		PageFirst.setBounds(215, 640, 90, 30);
+		add(PageFirst);
+		
 		Page1 = new JButton("1");
-		Page1.setBounds(390, 640, 60, 30);
+		Page1.setBounds(425, 640, 60, 30);
 		add(Page1);
 		
 		Page2 = new JButton("2");
-		Page2.setBounds(470, 640, 60, 30);
+		Page2.setBounds(505, 640, 60, 30);
 		add(Page2);
 		
 		Page3 = new JButton("3");
-		Page3.setBounds(550, 640, 60, 30);
+		Page3.setBounds(577, 640, 60, 30);
 		add(Page3);
 		
 		PageNext = new JButton("Trang kế tiếp");
-		PageNext.setBounds(630, 640, 100, 30);
+		PageNext.setBounds(660, 640, 100, 30);
 		add(PageNext);
 		
 	}
@@ -584,6 +589,14 @@ public class PanelBill extends JPanel {
 
 	public void setEditProduct(JButton editProduct) {
 		this.editProduct = editProduct;
+	}
+
+	public JButton getPageFirst() {
+		return PageFirst;
+	}
+
+	public void setPageFirst(JButton pageFirst) {
+		PageFirst = pageFirst;
 	}
 	
 }

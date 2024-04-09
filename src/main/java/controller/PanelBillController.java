@@ -71,6 +71,8 @@ public class PanelBillController {
 	private PaymentDAO paymentDao = new PaymentDAO();
 	private UserDAO userDao = new UserDAO();
 	private ArrayList<ArrayList<BillModel>> AllPageInformation = new ArrayList<>();
+	private String clickPage ;
+	private boolean StopPage = false;
 	
 	public PanelBillController(PanelBill panelBill) {
 		this.panelBill = panelBill;
@@ -79,6 +81,7 @@ public class PanelBillController {
 		renderTable(AllPageInformation.getFirst());
 		UpdateEvent();
 		addEvent();	
+		addPageButton();
 	}
 	public void renderTable(ArrayList<BillModel> rowData) {
 		DefaultTableModel model = new DefaultTableModel(); 
@@ -540,4 +543,143 @@ public class PanelBillController {
 		}
 		AllPageInformation = PageInformation;
 	}
+	
+	public void addPageButton() {
+		int before = Integer.parseInt((String) panelBill.getPage1().getText());
+		int next = Integer.parseInt((String) panelBill.getPage3().getText());
+		
+		
+		panelBill.getPageFirst().addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				renderTable(AllPageInformation.get(0));
+				panelBill.getPage1().setText(String.valueOf(1));
+				panelBill.getPage2().setText(String.valueOf(2));
+				panelBill.getPage3().setText(String.valueOf(3));
+			}
+			
+		});
+		
+		panelBill.getPageBefore().addActionListener(new ActionListener() { // vẫn bị lùi âm
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int p1 = Integer.parseInt(panelBill.getPage1().getText()); // lấy ra nhãn hiện tại
+				int p2 = Integer.parseInt(panelBill.getPage2().getText());
+				int p3 = Integer.parseInt(panelBill.getPage3().getText());
+				
+				if(StopPage) {
+					panelBill.getPage1().setText(String.valueOf(p1));
+					panelBill.getPage2().setText(String.valueOf(p2));
+					panelBill.getPage3().setText(String.valueOf(p3));
+				}
+				else {
+					panelBill.getPage1().setText(String.valueOf(p1-3));
+					p1-=3;
+					panelBill.getPage2().setText(String.valueOf(p2-3));
+					p2-=3;
+					panelBill.getPage3().setText(String.valueOf(p3-3));
+					p3-=3;
+				}
+			}
+		});
+		
+		panelBill.getPage1().addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int p1 = Integer.parseInt(panelBill.getPage1().getText());
+				if(p1 ==1) {
+					renderTable(AllPageInformation.get(0));
+					if(AllPageInformation.get(0).size() < 5) {
+						StopPage = true;
+					}
+				}
+				else {
+					if(AllPageInformation.get(p1-1).size() == 0) {
+						JOptionPane.showMessageDialog(panelBill, "Không có dữ liệu");
+					}
+					else {
+						renderTable(AllPageInformation.get(p1-1));
+						if(AllPageInformation.get(p1 -1).size() < 5) {
+							StopPage = true;
+						}
+					}
+				}
+				clickPage = (String) panelBill.getPage1().getText();
+			}
+		});
+		
+		panelBill.getPage2().addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int p2 = Integer.parseInt(panelBill.getPage2().getText());
+				if(p2 == 2) {
+					renderTable(AllPageInformation.get(1));
+					if(AllPageInformation.get(1).size() < 5) {
+						StopPage = true;
+					}
+				}
+				else {
+					if(AllPageInformation.get(p2-1).size() == 0) {
+						JOptionPane.showMessageDialog(panelBill, "Không có dữ liệu");
+					}
+					else {
+						renderTable(AllPageInformation.get(p2-1));
+						if(AllPageInformation.get(p2 -1).size() < 5) {
+							StopPage = true;
+						}
+					}
+				}
+				clickPage = (String) panelBill.getPage2().getText();
+			}
+		});
+		
+		panelBill.getPage3().addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int p3 = Integer.parseInt(panelBill.getPage3().getText());
+				if(p3 == 3) {
+					renderTable(AllPageInformation.get(2));
+					if(AllPageInformation.get(2).size() < 5) {
+						StopPage = true;
+					}
+				}
+				else {
+					if(AllPageInformation.get(p3-1).size() == 0) {
+						JOptionPane.showMessageDialog(panelBill, "Không có dữ liệu");
+					}
+					else {
+						renderTable(AllPageInformation.get(p3-1));
+						if(AllPageInformation.get(p3 -1).size() < 5) {
+							StopPage = true;
+						}
+					}
+				}
+			}
+		});
+		
+		
+		panelBill.getPageNext().addActionListener(new ActionListener() { // tiến vô hạn
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int p1 = Integer.parseInt(panelBill.getPage1().getText()); // lấy ra nhãn hiện tại
+				int p2 = Integer.parseInt(panelBill.getPage2().getText());
+				int p3 = Integer.parseInt(panelBill.getPage3().getText());
+				
+				if(StopPage) {
+					panelBill.getPage1().setText(String.valueOf(p1));
+					panelBill.getPage2().setText(String.valueOf(p2));
+					panelBill.getPage3().setText(String.valueOf(p3));
+				}
+				else {
+					panelBill.getPage1().setText(String.valueOf(p1+3));
+					p1+=3;
+					panelBill.getPage2().setText(String.valueOf(p2+3));
+					p2+=3;
+					panelBill.getPage3().setText(String.valueOf(p3+3));
+					p3+=3;
+				}
+			}
+		});
+	}
+	
 }
