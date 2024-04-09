@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -83,7 +84,7 @@ public class PanelBillController {
 		for(String x : colName) {
 			model.addColumn(x);
 		}
-		
+		Collections.reverse(rowData);
 		for(BillModel x: rowData) {
 			Vector<String> row = new Vector<>();
 			row.add(Integer.toString(x.getID()));
@@ -235,6 +236,7 @@ public class PanelBillController {
 			public void actionPerformed(ActionEvent e) {
 				EnableInput();
 				resetInput();
+				ProductListTable.clear();
 			}
 		});
 		
@@ -256,9 +258,14 @@ public class PanelBillController {
 				
 				tmp.setStatus(Status);
 				
-				CustomerModel cusDao = customerDao.findByID(Customer_ID);
-				tmp.setCustomer(cusDao);
-				tmp.setCustomerID(cusDao.getID());
+				if(Customer_ID != null) {
+					CustomerModel cusDao = customerDao.findByID(Customer_ID);
+					tmp.setCustomer(cusDao);
+					tmp.setCustomerID(cusDao.getID());
+				}
+				else {
+					tmp.setCustomerID(0);
+				}
 				
 				TableModel tablee = tableDao.findByID(Table_ID);
 				tmp.setTable(tablee);
@@ -318,7 +325,6 @@ public class PanelBillController {
 					BillDetaList.add(tmpBillDetails);
 				});
 				
-				System.out.println(BillDetaList.size()+"SSS");
 				if(ValidateUtils.checkEmptyAndNull(Bill_ID)) {
         			for(int i=0;i<BillDetaList.size();i++) {
         				BillDetailsModel tmpDetails = BillDetaList.get(i);
@@ -398,15 +404,11 @@ public class PanelBillController {
 	}
 	public boolean validateForm(BillModel bill,StringBuilder res) {			
 		if(!billDao.checkUser(bill.getUser().getID()+"")) {
-			res.append("Người dùng không tồn tại\\n");
-			return false;
-		}
-		if(!billDao.checkCustomer(bill.getCustomer().getID()+"")) {
-			res.append("Khách không tồn tại\\n");
+			res.append("Người dùng không tồn tại \n");
 			return false;
 		}
 		if(!billDao.checkTable(bill.getTable().getID()+"")) {
-			res.append("Bàn không tồn tại\\n");
+			res.append("Bàn không tồn tại \n");
 			return false;
 		}
 		return true;
