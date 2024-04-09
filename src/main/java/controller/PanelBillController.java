@@ -70,11 +70,13 @@ public class PanelBillController {
 	private TableDAO tableDao = new TableDAO();
 	private PaymentDAO paymentDao = new PaymentDAO();
 	private UserDAO userDao = new UserDAO();
+	private ArrayList<ArrayList<BillModel>> AllPageInformation = new ArrayList<>();
 	
 	public PanelBillController(PanelBill panelBill) {
 		this.panelBill = panelBill;
 		ArrayList<BillModel> rowData = billDao.findAll();	
-		renderTable(rowData);
+		Pagination(rowData);
+		renderTable(AllPageInformation.getFirst());
 		UpdateEvent();
 		addEvent();	
 	}
@@ -84,7 +86,7 @@ public class PanelBillController {
 		for(String x : colName) {
 			model.addColumn(x);
 		}
-		Collections.reverse(rowData);
+		
 		for(BillModel x: rowData) {
 			Vector<String> row = new Vector<>();
 			row.add(Integer.toString(x.getID()));
@@ -301,7 +303,14 @@ public class PanelBillController {
             		if(validateForm(tmp, messageError)) {
             			tmp.setID(billDao.findAll().getLast().getID()+1);
             			billDao.insert(tmp);
-            			renderTable(billDao.findAll());            			
+            			resetTable();
+            			
+            			// update table view
+            			ArrayList<BillModel> AddrowData = billDao.findAll();	
+            			Pagination(AddrowData);
+            			renderTable(AllPageInformation.getFirst());
+            			System.out.println(AllPageInformation.get(0).size());
+            			//renderTable(billDao.findAll());            			
             		}else {
             			JOptionPane.showMessageDialog(panelBill, messageError.toString());
             		}
@@ -461,6 +470,23 @@ public class PanelBillController {
 		panelBill.getTable_ID().setEnabled(false);
 		panelBill.getPayment_ID().setEnabled(false);
 	}
+	
+	public void resetTable() {
+		
+		DefaultTableModel model = new DefaultTableModel() {
+			public boolean isCellEditable(int row, int column) {
+				return false;
+			}
+		};
+		
+		String[] colName = {"BillID", "CustomerID", "UserID", "Date", "Price"};
+		for(String x : colName) {
+			model.addColumn(x);
+		}
+		model.setRowCount(0);
+		panelBill.getTableBill().setModel(model);
+	}
+	
 	public void UpdateEvent() {
 		// time run
 		ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
@@ -478,5 +504,40 @@ public class PanelBillController {
         	panelBill.getProducts_item().addItem(item.getName());
         }
         AutoCompleteDecorator.decorate(panelBill.getProducts_item());
+	}
+	
+	public void Pagination(ArrayList<BillModel> rowData) {
+		Collections.reverse(rowData);
+		ArrayList<ArrayList<BillModel>> PageInformation = new ArrayList<>();
+		
+		int TableRowLength =  rowData.size();
+		//Collections.reverse(BillListPage);
+		
+		//System.out.println(TableRowLength);
+		int PageSize = 5;
+		// chia 1 page chứa 5 row
+		int PageNumber;
+		int rowExcess;
+		//System.out.println(PageNumber+" "+rowExcess);
+		if(TableRowLength%PageSize == 0) {
+			PageNumber = TableRowLength/PageSize;
+			rowExcess = 0;
+		}else {
+			PageNumber = TableRowLength/PageSize +1;
+			rowExcess = TableRowLength - (PageNumber - 1)*PageSize;
+		}
+		System.out.println(PageNumber+" "+PageSize);
+		for(int i=0;i<PageNumber;i++) {
+			ArrayList<BillModel> tmp = new ArrayList<BillModel>();
+			PageInformation.add(tmp);
+			for(int j=0;j<PageSize;j++) {
+				if(i*PageSize+j < TableRowLength) {
+					BillModel x = rowData.get(i*PageSize+j);
+					PageInformation.get(i).add(x);
+				}
+				else break;
+			}
+		}
+		AllPageInformation = PageInformation;
 	}
 }
