@@ -18,6 +18,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.sql.SQLException;
 import java.util.List;
 
 import javax.swing.ImageIcon;
@@ -61,14 +62,32 @@ public class PanelProduct extends JPanel {
 	JMenuBar outMenu = new JMenuBar();
 	JMenu menu1 = new JMenu("Menu");
 	String[] typeProduct = { "cafe", "nuoc ngot", "banh ngot", "Nuoc ep" };
-	List<ProductModel> listProduct = ProductDAO.selectAll();
 	private static PanelProduct ins;
+	List<ProductModel> listProduct = ProductDAO.selectAll();
 
 	public static PanelProduct getIns() {
 		return ins;
 	}
+	
+	public void reLoad() {
+		listProduct= ProductDAO.selectAll();
+		int amountPageNumber = (listProduct.size() / 8) + 1;
+		PagePanel[] pageNumber = new PagePanel[amountPageNumber + 1];
+		
+		southCenterPanel.removeAll();
+		for (int i = 1; i <= amountPageNumber; i++) {
+			pageNumber[i] = new PagePanel(i);
+			southCenterPanel.add(pageNumber[i]);
+		}
+	    showPage(1);
+		
+	}
+	
 
 	public void showPage(int pageNumber) {
+		
+		
+		
 		centerCenterPanel.setLayout(new GridLayout(2, 4, 20, 20));
 		centerCenterPanel.removeAll();
 		ItemProduct[] itemProduct = new ItemProduct[8];
@@ -176,12 +195,8 @@ public class PanelProduct extends JPanel {
 		showPage(1);
 
 // southCenterpanel
-		int amountPageNumber = (listProduct.size() / 8) + 1;
-		PagePanel[] pageNumber = new PagePanel[amountPageNumber + 1];
-		for (int i = 1; i <= amountPageNumber; i++) {
-			pageNumber[i] = new PagePanel(i);
-			southCenterPanel.add(pageNumber[i]);
-		}
+		reLoad();
+	
 
 	}
 
@@ -341,9 +356,16 @@ class ItemProduct extends JPanel {
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						// TODO Auto-generated method stub
-						new ProductDAO().delete(model); 
-						
-						JOptionPane.showMessageDialog(dialog, "Xóa thành công","Thông báo",JOptionPane.INFORMATION_MESSAGE);
+						try {
+							ProductDAO.delete(model);
+							dialog.dispose();
+							JOptionPane.showMessageDialog(dialog, "Xóa thành công","Thông báo",JOptionPane.INFORMATION_MESSAGE);
+							PanelProduct.getIns().reLoad();
+						} catch (SQLException e1) {
+							// TODO Auto-generated catch block
+							
+							JOptionPane.showMessageDialog(dialog, "Xóa thất bại","Thông báo",JOptionPane.INFORMATION_MESSAGE);
+						} 
 						
 					}
 				});

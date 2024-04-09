@@ -7,30 +7,27 @@ import model.BillModel;
 import model.CategoryModel;
 import model.ProductModel;
 
-public class ProductDAO extends DAO implements AbstractDAO<ProductModel> {
+public class ProductDAO extends DAO  {
 
-	@Override
+	
 	public void insert(ProductModel t) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
-	public void delete(ProductModel t) {
+	
+	public static void delete(ProductModel t) throws SQLException  {
 		// TODO Auto-generated method stub
-		try {
+		
 			Statement stm1= conn.createStatement();
 			String sqlCommand= " delete from product where id = "+ t.getID();
 			stm1.execute(sqlCommand);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 		
 		
 	}
 
-	@Override
+	
 	public void update(ProductModel t) {
 		// TODO Auto-generated method stub
 		
