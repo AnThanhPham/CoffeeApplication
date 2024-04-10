@@ -319,6 +319,7 @@ public class PanelBill extends JPanel {
 		
 		Page1 = new JButton("1");
 		Page1.setBounds(425, 640, 60, 30);
+		Page1.setBackground(Color.orange);
 		add(Page1);
 		
 		Page2 = new JButton("2");

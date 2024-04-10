@@ -1,5 +1,6 @@
 package controller;
 
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -551,6 +552,9 @@ public class PanelBillController {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				int p1 = Integer.parseInt(panelBill.getPage1().getText());
+				panelBill.getPage1().setBackground(Color.orange);
+				panelBill.getPage2().setBackground(Color.white);
+				panelBill.getPage3().setBackground(Color.white);
 				if(p1 ==1) {
 					renderTable(AllPageInformation.get(0));
 				}
@@ -570,9 +574,13 @@ public class PanelBillController {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				int p2 = Integer.parseInt(panelBill.getPage2().getText());
-				System.out.println(AllPageInformation.size());
+				panelBill.getPage1().setBackground(Color.white);
+				panelBill.getPage2().setBackground(Color.orange);
+				panelBill.getPage3().setBackground(Color.white);
+				
 				if(p2 == 2) {
 					renderTable(AllPageInformation.get(1));
+					
 				}
 				else {
 					// 10 0-> 9
@@ -591,6 +599,9 @@ public class PanelBillController {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				int p3 = Integer.parseInt(panelBill.getPage3().getText());
+				panelBill.getPage1().setBackground(Color.white);
+				panelBill.getPage2().setBackground(Color.white);
+				panelBill.getPage3().setBackground(Color.orange);
 				if(p3 == 3) {
 					renderTable(AllPageInformation.get(2));
 				}
@@ -614,22 +625,55 @@ public class PanelBillController {
 				int p2 = Integer.parseInt(panelBill.getPage2().getText());
 				int p3 = Integer.parseInt(panelBill.getPage3().getText());
 				
-				if(p3 >= PageNumber) {
-					JOptionPane.showMessageDialog(panelBill, "Không có dữ liệu");
-					panelBill.getPage1().setText(String.valueOf(p1));
-					panelBill.getPage2().setText(String.valueOf(p2));
-					panelBill.getPage3().setText(String.valueOf(p3));
+				String Background1 =  panelBill.getPage1().getBackground().toString();
+				String Background2 =  panelBill.getPage2().getBackground().toString();
+				String Background3 =  panelBill.getPage3().getBackground().toString();
+			//	System.out.println(Background1+" 3"+Background2+" 3"+Background3);
+			   
+				int presentPage = 0 ;
+				
+			    if(Background1.equals("java.awt.Color[r=255,g=200,b=0]")) {
+			    	presentPage = p1;
+			    }
+			    else if(Background2.equals("java.awt.Color[r=255,g=200,b=0]")) {
+			    	presentPage = p2;
+			    }
+			    else if(Background3.equals("java.awt.Color[r=255,g=200,b=0]")) {
+			    	presentPage = p3;
+			    }
+			    
+			    // 3 next = 4
+			   // System.out.println(presentPage);
+				if(p3 >= PageNumber) { 
+						panelBill.getPage1().setText(String.valueOf(PageNumber-2));
+						panelBill.getPage2().setText(String.valueOf(PageNumber-1));
+						panelBill.getPage3().setText(String.valueOf(PageNumber));
+						if(presentPage==PageNumber) { // 10 - 10 vẫn phải cho data 11 - 10 mới in ra thông báo
+							JOptionPane.showMessageDialog(panelBill, "Không có dữ liệu");
+						}
+						renderTable(AllPageInformation.get(presentPage));
+						++presentPage;//9
+						
+					if(Background1.equals("java.awt.Color[r=255,g=200,b=0]")) {
+						panelBill.getPage1().setBackground(Color.white);
+				    	panelBill.getPage2().setBackground(Color.orange);
+				    	panelBill.getPage3().setBackground(Color.white);
+				    }
+				    else if(Background2.equals("java.awt.Color[r=255,g=200,b=0]")) {
+				    	panelBill.getPage1().setBackground(Color.white);
+				    	panelBill.getPage2().setBackground(Color.white);
+				    	panelBill.getPage3().setBackground(Color.orange);
+				    }
 				}
 				else {
-					panelBill.getPage1().setText(String.valueOf(p1+3));
-					p1+=3;
-					renderTable(AllPageInformation.get(p1-1));
-					panelBill.getPage2().setText(String.valueOf(p2+3));
-					p2+=3;
-					panelBill.getPage3().setText(String.valueOf(p3+3));
-					p3+=3;
+					p1+=1;
+					panelBill.getPage1().setText(String.valueOf(p1));
+					p2+=1;
+					panelBill.getPage2().setText(String.valueOf(p2));
+					p3+=1;
+					panelBill.getPage3().setText(String.valueOf(p3));
+					renderTable(AllPageInformation.get(presentPage));
 				}
-				
 				
 			}
 		});
@@ -642,20 +686,55 @@ public class PanelBillController {
 				int p2 = Integer.parseInt(panelBill.getPage2().getText());
 				int p3 = Integer.parseInt(panelBill.getPage3().getText());
 				
-				if(p1 ==1) {
-					JOptionPane.showMessageDialog(panelBill, "Không có dữ liệu");
-					panelBill.getPage1().setText(String.valueOf(p1));
-					panelBill.getPage2().setText(String.valueOf(p2));
-					panelBill.getPage3().setText(String.valueOf(p3));
+				String Background1 =  panelBill.getPage1().getBackground().toString();
+				String Background2 =  panelBill.getPage2().getBackground().toString();
+				String Background3 =  panelBill.getPage3().getBackground().toString();
+			//	System.out.println(Background1+" 3"+Background2+" 3"+Background3);
+			   
+				int presentPage = 0 ;
+				
+			    if(Background1.equals("java.awt.Color[r=255,g=200,b=0]")) {
+			    	presentPage = p1;
+			    }
+			    else if(Background2.equals("java.awt.Color[r=255,g=200,b=0]")) {
+			    	presentPage = p2;
+			    }
+			    else if(Background3.equals("java.awt.Color[r=255,g=200,b=0]")) {
+			    	presentPage = p3;
+			    }
+			    --presentPage; // phải giảm 1 trước để present = vị trí của mảng hiện t
+			    // 3 next = 4
+			    System.out.println(presentPage);
+				if(p3 <=3) { 
+						panelBill.getPage1().setText(String.valueOf(1));
+						panelBill.getPage2().setText(String.valueOf(2));
+						panelBill.getPage3().setText(String.valueOf(3));
+						if(presentPage <1) { // 10 - 10 vẫn phải cho data 11 - 10 mới in ra thông báo
+							JOptionPane.showMessageDialog(panelBill, "Không có dữ liệu");
+						}
+						--presentPage;
+						renderTable(AllPageInformation.get(presentPage));
+						;//9
+						
+					if(Background3.equals("java.awt.Color[r=255,g=200,b=0]")) {
+						panelBill.getPage1().setBackground(Color.white);
+				    	panelBill.getPage2().setBackground(Color.orange);
+				    	panelBill.getPage3().setBackground(Color.white);
+				    }
+				    else if(Background2.equals("java.awt.Color[r=255,g=200,b=0]")) {
+				    	panelBill.getPage1().setBackground(Color.orange);
+				    	panelBill.getPage3().setBackground(Color.white);
+				    	panelBill.getPage2().setBackground(Color.white);
+				    }
 				}
 				else {
-					panelBill.getPage1().setText(String.valueOf(p1-3));
-					p1-=3;
-					renderTable(AllPageInformation.get(p3+1));
-					panelBill.getPage2().setText(String.valueOf(p2-3));
-					p2-=3;
-					panelBill.getPage3().setText(String.valueOf(p3-3));
-					p3-=3;
+					p1-=1;
+					panelBill.getPage1().setText(String.valueOf(p1));
+					p2-=1;
+					panelBill.getPage2().setText(String.valueOf(p2));
+					p3-=1;
+					panelBill.getPage3().setText(String.valueOf(p3));
+					renderTable(AllPageInformation.get(--presentPage));
 				}
 			}
 		});
