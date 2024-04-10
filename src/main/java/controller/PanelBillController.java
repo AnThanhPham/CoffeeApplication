@@ -83,6 +83,7 @@ public class PanelBillController {
 		addEventHeader();
 		addEvent();	
 		addPageButton();
+		addEventBody();
 	}
 	public void renderTable(ArrayList<BillModel> rowData) {
 		DefaultTableModel model = new DefaultTableModel(); 
@@ -143,9 +144,10 @@ public class PanelBillController {
 			}
 		});
 		
-
+		
+		// thêm sản phẩm vào giỏ hàng 
 		LinkedHashMap<String, String> ProductListTable = new LinkedHashMap<String, String>();
-		panelBill.getAddProduct().addActionListener(new ActionListener() {			
+		panelBill.getaddBillProduct().addActionListener(new ActionListener() {			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// ktra xem sản phẩm đã tồn tại chưa
@@ -168,7 +170,8 @@ public class PanelBillController {
 			}
 		});
 		
-		panelBill.getEditProduct().addActionListener(new ActionListener() {
+		// chỉnh sửa giỏ hàng
+		panelBill.geteditBillProduct().addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -176,7 +179,6 @@ public class PanelBillController {
 				FrameProduct.setLayout(new FlowLayout());
 				
 				JScrollPane scrollPaneProduct = new JScrollPane();
-				//scrollPaneProduct.setBounds(60, 340, 894, 290);
 				FrameProduct.add(scrollPaneProduct);
 				
 				JTable tableCart = new JTable();
@@ -672,7 +674,7 @@ public class PanelBillController {
 					panelBill.getPage2().setText(String.valueOf(p2));
 					p3+=1;
 					panelBill.getPage3().setText(String.valueOf(p3));
-					renderTable(AllPageInformation.get(presentPage));
+					renderTable(AllPageInformation.get(presentPage)); // present = vị trí hiện tại = next
 				}
 				
 			}
@@ -712,9 +714,8 @@ public class PanelBillController {
 						if(presentPage <1) { // 10 - 10 vẫn phải cho data 11 - 10 mới in ra thông báo
 							JOptionPane.showMessageDialog(panelBill, "Không có dữ liệu");
 						}
-						--presentPage;
+						--presentPage; // phải giảm vì nó sẽ trả về chỉ số mảng tương tứng chỉ số trang
 						renderTable(AllPageInformation.get(presentPage));
-						;//9
 						
 					if(Background3.equals("java.awt.Color[r=255,g=200,b=0]")) {
 						panelBill.getPage1().setBackground(Color.white);
@@ -734,15 +735,44 @@ public class PanelBillController {
 					panelBill.getPage2().setText(String.valueOf(p2));
 					p3-=1;
 					panelBill.getPage3().setText(String.valueOf(p3));
-					renderTable(AllPageInformation.get(--presentPage));
+					renderTable(AllPageInformation.get(--presentPage)); // giảm để lấy mảng đằng trước
 				}
 			}
 		});
 	}
 	
-	/*
+	
 	public void addEventBody() {
+		int  day =  Integer.parseInt(panelBill.getFDay().getSelectedItem().toString());
+		System.out.println(day);
 		
+		int  month =  Integer.parseInt(panelBill.getFMonth().getSelectedItem().toString());
+		System.out.println(month);
+		
+		int  year =  Integer.parseInt(panelBill.getFYear().getSelectedItem().toString());
+		System.out.println(day +" "+month+" "+year);
 	}
-	*/
+	
+	public boolean checkDate(String day, String month, String year) {
+		int d = Integer.parseInt(day);
+		int m = Integer.parseInt(month);
+		int y = Integer.parseInt(year);
+		
+		if(y %4 ==0 || y %100 ==0) {
+			if(m ==2 && d <=29) {
+				return true;
+			}
+		}
+		else {
+			if(m ==2 && d <=28) {
+				return true;
+			}
+		}
+		
+		if(m==4 || m==6 || m==8 || m==10 || m== 12) {
+			if(d <=30)
+			    return true;
+		}
+			return false;
+	}
 }

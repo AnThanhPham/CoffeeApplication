@@ -29,8 +29,8 @@ public class PanelBill extends JPanel {
 	private JButton EditBill;
 	private JButton DetailsBill;
 	private JButton SaveBill;
-	private JButton addProduct;
-	private JButton editProduct;
+	private JButton addBillProduct;
+	private JButton editBillProduct;
 	//page
 	private JButton Page1;
 	private JButton Page2;
@@ -81,117 +81,118 @@ public class PanelBill extends JPanel {
 	}
 
 	public void CreateHeader() {
-		jlabel = new JLabel("BillID");
-		jlabel.setBounds(60,130,60,30);
+		jlabel = new JLabel("Mã Hóa Đơn");
+		jlabel.setBounds(60,50,100,30);
 		jlabel.setFont(FLabel);
 		add(jlabel);
 		
 		Bill_ID = new JTextField();
-		Bill_ID.setBounds(130,130,80,30);
+		Bill_ID.setBounds(180,50,120,30);
 		Bill_ID.setFont(FLabelText);
 		add(Bill_ID);
 		
-		jlabel = new JLabel("CustomerID");
-		jlabel.setBounds(215,130,90,30);
+		jlabel = new JLabel("Mã Khách Hàng");
+		jlabel.setBounds(60,185,110,30);
 		jlabel.setFont(FLabel);
 		add(jlabel);
 		
 		Customer_ID = new JTextField();
-		Customer_ID.setBounds(315,131,80,30);
+		Customer_ID.setBounds(180,185,120,30);
 		Customer_ID.setFont(FLabelText);
 		add(Customer_ID);
 		
-		jlabel = new JLabel("UserID");
-		jlabel.setBounds(425,130,60,30);
+		jlabel = new JLabel("Mã Nhân Viên");
+		jlabel.setBounds(60,140,100,30);
 		jlabel.setFont(FLabel);
 		add(jlabel);
 		
 		User_ID = new JTextField();
-		User_ID.setBounds(485,131,80,30);
+		User_ID.setBounds(180,140,120,30);
 		User_ID.setFont(FLabelText);
 		add(User_ID);
 		
-		jlabel = new JLabel("Quantity"); // dòng tổng tiền + hiển thị 
-		jlabel.setBounds(60,77,70,30);
-		jlabel.setFont(FLabel);
-		add(jlabel);
 		
-		Quantity = new JTextField();
-		Quantity.setBounds(130,78,80,30);
-		Quantity.setFont(FLabel);
-		add(Quantity);
-		
-		jlabel = new JLabel("TableID");
-		jlabel.setBounds(60,170,60,30);
+		jlabel = new JLabel("Bàn số");
+		jlabel.setBounds(60,230,60,30);
 		jlabel.setFont(FLabel);
 		add(jlabel);
 		
 		Table_ID = new JTextField();
-		Table_ID.setBounds(130,171,80,30);
+		Table_ID.setBounds(180,230,119,30);
 		Table_ID.setFont(FLabelText);
 		add(Table_ID);
 		
-		jlabel = new JLabel("Payment");
-		jlabel.setBounds(230,170,70,30);
+		jlabel = new JLabel("Thanh Toán");
+		jlabel.setBounds(340,140,90,30);
 		jlabel.setFont(FLabel);
 		add(jlabel);
 		
 		Payment_ID = new JTextField();
-		Payment_ID.setBounds(315,170,80,30);
+		Payment_ID.setBounds(440,140,100,30);
 		Payment_ID.setFont(FLabelText);
 		add(Payment_ID);
 		
-		jlabel = new JLabel("Date"); // thời gian tạo hóa đơn + hiển thị
-		jlabel.setBounds(60,210,60,30);
+		jlabel = new JLabel("Ngày Hóa Đơn"); // thời gian tạo hóa đơn + hiển thị
+		jlabel.setBounds(60,95,120,30);
 		jlabel.setFont(FLabel);
 		add(jlabel);
 		
 		Datetime = new JLabel("",SwingConstants.CENTER);
-		Datetime.setBounds(130,210,275,30);
+		Datetime.setBounds(180,95,120,30);
 		Datetime.setBackground(Color.WHITE);
 		Datetime.setOpaque(true);
 		Datetime.setFont(FLabelText);
 		add(Datetime);
 		
-		jlabel = new JLabel("Status"); // thời gian tạo hóa đơn + hiển thị
-		jlabel.setBounds(425,170,60,30);
+		jlabel = new JLabel("Trạng Thái"); // thời gian tạo hóa đơn + hiển thị
+		jlabel.setBounds(340,185,90,30);
 		jlabel.setFont(FLabel);
 		add(jlabel);
 		
 		Status_item = new JComboBox<String>();
-		Status_item.setBounds(485,170,80,30);
+		Status_item.setBounds(440,185,100,30);
 		Status_item.addItem("Done");
 		Status_item.addItem("Waiting");
 		add(Status_item);
 		
-		jlabel = new JLabel("Product"); // thời gian tạo hóa đơn + hiển thị
-		jlabel.setBounds(60,37,60,30);
+		jlabel = new JLabel("Sản Phẩm"); // thời gian tạo hóa đơn + hiển thị
+		jlabel.setBounds(340,50,70,30);
 		jlabel.setFont(FLabel);
 		add(jlabel);
 		
 		Products_item = new JComboBox<String>();
-		Products_item.setBounds(130,37,150,30);
+		Products_item.setBounds(440,50,150,30);
 		Products_item.setFont(FLabelText);
 		add(Products_item);
 		
-		addProduct = new JButton(); // thêm hóa đơn
-		addProduct.setBounds(320,31,160,40);
-		addProduct.setFont(FBtnBill);
-		addProduct.setBackground(Color.ORANGE);
-		addProduct.setOpaque(true);
-		addProduct.setText("Thêm mặt hàng");
-		add(addProduct);
+		jlabel = new JLabel("Số lượng"); // dòng tổng tiền + hiển thị 
+		jlabel.setBounds(340,95,70,30);
+		jlabel.setFont(FLabel);
+		add(jlabel);
 		
-		editProduct = new JButton(); // thêm hóa đơn
-		editProduct.setBounds(320,80,160,40);
-		editProduct.setFont(FBtnBill);
-		editProduct.setBackground(Color.ORANGE);
-		editProduct.setOpaque(true);
-		editProduct.setText("Giỏ hàng");
-		add(editProduct);
+		Quantity = new JTextField();
+		Quantity.setBounds(440,95,100,30);
+		Quantity.setFont(FLabel);
+		add(Quantity);
+		
+		addBillProduct = new JButton(); // thêm hóa đơn
+		addBillProduct.setBounds(630,50,160,40);
+		addBillProduct.setFont(FBtnBill);
+		addBillProduct.setBackground(Color.ORANGE);
+		addBillProduct.setOpaque(true);
+		addBillProduct.setText("Thêm mặt hàng");
+		add(addBillProduct);
+		
+		editBillProduct = new JButton(); // thêm hóa đơn
+		editBillProduct.setBounds(630,105,160,40);
+		editBillProduct.setFont(FBtnBill);
+		editBillProduct.setBackground(Color.ORANGE);
+		editBillProduct.setOpaque(true);
+		editBillProduct.setText("Giỏ hàng");
+		add(editBillProduct);
         
 		AddBill = new JButton(); // thêm hóa đơn
-		AddBill.setBounds(800,31,160,40);
+		AddBill.setBounds(800,50,160,40);
 		AddBill.setFont(FBtnBill);
 		AddBill.setBackground(Color.GREEN);
 		AddBill.setOpaque(true);
@@ -199,7 +200,7 @@ public class PanelBill extends JPanel {
 		add(AddBill);
 		
 		DeleteBill = new JButton(); // xóa hóa đơn
-		DeleteBill.setBounds(800,130,160,40);
+		DeleteBill.setBounds(800,215,160,40);
 		DeleteBill.setFont(FBtnBill);
 		DeleteBill.setBackground(Color.RED);
 		DeleteBill.setOpaque(true);
@@ -207,7 +208,7 @@ public class PanelBill extends JPanel {
 		add(DeleteBill);
 		
 		EditBill = new JButton(); // hóa đơn chi tiết 
-		EditBill.setBounds(800,80,160,40);
+		EditBill.setBounds(800,105,160,40);
 		EditBill.setFont(FBtnBill);
 		EditBill.setBackground(Color.YELLOW);
 		EditBill.setOpaque(true);
@@ -215,7 +216,7 @@ public class PanelBill extends JPanel {
 		add(EditBill);
 		
 		DetailsBill = new JButton(); // hóa đơn chi tiết 
-		DetailsBill.setBounds(620,31,165,40);
+		DetailsBill.setBounds(800,160,160,40);
 		DetailsBill.setFont(FBtnBill);
 		DetailsBill.setBackground(Color.BLUE);
 		DetailsBill.setOpaque(true);
@@ -223,11 +224,11 @@ public class PanelBill extends JPanel {
 		add(DetailsBill);
 		
 		SaveBill = new JButton(); // hóa đơn chi tiết 
-		SaveBill.setBounds(620,80,164,40);
+		SaveBill.setBounds(630,160,160,40);
 		SaveBill.setFont(FBtnBill);
 		SaveBill.setBackground(Color.LIGHT_GRAY);
 		SaveBill.setOpaque(true);
-		SaveBill.setText("Save");
+		SaveBill.setText("Lưu Hóa Đơn");
 		add(SaveBill);
 	}
 
@@ -238,13 +239,13 @@ public class PanelBill extends JPanel {
 	        Graphics g2 = (Graphics) g;
 
 	        // Vẽ đường thẳng ngăn cách giữa 2 phần
-	        g2.drawLine(60, 265, 1180, 265);
+	        g2.drawLine(60, 290, 1180, 290);
 	    }
 	 
 	public void CreateBody() {
 		// time
 		jlabel = new JLabel("Thời gian : ");
-		jlabel.setBounds(60,288,80,30);
+		jlabel.setBounds(60,320,80,30);
 		jlabel.setFont(FLabel);
 		add(jlabel);
 		
@@ -254,7 +255,7 @@ public class PanelBill extends JPanel {
 			if(i<10) FDay.addItem("0"+String.valueOf(i));
 			else FDay.addItem(String.valueOf(i));
 		}
-		FDay.setBounds(150,290,60,30);
+		FDay.setBounds(150,320,60,30);
 		add(FDay);
 		
 		FMonth = new JComboBox<String>();
@@ -262,35 +263,35 @@ public class PanelBill extends JPanel {
 			if(i<10) FMonth.addItem("0"+String.valueOf(i));
 			else FMonth.addItem(String.valueOf(i));
 		}
-		FMonth.setBounds(220,290,60,30);
+		FMonth.setBounds(220,320,60,30);
 		add(FMonth);
 		
 		FYear = new JComboBox<String>();
 		FYear.addItem("0000");
 		for(int i=2000;i<=2024;i++)
 			FYear.addItem(String.valueOf(i));
-		FYear.setBounds(290,290,60,30);
+		FYear.setBounds(290,320,60,30);
 		add(FYear);
 		
 
 		// lọc mã
-		jlabel = new JLabel("Find Bill ID : ");
-		jlabel.setBounds(390,288,90,30);
+		jlabel = new JLabel("Tìm Mã Hóa Đơn");
+		jlabel.setBounds(390,320,120,30);
 		jlabel.setFont(FLabel);
 		add(jlabel);
 		
-		jlabel = new JLabel("Sort By : ");
-		jlabel.setBounds(680,288,80,30);
+		jlabel = new JLabel("Sắp Xếp Theo ");
+		jlabel.setBounds(650,320,110,30);
 		jlabel.setFont(FLabel);
 		add(jlabel);
 		
 		FindBillID = new JTextField();
-		FindBillID.setBounds(485,289,80,30);
+		FindBillID.setBounds(520,320,100,30);
 		FindBillID.setFont(FLabelText);
 		add(FindBillID);
 		
 		Fitter = new JComboBox<String>();
-		Fitter.setBounds(756,288,198,30);
+		Fitter.setBounds(760,320,200,30);
 		Fitter.addItem("Mã hóa đơn mới nhất");
 		Fitter.addItem("Mã hóa đơn cũ nhất");
 		Fitter.addItem("Doanh thu từ thấp đến cao");
@@ -298,7 +299,7 @@ public class PanelBill extends JPanel {
 		add(Fitter);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(60, 340, 894, 290);
+		scrollPane.setBounds(60, 380, 900, 290);
 		add(scrollPane);
 		
 		TableBill = new JTable();
@@ -310,28 +311,28 @@ public class PanelBill extends JPanel {
 		
 		// Page
 		PageBefore = new JButton("Trang trước");
-		PageBefore.setBounds(315, 640, 100, 30);
+		PageBefore.setBounds(310, 687, 100, 30);
 		add(PageBefore);
 		
 		PageFirst = new JButton("Trang Đầu");
-		PageFirst.setBounds(215, 640, 90, 30);
+		PageFirst.setBounds(210, 687, 90, 30);
 		add(PageFirst);
 		
 		Page1 = new JButton("1");
-		Page1.setBounds(425, 640, 60, 30);
+		Page1.setBounds(430, 687, 60, 30);
 		Page1.setBackground(Color.orange);
 		add(Page1);
 		
 		Page2 = new JButton("2");
-		Page2.setBounds(505, 640, 60, 30);
+		Page2.setBounds(505, 687, 60, 30);
 		add(Page2);
 		
 		Page3 = new JButton("3");
-		Page3.setBounds(577, 640, 60, 30);
+		Page3.setBounds(575, 687, 60, 30);
 		add(Page3);
 		
 		PageNext = new JButton("Trang kế tiếp");
-		PageNext.setBounds(660, 640, 100, 30);
+		PageNext.setBounds(660, 687, 100, 30);
 		add(PageNext);
 		
 	}
@@ -578,20 +579,20 @@ public class PanelBill extends JPanel {
 		SaveBill = saveBill;
 	}
 
-	public JButton getAddProduct() {
-		return addProduct;
+	public JButton getaddBillProduct() {
+		return addBillProduct;
 	}
 
-	public void setAddProduct(JButton addProduct) {
-		this.addProduct = addProduct;
+	public void setaddBillProduct(JButton addBillProduct) {
+		this.addBillProduct = addBillProduct;
 	}
 
-	public JButton getEditProduct() {
-		return editProduct;
+	public JButton geteditBillProduct() {
+		return editBillProduct;
 	}
 
-	public void setEditProduct(JButton editProduct) {
-		this.editProduct = editProduct;
+	public void seteditBillProduct(JButton editBillProduct) {
+		this.editBillProduct = editBillProduct;
 	}
 
 	public JButton getPageFirst() {
