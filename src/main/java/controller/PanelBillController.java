@@ -71,15 +71,15 @@ public class PanelBillController {
 	private PaymentDAO paymentDao = new PaymentDAO();
 	private UserDAO userDao = new UserDAO();
 	private ArrayList<ArrayList<BillModel>> AllPageInformation = new ArrayList<>();
-	private String clickPage ;
-	private boolean StopPage = false;
+	private int PageSize =5 ;
+	private int PageNumber;
 	
 	public PanelBillController(PanelBill panelBill) {
 		this.panelBill = panelBill;
 		ArrayList<BillModel> rowData = billDao.findAll();	
 		Pagination(rowData);
 		renderTable(AllPageInformation.getFirst());
-		UpdateEvent();
+		addEventHeader();
 		addEvent();	
 		addPageButton();
 	}
@@ -475,7 +475,6 @@ public class PanelBillController {
 	}
 	
 	public void resetTable() {
-		
 		DefaultTableModel model = new DefaultTableModel() {
 			public boolean isCellEditable(int row, int column) {
 				return false;
@@ -490,7 +489,7 @@ public class PanelBillController {
 		panelBill.getTableBill().setModel(model);
 	}
 	
-	public void UpdateEvent() {
+	public void addEventHeader() {
 		// time run
 		ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -501,12 +500,15 @@ public class PanelBillController {
             panelBill.getDatetime().setText(formatted);
         };
         scheduler.scheduleAtFixedRate(task, 0, 1, TimeUnit.SECONDS);
+       
         
-        // set up product
+        // set up product - danh sách sản phẩm 
         for(ProductModel item: productList) {
         	panelBill.getProducts_item().addItem(item.getName());
         }
         AutoCompleteDecorator.decorate(panelBill.getProducts_item());
+        
+        
 	}
 	
 	public void Pagination(ArrayList<BillModel> rowData) {
@@ -514,22 +516,11 @@ public class PanelBillController {
 		ArrayList<ArrayList<BillModel>> PageInformation = new ArrayList<>();
 		
 		int TableRowLength =  rowData.size();
-		//Collections.reverse(BillListPage);
-		
-		//System.out.println(TableRowLength);
-		int PageSize = 5;
-		// chia 1 page chứa 5 row
-		int PageNumber;
-		int rowExcess;
-		//System.out.println(PageNumber+" "+rowExcess);
 		if(TableRowLength%PageSize == 0) {
 			PageNumber = TableRowLength/PageSize;
-			rowExcess = 0;
 		}else {
 			PageNumber = TableRowLength/PageSize +1;
-			rowExcess = TableRowLength - (PageNumber - 1)*PageSize;
 		}
-		System.out.println(PageNumber+" "+PageSize);
 		for(int i=0;i<PageNumber;i++) {
 			ArrayList<BillModel> tmp = new ArrayList<BillModel>();
 			PageInformation.add(tmp);
@@ -545,10 +536,6 @@ public class PanelBillController {
 	}
 	
 	public void addPageButton() {
-		int before = Integer.parseInt((String) panelBill.getPage1().getText());
-		int next = Integer.parseInt((String) panelBill.getPage3().getText());
-		
-		
 		panelBill.getPageFirst().addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -560,51 +547,22 @@ public class PanelBillController {
 			
 		});
 		
-		panelBill.getPageBefore().addActionListener(new ActionListener() { // vẫn bị lùi âm
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				int p1 = Integer.parseInt(panelBill.getPage1().getText()); // lấy ra nhãn hiện tại
-				int p2 = Integer.parseInt(panelBill.getPage2().getText());
-				int p3 = Integer.parseInt(panelBill.getPage3().getText());
-				
-				if(StopPage) {
-					panelBill.getPage1().setText(String.valueOf(p1));
-					panelBill.getPage2().setText(String.valueOf(p2));
-					panelBill.getPage3().setText(String.valueOf(p3));
-				}
-				else {
-					panelBill.getPage1().setText(String.valueOf(p1-3));
-					p1-=3;
-					panelBill.getPage2().setText(String.valueOf(p2-3));
-					p2-=3;
-					panelBill.getPage3().setText(String.valueOf(p3-3));
-					p3-=3;
-				}
-			}
-		});
-		
 		panelBill.getPage1().addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				int p1 = Integer.parseInt(panelBill.getPage1().getText());
 				if(p1 ==1) {
 					renderTable(AllPageInformation.get(0));
-					if(AllPageInformation.get(0).size() < 5) {
-						StopPage = true;
-					}
 				}
 				else {
-					if(AllPageInformation.get(p1-1).size() == 0) {
+					if(AllPageInformation.size() < p1 ) {
 						JOptionPane.showMessageDialog(panelBill, "Không có dữ liệu");
+						resetTable();
 					}
 					else {
 						renderTable(AllPageInformation.get(p1-1));
-						if(AllPageInformation.get(p1 -1).size() < 5) {
-							StopPage = true;
-						}
 					}
 				}
-				clickPage = (String) panelBill.getPage1().getText();
 			}
 		});
 		
@@ -612,24 +570,20 @@ public class PanelBillController {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				int p2 = Integer.parseInt(panelBill.getPage2().getText());
+				System.out.println(AllPageInformation.size());
 				if(p2 == 2) {
 					renderTable(AllPageInformation.get(1));
-					if(AllPageInformation.get(1).size() < 5) {
-						StopPage = true;
-					}
 				}
 				else {
-					if(AllPageInformation.get(p2-1).size() == 0) {
+					// 10 0-> 9
+					if(AllPageInformation.size() < p2 ) {
 						JOptionPane.showMessageDialog(panelBill, "Không có dữ liệu");
+						resetTable();
 					}
 					else {
 						renderTable(AllPageInformation.get(p2-1));
-						if(AllPageInformation.get(p2 -1).size() < 5) {
-							StopPage = true;
-						}
 					}
 				}
-				clickPage = (String) panelBill.getPage2().getText();
 			}
 		});
 		
@@ -639,33 +593,29 @@ public class PanelBillController {
 				int p3 = Integer.parseInt(panelBill.getPage3().getText());
 				if(p3 == 3) {
 					renderTable(AllPageInformation.get(2));
-					if(AllPageInformation.get(2).size() < 5) {
-						StopPage = true;
-					}
 				}
 				else {
-					if(AllPageInformation.get(p3-1).size() == 0) {
+					if(AllPageInformation.size() < p3 ) {
 						JOptionPane.showMessageDialog(panelBill, "Không có dữ liệu");
+						resetTable();
 					}
 					else {
 						renderTable(AllPageInformation.get(p3-1));
-						if(AllPageInformation.get(p3 -1).size() < 5) {
-							StopPage = true;
-						}
 					}
 				}
 			}
 		});
 		
 		
-		panelBill.getPageNext().addActionListener(new ActionListener() { // tiến vô hạn
+		panelBill.getPageNext().addActionListener(new ActionListener() { 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				int p1 = Integer.parseInt(panelBill.getPage1().getText()); // lấy ra nhãn hiện tại
 				int p2 = Integer.parseInt(panelBill.getPage2().getText());
 				int p3 = Integer.parseInt(panelBill.getPage3().getText());
 				
-				if(StopPage) {
+				if(p3 >= PageNumber) {
+					JOptionPane.showMessageDialog(panelBill, "Không có dữ liệu");
 					panelBill.getPage1().setText(String.valueOf(p1));
 					panelBill.getPage2().setText(String.valueOf(p2));
 					panelBill.getPage3().setText(String.valueOf(p3));
@@ -673,13 +623,47 @@ public class PanelBillController {
 				else {
 					panelBill.getPage1().setText(String.valueOf(p1+3));
 					p1+=3;
+					renderTable(AllPageInformation.get(p1-1));
 					panelBill.getPage2().setText(String.valueOf(p2+3));
 					p2+=3;
 					panelBill.getPage3().setText(String.valueOf(p3+3));
 					p3+=3;
 				}
+				
+				
+			}
+		});
+		
+		// -2 -1 0 1
+		panelBill.getPageBefore().addActionListener(new ActionListener() { // vẫn bị lùi âm
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int p1 = Integer.parseInt(panelBill.getPage1().getText()); // lấy ra nhãn hiện tại
+				int p2 = Integer.parseInt(panelBill.getPage2().getText());
+				int p3 = Integer.parseInt(panelBill.getPage3().getText());
+				
+				if(p1 ==1) {
+					JOptionPane.showMessageDialog(panelBill, "Không có dữ liệu");
+					panelBill.getPage1().setText(String.valueOf(p1));
+					panelBill.getPage2().setText(String.valueOf(p2));
+					panelBill.getPage3().setText(String.valueOf(p3));
+				}
+				else {
+					panelBill.getPage1().setText(String.valueOf(p1-3));
+					p1-=3;
+					renderTable(AllPageInformation.get(p3+1));
+					panelBill.getPage2().setText(String.valueOf(p2-3));
+					p2-=3;
+					panelBill.getPage3().setText(String.valueOf(p3-3));
+					p3-=3;
+				}
 			}
 		});
 	}
 	
+	/*
+	public void addEventBody() {
+		
+	}
+	*/
 }

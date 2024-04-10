@@ -191,7 +191,7 @@ public class PanelBill extends JPanel {
 		add(editProduct);
         
 		AddBill = new JButton(); // thêm hóa đơn
-		AddBill.setBounds(800,50,160,40);
+		AddBill.setBounds(800,31,160,40);
 		AddBill.setFont(FBtnBill);
 		AddBill.setBackground(Color.GREEN);
 		AddBill.setOpaque(true);
@@ -199,7 +199,7 @@ public class PanelBill extends JPanel {
 		add(AddBill);
 		
 		DeleteBill = new JButton(); // xóa hóa đơn
-		DeleteBill.setBounds(800,150,160,40);
+		DeleteBill.setBounds(800,130,160,40);
 		DeleteBill.setFont(FBtnBill);
 		DeleteBill.setBackground(Color.RED);
 		DeleteBill.setOpaque(true);
@@ -207,7 +207,7 @@ public class PanelBill extends JPanel {
 		add(DeleteBill);
 		
 		EditBill = new JButton(); // hóa đơn chi tiết 
-		EditBill.setBounds(800,100,160,40);
+		EditBill.setBounds(800,80,160,40);
 		EditBill.setFont(FBtnBill);
 		EditBill.setBackground(Color.YELLOW);
 		EditBill.setOpaque(true);
@@ -215,7 +215,7 @@ public class PanelBill extends JPanel {
 		add(EditBill);
 		
 		DetailsBill = new JButton(); // hóa đơn chi tiết 
-		DetailsBill.setBounds(620,50,165,40);
+		DetailsBill.setBounds(620,31,165,40);
 		DetailsBill.setFont(FBtnBill);
 		DetailsBill.setBackground(Color.BLUE);
 		DetailsBill.setOpaque(true);
@@ -223,7 +223,7 @@ public class PanelBill extends JPanel {
 		add(DetailsBill);
 		
 		SaveBill = new JButton(); // hóa đơn chi tiết 
-		SaveBill.setBounds(620,104,164,40);
+		SaveBill.setBounds(620,80,164,40);
 		SaveBill.setFont(FBtnBill);
 		SaveBill.setBackground(Color.LIGHT_GRAY);
 		SaveBill.setOpaque(true);
@@ -248,8 +248,9 @@ public class PanelBill extends JPanel {
 		jlabel.setFont(FLabel);
 		add(jlabel);
 		
+		
 		FDay = new JComboBox<String>();
-		for(int i=1;i<=31;i++) {
+		for(int i=0;i<=31;i++) {
 			if(i<10) FDay.addItem("0"+String.valueOf(i));
 			else FDay.addItem(String.valueOf(i));
 		}
@@ -257,7 +258,7 @@ public class PanelBill extends JPanel {
 		add(FDay);
 		
 		FMonth = new JComboBox<String>();
-		for(int i=1;i<=12;i++) {
+		for(int i=0;i<=12;i++) {
 			if(i<10) FMonth.addItem("0"+String.valueOf(i));
 			else FMonth.addItem(String.valueOf(i));
 		}
@@ -265,6 +266,7 @@ public class PanelBill extends JPanel {
 		add(FMonth);
 		
 		FYear = new JComboBox<String>();
+		FYear.addItem("0000");
 		for(int i=2000;i<=2024;i++)
 			FYear.addItem(String.valueOf(i));
 		FYear.setBounds(290,290,60,30);
@@ -289,8 +291,8 @@ public class PanelBill extends JPanel {
 		
 		Fitter = new JComboBox<String>();
 		Fitter.setBounds(756,288,198,30);
-		Fitter.addItem("Mã hóa đơn cũ nhất");
 		Fitter.addItem("Mã hóa đơn mới nhất");
+		Fitter.addItem("Mã hóa đơn cũ nhất");
 		Fitter.addItem("Doanh thu từ thấp đến cao");
 		Fitter.addItem("Doanh thu từ cao đến thấp");
 		add(Fitter);
