@@ -1,16 +1,30 @@
 package controller;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Vector;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
+import com.google.protobuf.StringValue;
+import com.google.protobuf.Value;
+
 import dao.CustomerDao;
+import model.CustomerModel;
 import model.CustomerModel;
 import util.MapUtil;
 import util.ValidateUtils;
@@ -24,7 +38,14 @@ public class PanelCustomerController{
 		this.panelCustomer = panelCustomer;
 		ArrayList<CustomerModel> rowData = CustomerDao.CustomerList();
 		renderTable(rowData);
+		renderListID();
 		addEvent();
+	}
+	public void renderListID() {
+		Object[] listID= customerdao.CustomerList().stream().map(itemCustomer->itemCustomer.getID()).toArray();
+		listID = Stream.concat(Stream.of("Ma Khach Hang"), Stream.of(listID)).toArray();
+		panelCustomer.getComboBox_MaKH().setModel(new DefaultComboBoxModel<>(listID));
+		ArrayList<CustomerModel> rowData = CustomerDao.CustomerList();		
 	}
 
 	private void renderTable(ArrayList<CustomerModel> rowData) {
@@ -143,7 +164,64 @@ public class PanelCustomerController{
 					}
 				}
 			});
-		}
+			
+			panelCustomer.getTextField_Find().addKeyListener(new KeyAdapter() {
+				public void keyReleased(KeyEvent e) {
+					JTextField textField = (JTextField) e.getSource();
+					String text = textField.getText();
+					renderTableByFullName(text);
+				}
+
+				public void keyTyped(KeyEvent e) {
+				}
+
+				public void keyPressed(KeyEvent e) {
+				}
+			});
+			panelCustomer.getComboBox_MaKH().addActionListener(new ActionListener() {
+		        @SuppressWarnings("unchecked")
+				@Override
+		        public void actionPerformed(ActionEvent e) {
+					JComboBox<Object> comboBox = (JComboBox<Object>) e.getSource();
+		            String selectedID = (String) comboBox.getSelectedItem().toString();
+
+		            if (!("Ma Khach Hang").equals(selectedID)) {
+		                ArrayList<CustomerModel> filteredData = new ArrayList<>();
+		                // Lọc dữ liệu tương ứng với ID được chọn
+		                for (CustomerModel customer : CustomerDao.CustomerList()) {
+		                    if (selectedID.equals(Integer.toString(customer.getID()))) {
+		                        filteredData.add(customer);
+		                    }
+		                }
+		                renderTable(filteredData);
+		            } else {
+		                renderTable(CustomerDao.CustomerList());
+		            }
+		        }
+		    });
+			
+			panelCustomer.getTextField_Find().addFocusListener(new FocusListener() {
+				
+				@Override
+				public void focusGained(FocusEvent e) {
+			        JTextField field = (JTextField) e.getSource();
+			        if (field.getText().equals("Tìm kiếm tên khách hàng")) {
+			            field.setText("");
+			        }
+			    }
+			    
+			    @Override
+			    public void focusLost(FocusEvent e) {
+			        JTextField field = (JTextField) e.getSource();
+			        if (field.getText().isEmpty()) {
+			            field.setText("Tìm kiếm tên khách hàng");
+			            field.setForeground(Color.GRAY);
+			        }
+			    }
+			});
+			panelCustomer.getTextField_Find().setText("Tìm kiếm tên khách hàng");
+			panelCustomer.getTextField_Find().setForeground(Color.GRAY);
+		}	
 
 	public boolean validateForm(CustomerModel cus,StringBuilder res) {			
 		if(ValidateUtils.checkEmptyAndNull(cus.getName())){
@@ -227,6 +305,17 @@ public class PanelCustomerController{
 		panelCustomer.getTextfield_Email().setEnabled(false);
 		panelCustomer.getTextfield_Name().setEnabled(false);
 	}
+	public void renderTableByFullName(String text) {
+		ArrayList<CustomerModel> rowData = new ArrayList<>();
+		if(text.equals("") || text == null) {
+			rowData = customerdao.CustomerList();
+		}else {
+			rowData =customerdao.findByFullname(text);					
+		}
+		renderTable(rowData);
+	}
+	
+
 }
 	
 
