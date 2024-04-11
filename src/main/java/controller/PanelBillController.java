@@ -1,6 +1,7 @@
 package controller;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -31,6 +32,7 @@ import java.util.stream.Collectors;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -63,6 +65,8 @@ import util.ValidateUtils;
 import views.menu.PanelBill;
 
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
+
+import com.mysql.cj.xdevapi.Table;
 
 public class PanelBillController {
 	private PanelBill panelBill;
@@ -408,6 +412,71 @@ public class PanelBillController {
 				}
 			}
 		});
+		/*
+		panelBill.getDetailsBill().addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int rowSelect = panelBill.getTableBill().getSelectedRow();
+				String id = MapUtil.convertObjectToString(panelBill.getTableBill().getValueAt(rowSelect, 0));
+        		String cusID = MapUtil.convertObjectToString(panelBill.getTableBill().getValueAt(rowSelect, 1));
+        		String userID = MapUtil.convertObjectToString(panelBill.getTableBill().getValueAt(rowSelect, 2));
+        		String date = MapUtil.convertObjectToString(panelBill.getTableBill().getValueAt(rowSelect, 3));
+        		String sumPrice = MapUtil.convertObjectToString(panelBill.getTableBill().getValueAt(rowSelect, 4));
+        		
+				if(rowSelect!=-1) {
+					BillModel tmpBill = billDao.findByID(id);
+					ArrayList<BillDetailsModel> tmpBillDetail = billDetailsDao.findByBillID(id);
+					//System.out.println(tmpBillDetail.size());
+					JFrame FrameDetails = new JFrame();
+					FrameDetails.set
+					JDialog Details = new JDialog();
+					Details.setLayout(new GridLayout(4,1));
+					//Details.setSize(400, 600);
+					Details.setLocationRelativeTo(null);
+					JLabel rowBillId = new JLabel("Mã hóa đơn : "+id);
+					Details.add(rowBillId);
+					JLabel rowCusId = new JLabel("Mã Khách Hàng : "+cusID);
+					Details.add(rowCusId);
+					JLabel rowUserId = new JLabel("Mã Nhân Viên : "+userID);
+					Details.add(rowUserId);
+					JLabel rowDate = new JLabel("Ngày hóa đơn : "+date);
+					Details.add(rowDate);
+				    JLabel rowProductList = new JLabel("Sản Phẩm : ");
+					Details.add(rowProductList);
+					
+					JScrollPane scrollPane = new JScrollPane(); 
+					Details.add(scrollPane);
+
+					JTable tableDetails = new JTable();
+					scrollPane.setViewportView(tableDetails);
+					
+					DefaultTableModel DeftableDetails = new DefaultTableModel() {
+					};
+					String[] columnName = {"Tên sản phẩm","Số lượng","Thành Tiền"};
+					for(String x: columnName) {
+						DeftableDetails.addColumn(x);
+						
+					}
+					
+					for(BillDetailsModel x : tmpBillDetail) {
+						Vector<String> rowdataDetails = new Vector<String>();
+						rowdataDetails.add(x.getProduct().getName());
+						rowdataDetails.add(x.getQuantityProduct()+"");
+						rowdataDetails.add((x.getQuantityProduct()*x.getProduct().getPrice())+"");
+						DeftableDetails.addRow(rowdataDetails);
+					}
+					tableDetails.setModel(DeftableDetails);
+				
+					
+					Details.setVisible(true);
+				}
+				else {
+					JOptionPane.showMessageDialog(panelBill,"Bạn chưa chọn dữ liệu");
+				}
+			}
+		});
+		*/
 	}	
 	
 	public boolean validateForm2(BillModel bill,StringBuilder res) {		
@@ -761,8 +830,11 @@ public class PanelBillController {
 					if(checkDate(day, month, year)) {
 						String date = year+"-"+month+"-"+day;
 						ArrayList<BillModel> FitterDate = billDao.findByDate(date);
-						Pagination(FitterDate);
-						renderTable(AllPageInformation.get(0));
+						if(FitterDate.size()>0) {
+							Pagination(FitterDate);
+							renderTable(AllPageInformation.get(0));
+						}
+						else JOptionPane.showMessageDialog(panelBill,"Không có hóa đơn cho ngày "+day+"-"+month+"-"+year);
 					}
 					else {
 						JOptionPane.showMessageDialog(panelBill,"Ngày tháng không hợp lệ");
