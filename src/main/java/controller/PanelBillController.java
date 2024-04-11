@@ -5,9 +5,12 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.print.Pageable;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -77,8 +80,8 @@ public class PanelBillController {
 	
 	public PanelBillController(PanelBill panelBill) {
 		this.panelBill = panelBill;
-		ArrayList<BillModel> rowData = billDao.findAll();	
-		Pagination(rowData);
+		ArrayList<BillModel> rowDataList = billDao.findAll();	
+		Pagination(rowDataList);
 		renderTable(AllPageInformation.getFirst());
 		addEventHeader();
 		addEvent();	
@@ -517,9 +520,6 @@ public class PanelBillController {
 	
 	public void Pagination(ArrayList<BillModel> rowData) {
 		Collections.reverse(rowData);
-		if(panelBill.getSort().getSelectedIndex()==1) {
-			Collections.reverse(rowData);
-		}
 		ArrayList<ArrayList<BillModel>> PageInformation = new ArrayList<>();
 		
 		int TableRowLength =  rowData.size();
@@ -748,6 +748,7 @@ public class PanelBillController {
 	}
 	
 	public void addEventBody() {
+		
 		// lọc
 	    panelBill.getFitterDay().addActionListener(new ActionListener() {	
 				@Override
@@ -768,6 +769,60 @@ public class PanelBillController {
 					}
 				}
 			});
+	    
+	    panelBill.getFindBillID().addKeyListener(new KeyListener() {
+			
+			@Override
+			public void keyTyped(KeyEvent e) {
+			}
+			
+			@Override
+			public void keyReleased(KeyEvent e) {// nhấn phím trả về bắt đầu với kí tự
+				String keyText = panelBill.getFindBillID().getText();
+				ArrayList<BillModel> res = new ArrayList<BillModel>();
+				
+				for(BillModel x: billDao.findAll()) {
+					String billID = String.valueOf(x.getID());
+					if(billID.startsWith(keyText)) {
+						res.add(x);
+					}
+				}
+				Pagination(res);
+				renderTable(AllPageInformation.get(0));
+			}
+			
+			@Override
+			public void keyPressed(KeyEvent e) {// nhả
+			}
+		});
+	    
+	    panelBill.getSort().addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(panelBill.getSort().getSelectedIndex()==1){
+					ArrayList<BillModel> tmp = billDao.findAll();
+					Collections.reverse(tmp);
+					Pagination(tmp);
+					renderTable(AllPageInformation.get(0));
+					panelBill.getPage1().setBackground(Color.orange);
+					panelBill.getPage2().setBackground(Color.white);
+					panelBill.getPage3().setBackground(Color.white);
+					panelBill.getPage1().setText("1");
+					panelBill.getPage2().setText("2");
+					panelBill.getPage3().setText("3");
+	           }
+				else if(panelBill.getSort().getSelectedIndex()==0) {
+					Pagination(billDao.findAll());
+					renderTable(AllPageInformation.get(0));
+					panelBill.getPage1().setBackground(Color.orange);
+					panelBill.getPage2().setBackground(Color.white);
+					panelBill.getPage3().setBackground(Color.white);
+					panelBill.getPage1().setText("1");
+					panelBill.getPage2().setText("2");
+					panelBill.getPage3().setText("3");
+				}
+			}
+		});
 	}
 	
 	public boolean checkDate(String day, String month, String year) {
