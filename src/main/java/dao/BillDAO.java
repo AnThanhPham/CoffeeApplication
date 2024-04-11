@@ -92,15 +92,15 @@ public class BillDAO extends DAO implements AbstractDAO<BillModel>{
 	    return data;
 			
 	}
-	public BillModel findByDate(String day) {
-		BillModel res = null;
+	public ArrayList<BillModel> findByDate(String day) {
+		ArrayList<BillModel> res = new ArrayList<BillModel>();
     	try {
     		String sql = "select * from bill where BillDate = ? ";
     		PreparedStatement ps = conn.prepareStatement(sql);
     		ps.setString(1, day);
     		ResultSet rs = ps.executeQuery();
-    		BillModel tmp = new BillModel();
-    		if(rs.next()) {
+    		while(rs.next()) {
+    			BillModel tmp = new BillModel();
     			tmp.setID(rs.getInt(1));
 				if(rs.getString(2) != null) {
 					SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -114,9 +114,7 @@ public class BillDAO extends DAO implements AbstractDAO<BillModel>{
 				tmp.setUser(userDao.findByID(rs.getInt(6)+""));
 				tmp.setTable(tableDao.findByID(rs.getInt(7)+""));
 				tmp.setPayment(paymentDao.findByID(rs.getInt(8)+""));
-    		}
-    		if(Integer.toString(tmp.getID()) !=null) {
-    			res = tmp;
+				res.add(tmp);
     		}
     	}catch(Exception ex) {
     		ex.printStackTrace();

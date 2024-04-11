@@ -384,6 +384,7 @@ public class PanelBillController {
 		});
 		
 		panelBill.getDeleteBill().addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				int[] rowSelects = panelBill.getTableBill().getSelectedRows();
 				if(rowSelects.length >0) {
@@ -516,6 +517,9 @@ public class PanelBillController {
 	
 	public void Pagination(ArrayList<BillModel> rowData) {
 		Collections.reverse(rowData);
+		if(panelBill.getSort().getSelectedIndex()==1) {
+			Collections.reverse(rowData);
+		}
 		ArrayList<ArrayList<BillModel>> PageInformation = new ArrayList<>();
 		
 		int TableRowLength =  rowData.size();
@@ -739,18 +743,31 @@ public class PanelBillController {
 				}
 			}
 		});
+		
+		
 	}
 	
-	
 	public void addEventBody() {
-		int  day =  Integer.parseInt(panelBill.getFDay().getSelectedItem().toString());
-		System.out.println(day);
-		
-		int  month =  Integer.parseInt(panelBill.getFMonth().getSelectedItem().toString());
-		System.out.println(month);
-		
-		int  year =  Integer.parseInt(panelBill.getFYear().getSelectedItem().toString());
-		System.out.println(day +" "+month+" "+year);
+		// lọc
+	    panelBill.getFitterDay().addActionListener(new ActionListener() {	
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					String day = panelBill.getFDay().getSelectedItem().toString();
+					
+					String  month = panelBill.getFMonth().getSelectedItem().toString();
+					
+					String  year = panelBill.getFYear().getSelectedItem().toString();
+					if(checkDate(day, month, year)) {
+						String date = year+"-"+month+"-"+day;
+						ArrayList<BillModel> FitterDate = billDao.findByDate(date);
+						Pagination(FitterDate);
+						renderTable(AllPageInformation.get(0));
+					}
+					else {
+						JOptionPane.showMessageDialog(panelBill,"Ngày tháng không hợp lệ");
+					}
+				}
+			});
 	}
 	
 	public boolean checkDate(String day, String month, String year) {
@@ -769,8 +786,12 @@ public class PanelBillController {
 			}
 		}
 		
-		if(m==4 || m==6 || m==8 || m==10 || m== 12) {
-			if(d <=30)
+		if(m==4 || m==6 || m==9 || m==11 ) {
+			if(d>=1 && d <=30)
+			    return true;
+		}
+		if(m==1 || m==3 || m==5 || m==7 || m== 8 || m==10 || m ==12) {
+			if(d>=1  && d <=31)
 			    return true;
 		}
 			return false;
