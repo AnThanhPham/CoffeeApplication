@@ -81,6 +81,7 @@ public class PanelBillController {
 	private ArrayList<ArrayList<BillModel>> AllPageInformation = new ArrayList<>();
 	private int PageSize =5 ;
 	private int PageNumber;
+	private int ButtonPageNumber = 3;
 	
 	public PanelBillController(PanelBill panelBill) {
 		this.panelBill = panelBill;
@@ -89,8 +90,8 @@ public class PanelBillController {
 		renderTable(AllPageInformation.getFirst());
 		addEventHeader();
 		addEvent();	
-		addPageButton();
 		addEventBody();
+		addPageButton();
 	}
 	public void renderTable(ArrayList<BillModel> rowData) {
 		DefaultTableModel model = new DefaultTableModel(); 
@@ -266,7 +267,7 @@ public class PanelBillController {
 				String Table_ID = panelBill.getTable_ID().getText();
 				String Payment_ID = panelBill.getPayment_ID().getText();
 				String Status = (String) panelBill.getStatus_item().getSelectedItem();
-				String dateWork = panelBill.getDatetime().getText();
+				String dateWork = panelBill.getBill_Date().getText();
 				
 				// Lấy Bill 
                 BillModel tmp = new BillModel();
@@ -531,6 +532,11 @@ public class PanelBillController {
 		panelBill.getQuantity().setText("");
 		panelBill.getTable_ID().setText("");
 		panelBill.getPayment_ID().setText("");
+		
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+		LocalDateTime current = LocalDateTime.now();
+        String formatted = current.format(formatter);
+        panelBill.getBill_Date().setText(formatted);
 	}
 	public void EnableInput() {
 		//panelBill.getBill_ID().setEnabled(true);
@@ -538,8 +544,8 @@ public class PanelBillController {
 		panelBill.getUser_ID().setEnabled(true);
 		panelBill.getQuantity().setEnabled(true);
 		panelBill.getTable_ID().setEnabled(true);
-		panelBill.getPayment_ID().setEnabled(true);
-		
+		panelBill.getPayment_ID().setEnabled(true);	
+		panelBill.getBill_Date().setEnabled(true);
 	}
 	public void DisableInput() {
 		panelBill.getBill_ID().setEnabled(false);
@@ -548,6 +554,7 @@ public class PanelBillController {
 		panelBill.getQuantity().setEnabled(false);
 		panelBill.getTable_ID().setEnabled(false);
 		panelBill.getPayment_ID().setEnabled(false);
+		panelBill.getBill_Date().setEnabled(false);
 	}
 	
 	public void resetTable() {
@@ -567,13 +574,14 @@ public class PanelBillController {
 	
 	public void addEventHeader() {
 		// time run
+		
 		ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
 
         Runnable task = () -> {
             LocalDateTime current = LocalDateTime.now();
             String formatted = current.format(formatter);
-            panelBill.getDatetime().setText(formatted);
+            panelBill.getTodayDate().setText(formatted);
         };
         scheduler.scheduleAtFixedRate(task, 0, 1, TimeUnit.SECONDS);
        
@@ -616,9 +624,7 @@ public class PanelBillController {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				renderTable(AllPageInformation.get(0));
-				panelBill.getPage1().setText(String.valueOf(1));
-				panelBill.getPage2().setText(String.valueOf(2));
-				panelBill.getPage3().setText(String.valueOf(3));
+				renderButton();
 			}
 			
 		});
@@ -627,21 +633,8 @@ public class PanelBillController {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				int p1 = Integer.parseInt(panelBill.getPage1().getText());
-				panelBill.getPage1().setBackground(Color.orange);
-				panelBill.getPage2().setBackground(Color.white);
-				panelBill.getPage3().setBackground(Color.white);
-				if(p1 ==1) {
-					renderTable(AllPageInformation.get(0));
-				}
-				else {
-					if(AllPageInformation.size() < p1 ) {
-						JOptionPane.showMessageDialog(panelBill, "Không có dữ liệu");
-						resetTable();
-					}
-					else {
-						renderTable(AllPageInformation.get(p1-1));
-					}
-				}
+				setColorPage1();
+				renderTable(AllPageInformation.get(p1-1));
 			}
 		});
 		
@@ -649,24 +642,8 @@ public class PanelBillController {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				int p2 = Integer.parseInt(panelBill.getPage2().getText());
-				panelBill.getPage1().setBackground(Color.white);
-				panelBill.getPage2().setBackground(Color.orange);
-				panelBill.getPage3().setBackground(Color.white);
-				
-				if(p2 == 2) {
-					renderTable(AllPageInformation.get(1));
-					
-				}
-				else {
-					// 10 0-> 9
-					if(AllPageInformation.size() < p2 ) {
-						JOptionPane.showMessageDialog(panelBill, "Không có dữ liệu");
-						resetTable();
-					}
-					else {
-						renderTable(AllPageInformation.get(p2-1));
-					}
-				}
+				setColorPage2();
+				renderTable(AllPageInformation.get(p2-1));
 			}
 		});
 		
@@ -674,21 +651,8 @@ public class PanelBillController {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				int p3 = Integer.parseInt(panelBill.getPage3().getText());
-				panelBill.getPage1().setBackground(Color.white);
-				panelBill.getPage2().setBackground(Color.white);
-				panelBill.getPage3().setBackground(Color.orange);
-				if(p3 == 3) {
-					renderTable(AllPageInformation.get(2));
-				}
-				else {
-					if(AllPageInformation.size() < p3 ) {
-						JOptionPane.showMessageDialog(panelBill, "Không có dữ liệu");
-						resetTable();
-					}
-					else {
-						renderTable(AllPageInformation.get(p3-1));
-					}
-				}
+				setColorPage3();
+				renderTable(AllPageInformation.get(p3-1));
 			}
 		});
 		
@@ -705,59 +669,75 @@ public class PanelBillController {
 				String Background3 =  panelBill.getPage3().getBackground().toString();
 			//	System.out.println(Background1+" 3"+Background2+" 3"+Background3);
 			   
-				int presentPage = 0 ;
+				int CurrentPage = 0 ;
 				
 			    if(Background1.equals("java.awt.Color[r=255,g=200,b=0]")) {
-			    	presentPage = p1;
+			    	CurrentPage = p1;
 			    }
 			    else if(Background2.equals("java.awt.Color[r=255,g=200,b=0]")) {
-			    	presentPage = p2;
+			    	CurrentPage = p2;
 			    }
 			    else if(Background3.equals("java.awt.Color[r=255,g=200,b=0]")) {
-			    	presentPage = p3;
+			    	CurrentPage = p3;
 			    }
 			    
-			    // 3 next = 4
-			   // System.out.println(presentPage);
-				if(p3 >= PageNumber) { 
-						panelBill.getPage1().setText(String.valueOf(PageNumber-2));
-						panelBill.getPage2().setText(String.valueOf(PageNumber-1));
-						panelBill.getPage3().setText(String.valueOf(PageNumber));
-						if(presentPage==PageNumber) { // 10 - 10 vẫn phải cho data 11 - 10 mới in ra thông báo
-							JOptionPane.showMessageDialog(panelBill, "Không có dữ liệu");
-						}
-						renderTable(AllPageInformation.get(presentPage));
-						++presentPage;//9
-						
-					if(Background1.equals("java.awt.Color[r=255,g=200,b=0]")) {
-						panelBill.getPage1().setBackground(Color.white);
-				    	panelBill.getPage2().setBackground(Color.orange);
-				    	panelBill.getPage3().setBackground(Color.white);
-				    }
-				    else if(Background2.equals("java.awt.Color[r=255,g=200,b=0]")) {
-				    	panelBill.getPage1().setBackground(Color.white);
-				    	panelBill.getPage2().setBackground(Color.white);
-				    	panelBill.getPage3().setBackground(Color.orange);
-				    }
-				}
-				else {
-					p1+=1;
-					panelBill.getPage1().setText(String.valueOf(p1));
-					p2+=1;
-					panelBill.getPage2().setText(String.valueOf(p2));
-					p3+=1;
-					panelBill.getPage3().setText(String.valueOf(p3));
-					renderTable(AllPageInformation.get(presentPage)); // present = vị trí hiện tại = next
-				}
-				
+			    if(CurrentPage==PageNumber) {// 1 or 2
+			    	if(CurrentPage==p1) {
+			    		panelBill.getPage1().setText(p1+"");
+			    		setColorPage1();
+			    		renderTable(AllPageInformation.get(--CurrentPage));
+			    	}
+			    	else if (CurrentPage==p2){
+			    		panelBill.getPage1().setText(p1+"");
+			    		panelBill.getPage2().setText(p2+"");
+			    		setColorPage2();
+			    		renderTable(AllPageInformation.get(--CurrentPage));
+			    	}
+			    	JOptionPane.showMessageDialog(panelBill, "Không có dữ liệu 1");
+			    }
+			    
+			    if(p3==PageNumber) {
+			    	panelBill.getPage1().setText(p1+"");
+			    	panelBill.getPage2().setText(p2+"");
+			    	renderTable(AllPageInformation.get(p3-1));
+			    	panelBill.getPage3().setText(p3+"");
+			    	setColorPage3();
+			    }
+			    else {
+			    	if(CurrentPage==p3 && CurrentPage != PageNumber) {
+			    		p1+=ButtonPageNumber; //p1+=3
+			    		p2+=ButtonPageNumber;
+			    		p3+=ButtonPageNumber;
+			    	    if(p2 > PageNumber ) {
+			    	    	panelBill.getPage2().setVisible(false);
+			    	    	panelBill.getPage3().setVisible(false);
+			    	    }
+			    	    else if(p2 == PageNumber && p3 > PageNumber) {
+			    	    	panelBill.getPage3().setVisible(false);
+			    	    }
+			    	    panelBill.getPage1().setText(p1+"");
+				    	panelBill.getPage2().setText(p2+"");
+				    	renderTable(AllPageInformation.get(CurrentPage));
+				    	panelBill.getPage3().setText(p3+"");
+				    	setColorPage1();
+			    	}
+			    	
+			    	if(CurrentPage ==p1) {
+			    		renderTable(AllPageInformation.get(CurrentPage));
+				    	setColorPage2();
+			    	}
+			    	if(CurrentPage ==p2) {
+			    		renderTable(AllPageInformation.get(CurrentPage));
+				    	setColorPage3();
+			    	}
+			    }
 			}
 		});
 		
-		// -2 -1 0 1
-		panelBill.getPageBefore().addActionListener(new ActionListener() { // vẫn bị lùi âm
+		panelBill.getPageBefore().addActionListener(new ActionListener() { 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				int p1 = Integer.parseInt(panelBill.getPage1().getText()); // lấy ra nhãn hiện tại
+				int p1 = Integer.parseInt(panelBill.getPage1().getText()); 
 				int p2 = Integer.parseInt(panelBill.getPage2().getText());
 				int p3 = Integer.parseInt(panelBill.getPage3().getText());
 				
@@ -766,50 +746,60 @@ public class PanelBillController {
 				String Background3 =  panelBill.getPage3().getBackground().toString();
 			//	System.out.println(Background1+" 3"+Background2+" 3"+Background3);
 			   
-				int presentPage = 0 ;
+				int CurrentPage = 0 ;
 				
 			    if(Background1.equals("java.awt.Color[r=255,g=200,b=0]")) {
-			    	presentPage = p1;
+			    	CurrentPage = p1;
 			    }
 			    else if(Background2.equals("java.awt.Color[r=255,g=200,b=0]")) {
-			    	presentPage = p2;
+			    	CurrentPage = p2;
 			    }
 			    else if(Background3.equals("java.awt.Color[r=255,g=200,b=0]")) {
-			    	presentPage = p3;
+			    	CurrentPage = p3;
 			    }
-			    --presentPage; // phải giảm 1 trước để present = vị trí của mảng hiện t
-			    // 3 next = 4
-			    System.out.println(presentPage);
-				if(p3 <=3) { 
-						panelBill.getPage1().setText(String.valueOf(1));
-						panelBill.getPage2().setText(String.valueOf(2));
-						panelBill.getPage3().setText(String.valueOf(3));
-						if(presentPage <1) { // 10 - 10 vẫn phải cho data 11 - 10 mới in ra thông báo
-							JOptionPane.showMessageDialog(panelBill, "Không có dữ liệu");
-						}
-						--presentPage; // phải giảm vì nó sẽ trả về chỉ số mảng tương tứng chỉ số trang
-						renderTable(AllPageInformation.get(presentPage));
-						
-					if(Background3.equals("java.awt.Color[r=255,g=200,b=0]")) {
-						panelBill.getPage1().setBackground(Color.white);
-				    	panelBill.getPage2().setBackground(Color.orange);
-				    	panelBill.getPage3().setBackground(Color.white);
-				    }
-				    else if(Background2.equals("java.awt.Color[r=255,g=200,b=0]")) {
-				    	panelBill.getPage1().setBackground(Color.orange);
-				    	panelBill.getPage3().setBackground(Color.white);
-				    	panelBill.getPage2().setBackground(Color.white);
-				    }
-				}
-				else {
-					p1-=1;
-					panelBill.getPage1().setText(String.valueOf(p1));
-					p2-=1;
-					panelBill.getPage2().setText(String.valueOf(p2));
-					p3-=1;
-					panelBill.getPage3().setText(String.valueOf(p3));
-					renderTable(AllPageInformation.get(--presentPage)); // giảm để lấy mảng đằng trước
-				}
+			    
+			 // System.out.println(p1+" "+p2+" "+p3);
+			    if(CurrentPage==1) {
+			    	System.out.println(p1+" "+p2+" "+p3);
+			    	renderButton();
+			    	JOptionPane.showMessageDialog(panelBill, "Không có dữ liệu 2");
+			    	
+			    }
+			    if(p1==PageNumber) {
+			    	panelBill.getPage2().setVisible(true);
+			    	panelBill.getPage3().setVisible(true);
+			    	
+			    	p1-=ButtonPageNumber;
+			    	panelBill.getPage1().setText(p1+"");
+			    	panelBill.getPage2().setText(p1+1+"");
+			    	renderTable(AllPageInformation.get(p1+1));
+			    	panelBill.getPage3().setText(p1+2+"");
+			    	setColorPage3();
+			    }
+			    else {
+			    	if(CurrentPage==p1 && CurrentPage != 1) {
+			    		p1-=ButtonPageNumber;
+				    	panelBill.getPage1().setText(p1+"");
+			    		panelBill.getPage2().setText(p1+1+"");
+			    		panelBill.getPage3().setText(p1+2+"");
+			    		--CurrentPage;
+			    		renderTable(AllPageInformation.get(--CurrentPage));
+			    		setColorPage3();
+			    	}
+			    	
+			    	if(CurrentPage==p2) {
+			    		--CurrentPage;
+			    		renderTable(AllPageInformation.get(--CurrentPage));
+			    		setColorPage1();
+				    	
+			    	}
+			    	
+			    	if(CurrentPage==p3) {
+			    		--CurrentPage;
+			    		renderTable(AllPageInformation.get(--CurrentPage));
+			    		setColorPage2();
+			    	}
+			    }
 			}
 		});
 		
@@ -817,85 +807,80 @@ public class PanelBillController {
 	}
 	
 	public void addEventBody() {
-		
-		// lọc
-	    panelBill.getFitterDay().addActionListener(new ActionListener() {	
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					String day = panelBill.getFDay().getSelectedItem().toString();
-					
-					String  month = panelBill.getFMonth().getSelectedItem().toString();
-					
-					String  year = panelBill.getFYear().getSelectedItem().toString();
-					if(checkDate(day, month, year)) {
-						String date = year+"-"+month+"-"+day;
-						ArrayList<BillModel> FitterDate = billDao.findByDate(date);
-						if(FitterDate.size()>0) {
-							Pagination(FitterDate);
-							renderTable(AllPageInformation.get(0));
-						}
-						else JOptionPane.showMessageDialog(panelBill,"Không có hóa đơn cho ngày "+day+"-"+month+"-"+year);
-					}
-					else {
-						JOptionPane.showMessageDialog(panelBill,"Ngày tháng không hợp lệ");
-					}
-				}
-			});
-	    
-	    panelBill.getFindBillID().addKeyListener(new KeyListener() {
+		panelBill.getFitter().addActionListener(new ActionListener() {
 			
-			@Override
-			public void keyTyped(KeyEvent e) {
-			}
-			
-			@Override
-			public void keyReleased(KeyEvent e) {// nhấn phím trả về bắt đầu với kí tự
-				String keyText = panelBill.getFindBillID().getText();
-				ArrayList<BillModel> res = new ArrayList<BillModel>();
-				
-				for(BillModel x: billDao.findAll()) {
-					String billID = String.valueOf(x.getID());
-					if(billID.startsWith(keyText)) {
-						res.add(x);
-					}
-				}
-				Pagination(res);
-				renderTable(AllPageInformation.get(0));
-			}
-			
-			@Override
-			public void keyPressed(KeyEvent e) {// nhả
-			}
-		});
-	    
-	    panelBill.getSort().addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(panelBill.getSort().getSelectedIndex()==1){
-					ArrayList<BillModel> tmp = billDao.findAll();
-					Collections.reverse(tmp);
-					Pagination(tmp);
-					renderTable(AllPageInformation.get(0));
-					panelBill.getPage1().setBackground(Color.orange);
-					panelBill.getPage2().setBackground(Color.white);
-					panelBill.getPage3().setBackground(Color.white);
-					panelBill.getPage1().setText("1");
-					panelBill.getPage2().setText("2");
-					panelBill.getPage3().setText("3");
-	           }
-				else if(panelBill.getSort().getSelectedIndex()==0) {
-					Pagination(billDao.findAll());
-					renderTable(AllPageInformation.get(0));
-					panelBill.getPage1().setBackground(Color.orange);
-					panelBill.getPage2().setBackground(Color.white);
-					panelBill.getPage3().setBackground(Color.white);
-					panelBill.getPage1().setText("1");
-					panelBill.getPage2().setText("2");
-					panelBill.getPage3().setText("3");
+				String day = panelBill.getFDay().getSelectedItem().toString();
+				String  month = panelBill.getFMonth().getSelectedItem().toString();
+				String  year = panelBill.getFYear().getSelectedItem().toString();
+				String date = year+"-"+month+"-"+day;
+				String id =  panelBill.getFindBillID().getText();
+				
+				if(day.equalsIgnoreCase("day") && month.equalsIgnoreCase("month")&& year.equalsIgnoreCase(year)) {
+					if(!ValidateUtils.checkEmptyAndNull(id)) {
+						ArrayList<BillModel> res = new ArrayList<BillModel>();
+						
+						for(BillModel x: billDao.findAll()) {
+							String billID = String.valueOf(x.getID());
+							if(billID.startsWith(id)) {
+								res.add(x);
+							}
+						}
+						if(res.size()==0) {
+							JOptionPane.showMessageDialog(panelBill, "Không có dữ liệu mà bạn đang tìm");
+						}
+						sortdata(res);
+					}
+					else {
+						sortdata(billDao.findAll());
+					}
+				}
+				else {
+					if(checkDate(day, month, year)) {
+						if(!ValidateUtils.checkEmptyAndNull(id)) {
+							ArrayList<BillModel> res = new ArrayList<BillModel>();
+							
+							for(BillModel x: billDao.findAll()) {
+								String billID = String.valueOf(x.getID());
+								String billdate = String.valueOf(x.getBillDate());
+								if(billID.startsWith(id) && billdate.equals(date)) {
+									res.add(x);
+								}
+								System.out.println(billdate+"  "+date);
+							}
+							if(res.size()==0) {
+								JOptionPane.showMessageDialog(panelBill, "Không có dữ liệu mà bạn đang tìm");
+								resetTable();
+							}
+							sortdata(res);
+						}
+						else {
+                            ArrayList<BillModel> res = new ArrayList<BillModel>();
+							
+							for(BillModel x: billDao.findAll()) {
+								String billdate = String.valueOf(x.getBillDate());
+								if(billdate.equals(date)) {
+									res.add(x);
+								}
+							//	System.out.println(billdate+"  "+date);
+							}
+							if(res.size()==0) {
+								JOptionPane.showMessageDialog(panelBill, "Không có dữ liệu mà bạn đang tìm");
+								resetTable();
+							}
+							sortdata(res);
+						}
+					}
+					else {
+							JOptionPane.showMessageDialog(panelBill, "Ngày tháng không hợp lệ");
+					}
 				}
 			}
 		});
 	}
+	
+	
 	
 	public boolean checkDate(String day, String month, String year) {
 		int d = Integer.parseInt(day);
@@ -922,5 +907,62 @@ public class PanelBillController {
 			    return true;
 		}
 			return false;
+	}
+	
+	public void renderButton() {
+		panelBill.getPage1().setText("1");
+		panelBill.getPage2().setText("2");
+		panelBill.getPage3().setText("3");
+		panelBill.getPage1().setBackground(Color.orange);
+		panelBill.getPage2().setBackground(Color.white);
+		panelBill.getPage3().setBackground(Color.white);
+		
+	}
+	public void setColorPage1() {
+		panelBill.getPage1().setBackground(Color.orange);
+		panelBill.getPage2().setBackground(Color.white);
+		panelBill.getPage3().setBackground(Color.white);
+	}
+	public void setColorPage2() {
+		panelBill.getPage1().setBackground(Color.white);
+		panelBill.getPage2().setBackground(Color.orange);
+		panelBill.getPage3().setBackground(Color.white);
+	}
+	public void setColorPage3() {
+		panelBill.getPage1().setBackground(Color.white);
+		panelBill.getPage2().setBackground(Color.white);
+		panelBill.getPage3().setBackground(Color.orange);
+	}
+	public void sortdata(ArrayList<BillModel> rowdata) {
+		if(panelBill.getSort().getSelectedIndex()==1){
+			ArrayList<BillModel> tmp = rowdata;
+			Collections.reverse(tmp);
+			Pagination(tmp);
+			if(AllPageInformation.size() ==1) {
+					panelBill.getPage2().setVisible(false);
+					panelBill.getPage3().setVisible(false);
+				}
+			if(AllPageInformation.size() ==2) {
+					panelBill.getPage3().setVisible(false);
+				}
+			renderTable(AllPageInformation.get(0));
+       }
+		else if(panelBill.getSort().getSelectedIndex()==0) {
+			Pagination(rowdata);
+			if(AllPageInformation.size() ==1) {
+				panelBill.getPage2().setVisible(false);
+				panelBill.getPage3().setVisible(false);
+			}
+			else if(AllPageInformation.size() ==2) {
+				panelBill.getPage2().setVisible(true);
+				panelBill.getPage3().setVisible(false);
+			}
+			else {
+				panelBill.getPage2().setVisible(true);
+				panelBill.getPage3().setVisible(true);
+			}
+			renderTable(AllPageInformation.get(0));
+			renderButton();
+		}
 	}
 }

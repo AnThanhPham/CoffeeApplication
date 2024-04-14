@@ -22,7 +22,7 @@ import javax.swing.JScrollPane;
 
 public class PanelBill extends JPanel {
 	private JLabel jlabel;
-	private JLabel Datetime;
+	private JLabel TodayDate;
 	
 	private JButton AddBill;
 	private JButton DeleteBill;
@@ -38,7 +38,8 @@ public class PanelBill extends JPanel {
 	private JButton PageBefore;
 	private JButton PageNext; 
 	private JButton PageFirst;
-	private JButton FitterDay;
+	private JButton Fitter;
+	private JButton RefreshFitter;
 	
 	private Font FLabel;
 	private Font FLabelText;
@@ -51,6 +52,7 @@ public class PanelBill extends JPanel {
 	private JComboBox<String> Status_item;
 	private JComboBox<String> Products_item;
 	
+	private JTextField Bill_Date;
 	private JTextField Bill_ID;
 	private JTextField Customer_ID;
 	private JTextField User_ID;
@@ -82,6 +84,12 @@ public class PanelBill extends JPanel {
 	}
 
 	public void CreateHeader() {
+		
+		TodayDate = new JLabel();
+		TodayDate.setBounds(60,10,237,30);
+		TodayDate.setFont(FBtnBill);
+		add(TodayDate);
+		
 		jlabel = new JLabel("Mã Hóa Đơn");
 		jlabel.setBounds(60,50,100,30);
 		jlabel.setFont(FLabel);
@@ -138,12 +146,12 @@ public class PanelBill extends JPanel {
 		jlabel.setFont(FLabel);
 		add(jlabel);
 		
-		Datetime = new JLabel("",SwingConstants.CENTER);
-		Datetime.setBounds(180,95,120,30);
-		Datetime.setBackground(Color.WHITE);
-		Datetime.setOpaque(true);
-		Datetime.setFont(FLabelText);
-		add(Datetime);
+		Bill_Date = new JTextField();
+		Bill_Date.setBounds(180,95,120,30);
+		Bill_Date.setBackground(Color.WHITE);
+		Bill_Date.setOpaque(true);
+		Bill_Date.setFont(FLabelText);
+		add(Bill_Date);
 		
 		jlabel = new JLabel("Trạng Thái"); // thời gian tạo hóa đơn + hiển thị
 		jlabel.setBounds(340,185,90,30);
@@ -245,56 +253,62 @@ public class PanelBill extends JPanel {
 	 
 	public void CreateBody() {
 		// time
-		jlabel = new JLabel("Thời gian : ");
-		jlabel.setBounds(60,320,80,30);
+		jlabel = new JLabel("Thời gian ");
+		jlabel.setBounds(60,320,75,30);
 		jlabel.setFont(FLabel);
 		add(jlabel);
 		
 		
 		FDay = new JComboBox<String>();
-		for(int i=0;i<=31;i++) {
+		FDay.addItem("day");
+		for(int i=1;i<=31;i++) {
 			if(i<10) FDay.addItem("0"+String.valueOf(i));
 			else FDay.addItem(String.valueOf(i));
 		}
-		FDay.setBounds(140,320,60,30);
+		FDay.setBounds(135,320,55,30);
 		add(FDay);
 		
 		FMonth = new JComboBox<String>();
-		for(int i=0;i<=12;i++) {
+		FMonth.addItem("month");
+		for(int i=1;i<=12;i++) {
 			if(i<10) FMonth.addItem("0"+String.valueOf(i));
 			else FMonth.addItem(String.valueOf(i));
 		}
-		FMonth.setBounds(210,320,60,30);
+		FMonth.setBounds(200,320,70,30);
 		add(FMonth);
 		
 		FYear = new JComboBox<String>();
-		FYear.addItem("0000");
-		for(int i=2000;i<=2024;i++)
+		FYear.addItem("year");
+		for(int i=2020;i<=2024;i++)
 			FYear.addItem(String.valueOf(i));
-		FYear.setBounds(280,320,60,30);
+		FYear.setBounds(275,320,70,30);
 		add(FYear);
 		
-		FitterDay = new JButton("Lọc");
-		FitterDay.setBounds(350,320,60,30);
-		add(FitterDay);
+		Fitter = new JButton("Lọc");
+		Fitter.setBounds(885,300,75,30);
+		add(Fitter);
+		
+		RefreshFitter = new JButton("Làm mới");
+		RefreshFitter.setBounds(885,335,75,30);
+		add(RefreshFitter);
 		// lọc mã
 		jlabel = new JLabel("Tìm Mã Hóa Đơn");
-		jlabel.setBounds(440,320,120,30);
+		jlabel.setBounds(360,320,120,30);
 		jlabel.setFont(FLabel);
 		add(jlabel);
 		
 		jlabel = new JLabel("Sắp Xếp Theo ");
-		jlabel.setBounds(687,320,110,30);
+		jlabel.setBounds(614,320,110,30);
 		jlabel.setFont(FLabel);
 		add(jlabel);
 		
 		FindBillID = new JTextField();
-		FindBillID.setBounds(560,320,100,30);
+		FindBillID.setBounds(490,320,100,30);
 		FindBillID.setFont(FLabelText);
 		add(FindBillID);
 		
 		Sort = new JComboBox<String>();
-		Sort.setBounds(800,320,160,30);
+		Sort.setBounds(715,320,150,30);
 		Sort.addItem("Mã hóa đơn mới nhất");
 		Sort.addItem("Mã hóa đơn cũ nhất");
 		add(Sort);
@@ -339,12 +353,20 @@ public class PanelBill extends JPanel {
 	}
 	
 	
-	public JLabel getDatetime() {
-		return Datetime;
+	public JButton getRefreshFitter() {
+		return RefreshFitter;
 	}
 
-	public void setDatetime(JLabel datetime) {
-		Datetime = datetime;
+	public void setRefreshFitter(JButton refreshFitter) {
+		RefreshFitter = refreshFitter;
+	}
+
+	public JTextField getBill_Date() {
+		return Bill_Date;
+	}
+
+	public void setBill_Date(JTextField datetime) {
+		Bill_Date = datetime;
 	}
 
 	public JButton getPage1() {
@@ -385,14 +407,6 @@ public class PanelBill extends JPanel {
 
 	public void setPageBefore(JButton pageBefore) {
 		PageBefore = pageBefore;
-	}
-
-	public JComboBox<String> getFitter() {
-		return Sort;
-	}
-
-	public void setFitter(JComboBox<String> sort) {
-		Sort = sort;
 	}
 
 	public JTextField getBill_ID() {
@@ -620,12 +634,12 @@ public class PanelBill extends JPanel {
 		this.editBillProduct = editBillProduct;
 	}
 
-	public JButton getFitterDay() {
-		return FitterDay;
+	public JButton getFitter() {
+		return Fitter;
 	}
 
-	public void setFitterDay(JButton fitterDay) {
-		FitterDay = fitterDay;
+	public void setFitter(JButton fitter) {
+		Fitter = fitter;
 	}
 
 	public JComboBox<String> getSort() {
@@ -634,6 +648,14 @@ public class PanelBill extends JPanel {
 
 	public void setSort(JComboBox<String> sort) {
 		Sort = sort;
+	}
+
+	public JLabel getTodayDate() {
+		return TodayDate;
+	}
+
+	public void setTodayDate(JLabel todayDate) {
+		TodayDate = todayDate;
 	}
 	
 }
