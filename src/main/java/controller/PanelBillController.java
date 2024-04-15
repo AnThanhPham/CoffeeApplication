@@ -12,6 +12,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.print.Pageable;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -267,8 +268,8 @@ public class PanelBillController {
 				String Table_ID = panelBill.getTable_ID().getText();
 				String Payment_ID = panelBill.getPayment_ID().getText();
 				String Status = (String) panelBill.getStatus_item().getSelectedItem();
-				String dateWork = panelBill.getBill_Date().getText();
 				
+				String dateWork = panelBill.getBill_Date().getText();
 				// Lấy Bill 
                 BillModel tmp = new BillModel();
 				
@@ -294,13 +295,18 @@ public class PanelBillController {
 				PaymentModel payment = paymentDao.findByID(Payment_ID);
 				tmp.setPayment(payment);
 				tmp.setPaymentID(payment.getID());
-
+				
+				
+	           // System.out.println(dateWork);
 				try {
         			if(!ValidateUtils.checkEmptyAndNull(dateWork)) {
-        				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        				java.util.Date utilDate = dateFormat.parse(dateWork);
-        				java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
-        				tmp.setBillDate(sqlDate);        				
+        				SimpleDateFormat DateInput = new SimpleDateFormat("dd-MM-yyyy");
+        	            SimpleDateFormat DateOutput = new SimpleDateFormat("yyyy-MM-dd");
+        	            java.util.Date date = DateInput.parse(dateWork);
+        	          ///  System.out.println(date);
+        	            String outputParse = DateOutput.format(date);
+        	            tmp.setBillDate(java.sql.Date.valueOf(outputParse));
+        	          ///  System.out.println(outputParse);
         			}
         			else tmp.setBillDate(null);
 				} catch (Exception e1) {
@@ -407,7 +413,8 @@ public class PanelBillController {
 							}
 							billDao.delete(bill);
 						}
-						renderTable(billDao.findAll());
+						Pagination(billDao.findAll());
+						renderTable(AllPageInformation.get(0));
 						resetInput();
 					}
 				}
@@ -693,7 +700,7 @@ public class PanelBillController {
 			    		setColorPage2();
 			    		renderTable(AllPageInformation.get(--CurrentPage));
 			    	}
-			    	JOptionPane.showMessageDialog(panelBill, "Không có dữ liệu 1");
+			    	JOptionPane.showMessageDialog(panelBill, "Không có dữ liệu");
 			    }
 			    
 			    if(p3==PageNumber) {
@@ -762,7 +769,7 @@ public class PanelBillController {
 			    if(CurrentPage==1) {
 			    	System.out.println(p1+" "+p2+" "+p3);
 			    	renderButton();
-			    	JOptionPane.showMessageDialog(panelBill, "Không có dữ liệu 2");
+			    	JOptionPane.showMessageDialog(panelBill, "Không có dữ liệu");
 			    	
 			    }
 			    if(p1==PageNumber) {
@@ -878,6 +885,21 @@ public class PanelBillController {
 				}
 			}
 		});
+		
+	   panelBill.getRefreshFitter().addActionListener(new ActionListener() {
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			panelBill.getFDay().setSelectedIndex(0);
+			panelBill.getFMonth().setSelectedIndex(0);
+			panelBill.getFYear().setSelectedIndex(0);
+			panelBill.getFindBillID().setText("");
+			panelBill.getSort().setSelectedIndex(0);
+			sortdata(billDao.findAll());
+			Pagination(billDao.findAll());
+			renderTable(AllPageInformation.get(0));
+		  }
+	    });
 	}
 	
 	
@@ -915,8 +937,7 @@ public class PanelBillController {
 		panelBill.getPage3().setText("3");
 		panelBill.getPage1().setBackground(Color.orange);
 		panelBill.getPage2().setBackground(Color.white);
-		panelBill.getPage3().setBackground(Color.white);
-		
+		panelBill.getPage3().setBackground(Color.white);		
 	}
 	public void setColorPage1() {
 		panelBill.getPage1().setBackground(Color.orange);
@@ -938,31 +959,24 @@ public class PanelBillController {
 			ArrayList<BillModel> tmp = rowdata;
 			Collections.reverse(tmp);
 			Pagination(tmp);
-			if(AllPageInformation.size() ==1) {
-					panelBill.getPage2().setVisible(false);
-					panelBill.getPage3().setVisible(false);
-				}
-			if(AllPageInformation.size() ==2) {
-					panelBill.getPage3().setVisible(false);
-				}
-			renderTable(AllPageInformation.get(0));
        }
 		else if(panelBill.getSort().getSelectedIndex()==0) {
 			Pagination(rowdata);
-			if(AllPageInformation.size() ==1) {
-				panelBill.getPage2().setVisible(false);
-				panelBill.getPage3().setVisible(false);
-			}
-			else if(AllPageInformation.size() ==2) {
-				panelBill.getPage2().setVisible(true);
-				panelBill.getPage3().setVisible(false);
-			}
-			else {
-				panelBill.getPage2().setVisible(true);
-				panelBill.getPage3().setVisible(true);
-			}
-			renderTable(AllPageInformation.get(0));
-			renderButton();
 		}
+	//	else if(panelBill.gétS)
+		if(AllPageInformation.size() ==1) {
+			panelBill.getPage2().setVisible(false);
+			panelBill.getPage3().setVisible(false);
+		}
+		else if(AllPageInformation.size() ==2) {
+			panelBill.getPage2().setVisible(true);
+			panelBill.getPage3().setVisible(false);
+		}
+		else {
+			panelBill.getPage2().setVisible(true);
+			panelBill.getPage3().setVisible(true);
+		}
+		renderTable(AllPageInformation.get(0));
+		renderButton();
 	}
 }

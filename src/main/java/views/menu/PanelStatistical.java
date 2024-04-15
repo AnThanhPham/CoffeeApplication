@@ -10,6 +10,8 @@ import org.jfree.data.category.DefaultCategoryDataset;
 
 public class PanelStatistical extends JPanel {
 	private JComboBox<String> Year;
+	private JFreeChart chart;
+	
     public PanelStatistical() {
     	graphColumn();
     }
@@ -22,19 +24,19 @@ public class PanelStatistical extends JPanel {
          dataset.setValue(10, "Series 2", "Category B");
 
          // Create a bar chart
-         JFreeChart chart = ChartFactory.createBarChart(
-                 "Sample Statistical Chart",
-                 "Category",
-                 "Value",
-                 dataset,
-                 PlotOrientation.VERTICAL,
-                 true, // Include legend
-                 true, // Include tooltips
-                 false  // No URL generation
+        chart = ChartFactory.createBarChart(
+        		  "Sample Statistical Chart",
+                  "Category",
+                  "Value",
+                  dataset,
+                  PlotOrientation.VERTICAL,
+                  true, // Include legend
+                  true, // Include tooltips
+                  false  // No URL generation
          );
          
          ChartPanel chartPanel = new ChartPanel(chart);
-         chartPanel.setPreferredSize(new java.awt.Dimension(500, 300));
+         chartPanel.setPreferredSize(new java.awt.Dimension(1000, 700));
          // Add the chart to the panel
          add(chartPanel);  
          
