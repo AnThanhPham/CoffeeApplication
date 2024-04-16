@@ -170,7 +170,7 @@ public class PanelBill extends JPanel {
 		add(jlabel);
 		
 		Products_item = new JComboBox<String>();
-		Products_item.setBounds(440,50,150,30);
+		Products_item.setBounds(440,50,170,30);
 		Products_item.setFont(FLabelText);
 		add(Products_item);
 		
@@ -311,6 +311,8 @@ public class PanelBill extends JPanel {
 		Sort.setBounds(715,320,150,30);
 		Sort.addItem("Mã hóa đơn mới nhất");
 		Sort.addItem("Mã hóa đơn cũ nhất");
+		Sort.addItem("Ngày mới nhất");
+		Sort.addItem("Ngày Cũ nhất");
 		add(Sort);
 		
 		JScrollPane scrollPane = new JScrollPane();

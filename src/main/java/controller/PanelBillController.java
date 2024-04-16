@@ -19,6 +19,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -127,7 +128,7 @@ public class PanelBillController {
 			@Override
 		public void valueChanged(ListSelectionEvent e) {
 				// TODO Auto-generated method stub
-				/*
+				
 				 int rowSelect = panelBill.getTableBill().getSelectedRow();
 				int columnSelect = panelBill.getTableBill().getSelectedColumn();
 	        	panelBill.getTableBill().isCellEditable(rowSelect, columnSelect);
@@ -136,25 +137,27 @@ public class PanelBillController {
 	        		String id = MapUtil.convertObjectToString(panelBill.getTableBill().getValueAt(rowSelect, 0));
 	        		String CusID = MapUtil.convertObjectToString(panelBill.getTableBill().getValueAt(rowSelect, 1));
 	        		String UserID = MapUtil.convertObjectToString(panelBill.getTableBill().getValueAt(rowSelect, 2));
-	        		//String DateTime  = MapUtil.convertObjectToString(panelBill.getTableBill().getValueAt(rowSelect, 3));
-	        		/*
-	        		BillDetailsModel billdet = billDetailsDao.findByBillID(id);
+	        		String DateTime  = MapUtil.convertObjectToString(panelBill.getTableBill().getValueAt(rowSelect, 3));
+	        		
+	        		ArrayList<BillDetailsModel>  billdet = billDetailsDao.findByBillID(id);
 	             	BillModel bill = billDao.findByID(id);
 	        		panelBill.getBill_ID().setText(id);
-	        		//panelBill.getDatetime().setText(DateTime);
+	        		panelBill.getBill_Date().setText(DateTime);
 	        		panelBill.getCustomer_ID().setText(CusID);
 	        		panelBill.getUser_ID().setText(UserID);
-	        		panelBill.getQuantity().setText(billdet.getQuantityProduct()+"");
-	        	//	panelBill.getPayment_ID().setText(bill.getPayment().getID()+"");
-	        		//panelBill.getTable_ID().setText(bill.getTable().getID()+"");
+	        		panelBill.getPayment_ID().setText(bill.getPayment().getID()+"");
+	        		panelBill.getTable_ID().setText(bill.getTable().getID()+"");
 	        		panelBill.getStatus_item().setSelectedItem(bill.getStatus());
-	        		//panelBill.getProducts_item().setSelectedItem(billdet.getProduct().getName());
-				 */
+	        		
+	        		
+	        	}
+	        	
 			}
 		});
 		
 		
 		// thêm sản phẩm vào giỏ hàng 
+		
 		LinkedHashMap<String, String> ProductListTable = new LinkedHashMap<String, String>();
 		panelBill.getaddBillProduct().addActionListener(new ActionListener() {			
 			@Override
@@ -234,10 +237,10 @@ public class PanelBillController {
 						    ProductListTable.clear();
 						    ProductListTable.putAll(ProductListEdit.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
 						    
-						    /*ProductListTable.forEach((key, value) -> {
+						    ProductListTable.forEach((key, value) -> {
 						        System.out.println(key+" "+value);
 						    });
-						    */
+						    
 					}
 			
 				});
@@ -253,7 +256,7 @@ public class PanelBillController {
 			public void actionPerformed(ActionEvent e) {
 				EnableInput();
 				resetInput();
-				ProductListTable.clear();
+				//ProductListTable.clear();
 			}
 		});
 		
@@ -963,7 +966,30 @@ public class PanelBillController {
 		else if(panelBill.getSort().getSelectedIndex()==0) {
 			Pagination(rowdata);
 		}
-	//	else if(panelBill.gétS)
+		// tăng dan theo ngay
+		else if(panelBill.getSort().getSelectedIndex()==2) {
+			ArrayList<BillModel> tmp = rowdata;
+			Collections.sort(tmp, new Comparator<BillModel>() {
+				@Override
+				public int compare(BillModel o1, BillModel o2) {
+					// TODO Auto-generated method stub
+					return o1.getBillDate().compareTo(o2.getBillDate());
+				}
+	        });
+			Pagination(tmp);
+		}
+		// giam dan
+		else if(panelBill.getSort().getSelectedIndex()==3) {
+			ArrayList<BillModel> tmp = rowdata;
+			Collections.sort(tmp, new Comparator<BillModel>() {
+				@Override
+				public int compare(BillModel o1, BillModel o2) {
+					// TODO Auto-generated method stub
+					return o2.getBillDate().compareTo(o1.getBillDate());
+				}
+	        });
+			Pagination(tmp);
+		}
 		if(AllPageInformation.size() ==1) {
 			panelBill.getPage2().setVisible(false);
 			panelBill.getPage3().setVisible(false);

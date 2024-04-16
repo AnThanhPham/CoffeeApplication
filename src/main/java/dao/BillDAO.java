@@ -7,6 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.TreeMap;
 
 import javax.swing.table.DefaultTableModel;
 
@@ -264,12 +266,12 @@ public class BillDAO extends DAO implements AbstractDAO<BillModel>{
 		 return result;
 	 }
 	 
-	 public ArrayList<BillModel> FinDataByMonth(String month){
-		 ArrayList<BillModel> res = new ArrayList<BillModel>();
+	 public TreeMap<Integer,Double> FitterDataByYear(String year){
+		 TreeMap<Integer,Double> res = new TreeMap<Integer,Double>();
 		 try {
-	    		String sql = "select * from bill where month(BillDate) = ? ";
+			 String sql = "select *  from bill  where year(BillDate) = ?   ";
 	    		PreparedStatement ps = conn.prepareStatement(sql);
-	    		ps.setString(1, month);
+	    		ps.setString(1, year);
 	    		ResultSet rs = ps.executeQuery();
 	    		while(rs.next()) {
 	    			BillModel tmp = new BillModel();
@@ -279,6 +281,7 @@ public class BillDAO extends DAO implements AbstractDAO<BillModel>{
 						java.util.Date utilDate = dateFormat.parse(rs.getString(2));
 						java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
 						tmp.setBillDate(sqlDate);
+						
 					}
 					tmp.setBillTotal(rs.getFloat(3));
 					tmp.setStatus(rs.getString(4));
@@ -286,13 +289,23 @@ public class BillDAO extends DAO implements AbstractDAO<BillModel>{
 					tmp.setUser(userDao.findByID(rs.getInt(6)+""));
 					tmp.setTable(tableDao.findByID(rs.getInt(7)+""));
 					tmp.setPayment(paymentDao.findByID(rs.getInt(8)+""));
-					res.add(tmp);
+					Double sumPrice = (double) rs.getFloat(3);
+					
+					Integer key = tmp.getBillDate().getMonth()+1;
+					//System.out.println(tmp.getBillDate());
+					if(res.containsKey(key)){
+						res.replace(key, res.get(key)+sumPrice);
+					}
+					else res.put(key, sumPrice);
+					//System.out.println(key+"    "+res.get(key));
+					
 	    		}
 	    	}catch(Exception ex) {
 	    		ex.printStackTrace();
 	    	}
 		 return res;
 	 }
+	
 	@Override
 	public void insert(BillModel t) {
 		String sql = AbstractImpl.buildSqlInsertBill(t);
