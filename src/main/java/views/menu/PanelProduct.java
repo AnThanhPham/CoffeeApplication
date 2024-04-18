@@ -336,16 +336,7 @@ class ItemProduct extends JPanel {
 			public void mouseClicked(MouseEvent e) {
 				new insertUpdateDelete(model,false);
 				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-			}
+		}
 		});
 		
 	
