@@ -21,6 +21,7 @@ import java.awt.event.MouseListener;
 import java.sql.SQLException;
 import java.util.List;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -47,21 +48,29 @@ public class PanelProduct extends JPanel {
 	JTextField searchTextField = new JTextField();// Thanh tìm kiếm
 	JButton submit = new JButton("Tìm"); // nuts submit
 	JButton insertProduct = new JButton("Thêm sản phẩm"); // Them san pham
+	
+	
+	
+	
 	JLabel searchLabel = new JLabel("Tìm kiếm");
 	JLabel menu = new JLabel("Loại: ");
 
 	// CenterPanel
-	JLabel product1 = new JLabel();
-	JLabel nameProduct1 = new JLabel("Ten: Trà dâu");
-	JLabel priceProduct1 = new JLabel("Gia: 55.000");
-	JLabel descriptionPr1 = new JLabel("Sản phẩm là sự kết hợp từ dâu tây, trà nhài,..");
-	JPanel leftCenterpanel = new JPanel();
+//	JLabel product1 = new JLabel();
+//	JLabel nameProduct1 = new JLabel("Ten: Trà dâu");
+//	JLabel priceProduct1 = new JLabel("Gia: 55.000");
+//	JLabel descriptionPr1 = new JLabel("Sản phẩm là sự kết hợp từ dâu tây, trà nhài,..");
+//	JPanel leftCenterpanel = new JPanel();
 
-	// JComboBox<String> typeProduct= new JComboBox<>(new String []{"cafe","banh
-	// ngot","nước ép"});
-	JMenuBar outMenu = new JMenuBar();
-	JMenu menu1 = new JMenu("Menu");
-	String[] typeProduct = { "cafe", "nuoc ngot", "banh ngot", "Nuoc ep" };
+	
+	String typeCategoryname[];
+	
+	 JComboBox<String> typeProduct= new JComboBox<>();
+	 	
+	 //JComboBox<String> typeProduct= new JComboBox<>(new String []{"cafe","banhngot","nước ép"});
+//	JMenuBar outMenu = new JMenuBar();
+//	JMenu menu1 = new JMenu("Menu");
+//	String[] typeProduct = { "cafe", "nuoc ngot", "banh ngot", "Nuoc ep" };
 	private static PanelProduct ins;
 	List<ProductModel> listProduct = ProductDAO.selectAll();
 
@@ -69,12 +78,29 @@ public class PanelProduct extends JPanel {
 		return ins;
 	}
 	
-	public void reLoad() {
-		listProduct= ProductDAO.selectAll();
-		int amountPageNumber = (listProduct.size() / 8) + 1;
+	public void reLoad(boolean isSelectAll) throws SQLException {
+		if(isSelectAll==true) {
+			listProduct= ProductDAO.selectAll();
+		}else
+			listProduct= ProductDAO.search(searchTextField.getText(),typeProduct.getSelectedItem().toString());
+		
+		try {
+			typeCategoryname= new String[ProductDAO.selectCategory().size()];
+			for(int i=0; i<typeCategoryname.length; i++) {
+				typeCategoryname[i]= ProductDAO.selectCategory().get(i);
+				
+			}
+			typeProduct.setModel(new DefaultComboBoxModel<String>(typeCategoryname));
+			
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+			
+		int amountPageNumber = ((listProduct.size()-1 )/ 8) +1 ;
 		PagePanel[] pageNumber = new PagePanel[amountPageNumber + 1];
 		
-		southCenterPanel.removeAll();
+		southCenterPanel.removeAll(); // trước khi gọi lại các trang ta xóa hết những thứ trước đi
 		for (int i = 1; i <= amountPageNumber; i++) {
 			pageNumber[i] = new PagePanel(i);
 			southCenterPanel.add(pageNumber[i]);
@@ -85,8 +111,6 @@ public class PanelProduct extends JPanel {
 	
 
 	public void showPage(int pageNumber) {
-		
-		
 		
 		centerCenterPanel.setLayout(new GridLayout(2, 4, 20, 20));
 		centerCenterPanel.removeAll();
@@ -107,8 +131,8 @@ public class PanelProduct extends JPanel {
 	}
 
 	public PanelProduct() {
+		
 		ins = this;
-
 		// set layout cho panel chinh
 		this.setLayout(new BorderLayout());
 		this.add(centerPanel, BorderLayout.CENTER);
@@ -137,7 +161,7 @@ public class PanelProduct extends JPanel {
 		searchTextField.setPreferredSize(new Dimension(300, 30));
 
 		// tao left right center cho topcenterpanel
-		JPanel leftTop = new JPanel();
+		JPanel leftTop = new JPanel(); 
 		JPanel centerTop = new JPanel();
 		JPanel rightTop = new JPanel();
 		topNorthPanel.setLayout(new BorderLayout());
@@ -145,17 +169,61 @@ public class PanelProduct extends JPanel {
 		topNorthPanel.add(rightTop, BorderLayout.EAST);
 		topNorthPanel.add(leftTop, BorderLayout.WEST);
 		// centerTop.setBackground(Color.gray);
+		
 		centerTop.add(searchLabel);
 		centerTop.add(searchTextField);
 		centerTop.add(submit);
+		submit.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					 listProduct = ProductDAO.search(searchTextField.getText(),typeProduct.getSelectedItem().toString());
+					 System.out.println(searchTextField.getText());
+					 reLoad(false);
+					
+				} catch (SQLException e1) {
+					//JOptionPane.showMessageDialog(dialog,e.toString(),"Thông Báo", JOptionPane.MESSAGE_PROPERTY );
+					System.out.println(e1.toString());
+				}
+				
+			}
+		});
+		
 		rightTop.add(insertProduct);
+		insertProduct.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new insertUpdateDelete(new ProductModel(),true);
+			}
+		});
+		
+		
 		leftTop.add(menu);
+		leftTop.add(typeProduct);
+		typeProduct.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					reLoad(false);
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+			}
+		});
+		
+		
+		
 		// leftTop.add(typeProduct);
-		for (int i = 0; i < typeProduct.length; i++) {
-			menu1.add(typeProduct[i]);
-		}
-		outMenu.add(menu1);
-		leftTop.add(outMenu);
+//		for (int i = 0; i < typeProduct.length; i++) {
+//			menu1.add(typeProduct[i]);
+//		}
+//		outMenu.add(menu1);
+//		leftTop.add(outMenu);
 
 		// responsive topNorthPane
 		topNorthPanel.addComponentListener(new ComponentListener() {
@@ -195,7 +263,12 @@ public class PanelProduct extends JPanel {
 		showPage(1);
 
 // southCenterpanel
-		reLoad();
+		try {
+			reLoad(true);
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	
 
 	}
@@ -223,7 +296,8 @@ class ItemProduct extends JPanel {
 //		ImageIcon image=new ImageIcon(model.getImage());
 //		centerItem.setIcon(image);
 		centerItem.setOpaque(true);
-		centerItem.setBackground(Color.LIGHT_GRAY);
+		centerItem.setBackground(Color.lightGray);
+		
 		southItem.setText("<html>"+"Tên: "+model.getName()+ "<br>"+"Giá: "+ model.getPrice()+"</html>");
 		southItem.setForeground(Color.darkGray);
 		southItem.setFont(new Font("Times New roman",Font.PLAIN,20));
@@ -260,121 +334,7 @@ class ItemProduct extends JPanel {
 			
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				// TODO Auto-generated method stub
-				JDialog dialog= new JDialog();
-				JLabel topDialog = new JLabel();
-				JLabel centerDialog = new JLabel();
-				JPanel bottomDialog = new JPanel();
-				dialog.setVisible(true);
-				dialog.setMinimumSize(new Dimension(400,400));
-				dialog.setLayout(new BorderLayout());	
-				dialog.add(topDialog, BorderLayout.NORTH);
-				dialog.add(bottomDialog, BorderLayout.SOUTH);
-				dialog.add(centerDialog);
-				
-				// set top dialog
-				topDialog.setText("Chi tiết sản phẩm");
-				topDialog.setVerticalAlignment(JLabel.CENTER);
-				topDialog.setHorizontalAlignment(JLabel.CENTER);
-				topDialog.setFont(new Font(Font.SANS_SERIF, Font.BOLD,18));
-				topDialog.setPreferredSize(new Dimension(100,60));
-				
-				
-				Font centerFont= new Font(Font.SANS_SERIF, Font.BOLD, 15);
-				// set center dialog
-				centerDialog.setLayout(new GridBagLayout());
-				GridBagConstraints gbc=new GridBagConstraints();
-				JLabel idProduct= new JLabel("ID");
-				idProduct.setFont(centerFont);
-				JTextField idField= new JTextField(model.getID()+"");
-				idField.setEditable(false);//ko đc sửa
-				JLabel nameProduct= new JLabel("Tên");
-				nameProduct.setFont(centerFont);
-				JTextField nameField= new JTextField( model.getName());
-				JLabel priceProduct= new JLabel("Giá");
-				priceProduct.setFont(centerFont);
-				JTextField priceField= new JTextField(model.getPrice()+"");
-				JLabel desProduct= new JLabel("Mô Tả");
-				desProduct.setFont(centerFont);
-				JTextField desField= new JTextField(model.getDescription());
-				JLabel imgProduct= new JLabel("Link Ảnh");
-				imgProduct.setFont(centerFont);
-				JTextField imgField= new JTextField(model.getImage());
-				JLabel categoryProduct= new JLabel("Loại");
-				categoryProduct.setFont(centerFont);
-				JTextField categoryField= new JTextField(model.getCategory().getID()+"");
-			// cot trai	
-				gbc.insets= new Insets(0, 10,0,10);   // set padding
-				gbc.weightx= 0.3;  // set ti le cho ben trai ( con lai la ti le thua)
-				gbc.ipadx=60;		// tang chieu rong cua 1 ô 
-				gbc.ipady= 10;		// tang chieu cao của cả ô
-				gbc.anchor= GridBagConstraints.LINE_START; // căn vị trí của component( tất cả các loại J)so với ô- cụ thể đây là căn đầu dòng
-				gbc.gridx= 0;
-				gbc.gridy= 0;
-				centerDialog.add(idProduct,gbc);
-				gbc.gridy= 1;
-				centerDialog.add(nameProduct,gbc);
-				gbc.gridy= 2;
-				centerDialog.add(priceProduct,gbc);
-				gbc.gridy= 3;
-				centerDialog.add(desProduct,gbc);
-				gbc.gridy= 4;
-				centerDialog.add(imgProduct,gbc);
-				gbc.gridy= 5;
-				centerDialog.add(categoryProduct,gbc);
-				
-			// set size cho cot trai center
-				
-			// cot phai
-				
-				gbc.fill= GridBagConstraints.HORIZONTAL;  // lap đầy component trong ô
-				gbc.ipadx= 160;   
-				gbc.weightx= 0.7;
-				
-				gbc.gridx= 1;
-				gbc.gridy= 0;
-				centerDialog.add(idField,gbc);
-				gbc.gridy= 1;
-				centerDialog.add(nameField,gbc);
-				gbc.gridy= 2;
-				centerDialog.add(priceField,gbc);
-				gbc.gridy= 3;
-				centerDialog.add(desField,gbc);
-				gbc.gridy= 4;
-				centerDialog.add(imgField,gbc);
-				gbc.gridy= 5;
-				centerDialog.add(categoryField,gbc);
-// set soundDialog
-				Font fontSound= new Font(Font.SANS_SERIF,Font.BOLD,14);
-				bottomDialog.setPreferredSize(new Dimension(100,60));
-				JButton edit= new JButton("Sửa");
-				edit.setFont(fontSound);
-				
-				JButton delete= new JButton("Xóa");
-				delete.addActionListener(new ActionListener() {
-					
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						// TODO Auto-generated method stub
-						try {
-							ProductDAO.delete(model);
-							dialog.dispose();
-							JOptionPane.showMessageDialog(dialog, "Xóa thành công","Thông báo",JOptionPane.INFORMATION_MESSAGE);
-							PanelProduct.getIns().reLoad();
-						} catch (SQLException e1) {
-							// TODO Auto-generated catch block
-							
-							JOptionPane.showMessageDialog(dialog, "Xóa thất bại","Thông báo",JOptionPane.INFORMATION_MESSAGE);
-						} 
-						
-					}
-				});
-				delete.setFont(fontSound);
-				JButton cancel= new JButton("Thoát");
-				cancel.setFont(fontSound);
-				bottomDialog.add(edit);
-				bottomDialog.add(delete);
-				bottomDialog.add(cancel);
+				new insertUpdateDelete(model,false);
 				
 				
 				
@@ -393,7 +353,205 @@ class ItemProduct extends JPanel {
 
 }
 
-class PagePanel extends JLabel {
+class insertUpdateDelete extends JDialog {
+	public insertUpdateDelete(ProductModel model,boolean isInsert) {
+		
+		JDialog dialog= new JDialog();
+		JLabel topDialog = new JLabel();
+		JLabel centerDialog = new JLabel();
+		JPanel bottomDialog = new JPanel();
+		dialog.setVisible(true);
+		dialog.setMinimumSize(new Dimension(400,400));
+		dialog.setLayout(new BorderLayout());	
+		dialog.add(topDialog, BorderLayout.NORTH);
+		dialog.add(bottomDialog, BorderLayout.SOUTH);
+		dialog.add(centerDialog);
+		
+		// set top dialog
+		if(isInsert==true) {
+			topDialog.setText("Thêm sản phẩm");
+			
+		}else topDialog.setText("Chi tiết sản phẩm");
+		topDialog.setVerticalAlignment(JLabel.CENTER);
+		topDialog.setHorizontalAlignment(JLabel.CENTER);
+		topDialog.setFont(new Font(Font.SANS_SERIF, Font.BOLD,18));
+		topDialog.setPreferredSize(new Dimension(100,60));
+		
+		
+		Font centerFont= new Font(Font.SANS_SERIF, Font.BOLD, 15);
+		// set center dialog
+		centerDialog.setLayout(new GridBagLayout());
+		GridBagConstraints gbc=new GridBagConstraints();
+		JLabel idProduct= new JLabel("ID");
+		idProduct.setFont(centerFont);
+		JTextField idField= new JTextField(model.getID()+"");
+		if(isInsert==false) idField.setEditable(false);//ko đc sửa
+		JLabel nameProduct= new JLabel("Tên");
+		nameProduct.setFont(centerFont);
+		JTextField nameField= new JTextField( model.getName());
+		JLabel priceProduct= new JLabel("Giá");
+		priceProduct.setFont(centerFont);
+		JTextField priceField= new JTextField(model.getPrice()+"");
+		JLabel desProduct= new JLabel("Mô Tả");
+		desProduct.setFont(centerFont);
+		JTextField desField= new JTextField(model.getDescription());
+		JLabel imgProduct= new JLabel("Link Ảnh");
+		imgProduct.setFont(centerFont);
+		JTextField imgField= new JTextField(model.getImage());
+		JLabel categoryProduct= new JLabel("Loại");
+		categoryProduct.setFont(centerFont);
+		JTextField categoryField= new JTextField(model.getCategory().getID()+"");
+	// cot trai	
+		gbc.insets= new Insets(0, 10,0,10);   // set padding
+		gbc.weightx= 0.3;  // set ti le cho ben trai ( con lai la ti le thua)
+		gbc.ipadx=60;		// tang chieu rong cua 1 ô 
+		gbc.ipady= 10;		// tang chieu cao của cả ô
+		gbc.anchor= GridBagConstraints.LINE_START; // căn vị trí của component( tất cả các loại J)so với ô- cụ thể đây là căn đầu dòng
+		gbc.gridx= 0;
+		gbc.gridy= 0;
+		centerDialog.add(idProduct,gbc);
+		gbc.gridy= 1;
+		centerDialog.add(nameProduct,gbc);
+		gbc.gridy= 2;
+		centerDialog.add(priceProduct,gbc);
+		gbc.gridy= 3;
+		centerDialog.add(desProduct,gbc);
+		gbc.gridy= 4;
+		centerDialog.add(imgProduct,gbc);
+		gbc.gridy= 5;
+		centerDialog.add(categoryProduct,gbc);
+		
+	// set size cho cot trai center
+		
+	// cot phai
+		
+		gbc.fill= GridBagConstraints.HORIZONTAL;  // lap đầy component trong ô
+		gbc.ipadx= 160;   
+		gbc.weightx= 0.7;
+		
+		gbc.gridx= 1;
+		gbc.gridy= 0;
+		centerDialog.add(idField,gbc);
+		gbc.gridy= 1;
+		centerDialog.add(nameField,gbc);
+		gbc.gridy= 2;
+		centerDialog.add(priceField,gbc);
+		gbc.gridy= 3;
+		centerDialog.add(desField,gbc);
+		gbc.gridy= 4;
+		centerDialog.add(imgField,gbc);
+		gbc.gridy= 5;
+		centerDialog.add(categoryField,gbc);
+//set soundDialog
+		Font fontSouth= new Font(Font.SANS_SERIF,Font.BOLD,14);
+		bottomDialog.setPreferredSize(new Dimension(100,60));
+		JButton insert= new JButton("Thêm");
+		insert.setFont(fontSouth);
+		insert.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					model.setID(Integer.parseInt(idField.getText()));
+					model.setPrice(Integer.parseInt(priceField.getText()));
+					model.setName(nameField.getText());
+					model.setDescription(desField.getText());
+					model.setImage(imgField.getText());
+					model.getCategory().setID(Integer.parseInt(categoryField.getText()));
+					ProductDAO.insert(model);
+					dialog.dispose();
+					JOptionPane.showMessageDialog(dialog, "Thêm thành công","Thông báo",JOptionPane.INFORMATION_MESSAGE);
+					PanelProduct.getIns().reLoad(true);
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					
+					JOptionPane.showMessageDialog(dialog, "Thêm thất bại","Thông báo",JOptionPane.INFORMATION_MESSAGE);
+				} 
+				
+				
+			}
+		});
+		
+		JButton edit= new JButton("Sửa");
+		edit.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					model.setID(Integer.parseInt(idField.getText()));
+					model.setPrice(Integer.parseInt(priceField.getText()));
+					model.setName(nameField.getText());
+					model.setDescription(desField.getText());
+					model.setImage(imgField.getText());
+					ProductDAO.update(model);
+					dialog.dispose();
+					JOptionPane.showMessageDialog(dialog, "Sửa thành công","Thông báo",JOptionPane.INFORMATION_MESSAGE);
+					PanelProduct.getIns().reLoad(true);
+					
+				} catch (Exception e2) {
+					JOptionPane.showMessageDialog(dialog, e2.toString(),"Thông báo",JOptionPane.INFORMATION_MESSAGE);
+
+				}
+				
+			}
+		});
+		edit.setFont(fontSouth);
+		
+		JButton delete= new JButton("Xóa");
+		delete.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				try {
+					ProductDAO.delete(model);
+					dialog.dispose();
+					JOptionPane.showMessageDialog(dialog, "Xóa thành công","Thông báo",JOptionPane.INFORMATION_MESSAGE);
+					PanelProduct.getIns().reLoad(true);
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					
+					JOptionPane.showMessageDialog(dialog, "Xóa thất bại","Thông báo",JOptionPane.INFORMATION_MESSAGE);
+				} 
+				
+			}
+		});
+		delete.setFont(fontSouth);
+		JButton cancel= new JButton("Thoát");
+		cancel.setFont(fontSouth);
+		cancel.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				int result= JOptionPane.showConfirmDialog(dialog, "Bạn có chắc chắn thoát","Thông báo", JOptionPane.YES_NO_OPTION);
+				if (result==JOptionPane.YES_OPTION) {
+					dialog.dispose();
+					
+				}
+				
+			}
+		});
+		
+		
+		
+		if(isInsert==true) {
+			
+			bottomDialog.add(insert);
+			bottomDialog.add(cancel);
+		}else {
+			bottomDialog.add(edit);
+			bottomDialog.add(delete);
+			bottomDialog.add(cancel);
+		}
+		
+		
+		
+	}
+	
+}
+
+class PagePanel extends JLabel {	
 	private int pageNumber;
 
 	public PagePanel(int pageNumber) {
