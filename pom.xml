@@ -78,5 +78,9 @@
            <artifactId>swingx-autocomplete</artifactId>
            <version>1.6.5-1</version>
            </dependency>
+
 	</dependencies>
+	
+	
+    
 </project>

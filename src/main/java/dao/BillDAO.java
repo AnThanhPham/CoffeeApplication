@@ -306,6 +306,18 @@ public class BillDAO extends DAO implements AbstractDAO<BillModel>{
 		 return res;
 	 }
 	
+	 public void changePrice(Float price,Integer id ) {
+	    	try {
+	    		String sql = "update bill set BillTotal = ? where id = ?";
+	    		PreparedStatement ps = conn.prepareStatement(sql);
+	    		ps.setFloat(1, price);
+	    		ps.setInt(2,id);
+	    		ps.executeUpdate();
+	    	}catch(Exception ex) {
+	    		ex.printStackTrace();
+	    	}
+	    }
+	 
 	@Override
 	public void insert(BillModel t) {
 		String sql = AbstractImpl.buildSqlInsertBill(t);
@@ -315,8 +327,8 @@ public class BillDAO extends DAO implements AbstractDAO<BillModel>{
 			ps.executeUpdate();
 			ResultSet rs = ps.getGeneratedKeys();
 			rs.first();
-			int cusID = rs.getInt(1);
-			t.setID(cusID);
+			int BillID = rs.getInt(1);
+			t.setID(BillID);
 			ps.close();
 		} catch (SQLException e) {
 			e.printStackTrace();

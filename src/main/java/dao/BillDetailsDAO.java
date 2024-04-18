@@ -69,8 +69,8 @@ public class BillDetailsDAO extends DAO implements AbstractDAO<BillDetailsModel>
 			ps.executeUpdate();
 			ResultSet rs = ps.getGeneratedKeys();
 			rs.first();
-			int cusID = rs.getInt(1);
-			t.setID(cusID);
+			int ID = rs.getInt(1);
+			t.setID(ID);
 			ps.close();
 		} catch (SQLException e) {
 			e.printStackTrace();

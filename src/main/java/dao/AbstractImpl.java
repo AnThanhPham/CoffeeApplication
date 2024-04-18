@@ -135,13 +135,9 @@ public class AbstractImpl {
 				Object value = field.get(t);
 				String fieldName = field.getName();
 				if(value != null) {
-					if(!fieldName.equalsIgnoreCase("Customer") 
+					if(!fieldName.equalsIgnoreCase("Customer")
 							&& !fieldName.equalsIgnoreCase("User")
-							&& !fieldName.equalsIgnoreCase("Table")
-							&& !fieldName.equalsIgnoreCase("Payment")
-							&& !fieldName.equalsIgnoreCase("TableID")
-							&& !fieldName.equalsIgnoreCase("PaymentID")
-							&& !fieldName.equalsIgnoreCase("status")) {
+							&& !fieldName.equalsIgnoreCase("Table")) {
 						if(field.getType().getName().equals("java.lang.String")) {
 							res.append(fieldName+" = '"+value+"' ,");
 						}else if(field.getType().getName().equals("java.lang.Integer")) {
