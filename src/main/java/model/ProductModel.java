@@ -18,7 +18,14 @@ public class ProductModel {
 		Category = category;
 	}
 
-	public ProductModel() {}
+	public ProductModel() {
+		ID= 0;
+		Price= 0;
+		Name = "";
+		Description = "";
+		Image = "";
+		Category = new CategoryModel(0,"","");
+	}
 
 	public int getID() {
 		return ID;

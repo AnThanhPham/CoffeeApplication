@@ -10,10 +10,18 @@ import model.ProductModel;
 public class ProductDAO extends DAO  {
 
 	
-	public void insert(ProductModel t) {
+	public static void insert(ProductModel t) throws SQLException {
 		// TODO Auto-generated method stub
-		
+			new DAO();
+			
+			Statement stm1= conn.createStatement();
+			 String sql= "insert product value( " + t.getID()+" ,"+t.getPrice()+",N'"+t.getName()+"',N'"+
+					 								t.getDescription()+"',N'"+t.getImage()+"',"+
+					 								t.getCategory().getID()+")";
+			 stm1.execute(sql);
+	
 	}
+		
 
 	
 	public static void delete(ProductModel t) throws SQLException  {
@@ -23,15 +31,77 @@ public class ProductDAO extends DAO  {
 			String sqlCommand= " delete from product where id = "+ t.getID();
 			stm1.execute(sqlCommand);
 		
-		
-		
 	}
 
 	
-	public void update(ProductModel t) {
-		// TODO Auto-generated method stub
+	public static void update(ProductModel t) throws SQLException {
+
+		Statement stm1= conn.createStatement();
+		 String sql="update product" +
+				 	" SET "+
+				 	"Name = N'" + t.getName()+ "'," + 
+				 	"Price = "+ t.getPrice()+ " ," +
+				 	"Description = N'" + t.getDescription()+"',"+
+				 	"image= '" + t.getImage() +"'," +
+				 	"categoryid = "+ t.getCategory().getID()+
+				 	" where id= "+ t.getID()   ;
+		 System.out.println("sql"+ sql);
+		 stm1.execute(sql);                
+		
 		
 	}
+	
+	public static List<ProductModel>  search(String t, String searchCategory) throws SQLException {
+		List<ProductModel> listResult= new ArrayList<ProductModel>();
+		Statement stm1= conn.createStatement();
+		String sql="select * from Product join Category on category.ID= Product.categoryID where name like '%"+ t + "%' and categoryName= N'"+ searchCategory +"'" ; 
+		stm1.execute(sql);
+		ResultSet rs= stm1.executeQuery(sql);
+		
+		while(rs.next()) {
+			
+			int id=rs.getInt(1);
+			double price= rs.getDouble(2);
+			String name= rs.getString(3);
+			String des= rs.getString(4);
+			String image= rs.getString(5);
+			int categoryID= rs.getInt(6);
+			int categoryId= rs.getInt( "category.ID");
+			String categoryName= rs.getString("categoryName");
+			String categoryDes= rs.getString("category.description");
+			CategoryModel category= new CategoryModel(categoryId, categoryName, des);
+			ProductModel in4= new ProductModel(id, price, name, des, image, category);
+			listResult.add(in4);
+			
+		}
+		
+		
+		return listResult;
+		
+	}
+	
+	public static List<String>  selectCategory() throws SQLException {
+		List<String> listResult= new ArrayList<String>();
+		Statement stm1= conn.createStatement();
+		String sql="select categoryname from  category";
+		stm1.execute(sql);
+		ResultSet rs= stm1.executeQuery(sql);
+		
+		while(rs.next()) {
+			String categoryName= rs.getString("categoryName");
+			listResult.add(categoryName);
+			
+		}
+		
+		
+		return listResult;
+		
+	}
+//	
+	
+	
+	
+	
 	public static List<ProductModel> selectAll() {
 		new DAO();
 		List<ProductModel> listResult= new ArrayList<ProductModel>();
