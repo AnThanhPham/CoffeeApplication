@@ -98,8 +98,8 @@ public class PanelBill extends JPanel {
 		Bill_ID.setFont(FLabelText);
 		add(Bill_ID);
 		
-		jlabel = new JLabel("Mã Khách Hàng");
-		jlabel.setBounds(330,95,110,30);
+		jlabel = new JLabel("Sđt Khách Hàng");
+		jlabel.setBounds(330,95,120,30);
 		jlabel.setFont(FLabel);
 		add(jlabel);
 		

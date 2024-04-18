@@ -1,4 +1,5 @@
 package controller;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -48,6 +49,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import javax.swing.event.AncestorEvent;
+import javax.swing.event.AncestorListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -93,6 +96,7 @@ public class PanelBillController {
 	private int PageSize =5 ;
 	private int PageNumber;
 	private int ButtonPageNumber = 3;
+	private LinkedHashMap<String, String> cartList = new LinkedHashMap<String, String>(); 
 	
 	public PanelBillController(PanelBill panelBill) {
 		this.panelBill = panelBill;
@@ -138,7 +142,6 @@ public class PanelBillController {
 		//private Date utilDate;
 		DisableInput();
 		
-		LinkedHashMap<String, String> cartList = new LinkedHashMap<String, String>(); 
 		panelBill.getTableBill().getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 			@Override
 		public void valueChanged(ListSelectionEvent e) {
@@ -148,14 +151,14 @@ public class PanelBillController {
 	        	if(rowSelect != -1) {
 	        		
 	        		String id = MapUtil.convertObjectToString(panelBill.getTableBill().getValueAt(rowSelect, 0));
-	        		String CusID = MapUtil.convertObjectToString(panelBill.getTableBill().getValueAt(rowSelect, 1));
+	        		String CusPhone = MapUtil.convertObjectToString(panelBill.getTableBill().getValueAt(rowSelect, 1));
 	        		String UserID = MapUtil.convertObjectToString(panelBill.getTableBill().getValueAt(rowSelect, 2));
 	        		String DateTime  = MapUtil.convertObjectToString(panelBill.getTableBill().getValueAt(rowSelect, 3));
 	        		
 	             	BillModel bill = billDao.findByID(id);
 	        		panelBill.getBill_ID().setText(id);
 	        		panelBill.getBill_Date().setText(DateTime);
-	        		panelBill.getCustomer_ID().setText(CusID);
+	        		panelBill.getCustomer_ID().setText(billDao.findCusByPhone(CusPhone).getID()+"");
 	        		panelBill.getUser_ID().setText(UserID);
 	        		panelBill.getPayment_ID().setText(bill.getPayment().getID()+"");
 	        		panelBill.getTable_ID().setText(bill.getTable().getID()+"");
@@ -187,26 +190,28 @@ public class PanelBillController {
 				 JLabel QuantityLabel = new JLabel("Số lượng ");
 				 JTextField QuantityProduct = new JTextField(10);
 				 JButton saveData = new JButton("Thêm vào giỏ hàng");
-				 
 				 frameCart.add(productLabel);
 				 frameCart.add(productList);
 				 frameCart.add(QuantityLabel);
 				 frameCart.add(QuantityProduct);
 				 frameCart.add(saveData);
-					JScrollPane scrollPaneCart = new JScrollPane();
+					
+				 JScrollPane scrollPaneCart = new JScrollPane();
 					frameCart.add(scrollPaneCart);
+					
 					
 					JTable tableCart = new JTable();
 					scrollPaneCart.setViewportView(tableCart);
 					tableCart.setRowHeight(20);
 					
 					DefaultTableModel model = new DefaultTableModel();
-					String[] colName = {"ProductName","","Quantity","",""};
+					//String[] colName = {"ProductName","","Quantity","",""};
+					String[] colName = {"ProductName","Quantity",};
 					for(String x : colName) {
 						model.addColumn(x);
 					}
 					 tableCart.setModel(model);
-					 
+					 /*
 					 tableCart.getColumnModel().getColumn(1).setCellRenderer(new ButtonRenderer());
 					 tableCart.getColumnModel().getColumn(1).setCellEditor(new ButtonEditor(new JTextField()));
 					 tableCart.getColumnModel().getColumn(1).setPreferredWidth(3);
@@ -218,6 +223,7 @@ public class PanelBillController {
 					 tableCart.getColumnModel().getColumn(4).setCellRenderer(new ButtonRenderer());
 					 tableCart.getColumnModel().getColumn(4).setCellEditor(new ButtonEditor(new JTextField()));
 					 tableCart.getColumnModel().getColumn(4).setPreferredWidth(3);
+					 */
 				 if(rowSelect !=-1) {
 					 
 					 String id = MapUtil.convertObjectToString(panelBill.getTableBill().getValueAt(rowSelect, 0));
@@ -236,7 +242,7 @@ public class PanelBillController {
 							int productIdx =  productList.getSelectedIndex();
 						//	System.out.println(productIdx);
 								if(productIdx != 0 && (QuantityProduct.getText() !="" && Integer.parseInt(QuantityProduct.getText()) !=0)) {
-									//System.out.println(productDao.findByID(productIdx+"").getName());
+									
 									String ProductName = productDao.findByID(productIdx+"").getName();
 									Integer Quantity = Integer.parseInt(QuantityProduct.getText());
 									
@@ -249,7 +255,8 @@ public class PanelBillController {
 									}
 									model.setRowCount(0);
 									for(Entry<String, String> x : cartList.entrySet()) {
-										 model.addRow(new Object[] { x.getKey(),"+",x.getValue(),"-","delete"});
+										// model.addRow(new Object[] { x.getKey(),"+",x.getValue(),"-","delete"});
+										 model.addRow(new Object[] { x.getKey(),x.getValue()});
 									}
 									
 								}
@@ -258,17 +265,20 @@ public class PanelBillController {
 								}
 						}
 					});  
-					
 					for(Entry<String, String> x : cartList.entrySet()) {
-						 model.addRow(new Object[] { x.getKey(),"+",x.getValue(),"-","delete"});
+						// model.addRow(new Object[] { x.getKey(),"+",x.getValue(),"-","delete"});
+						 model.addRow(new Object[] { x.getKey(),x.getValue()});
 					}
+					
+					
+
 					/*
 					System.out.println(cartList.size());
 					cartList.forEach((key,value)->{
 						System.out.println(key+"  "+value);
 					});
 					*/
-				 frameCart.setSize(500, 300);
+				 frameCart.setSize(500, 500);
 				frameCart.setLocationRelativeTo(null);
 				frameCart.setVisible(true);
 				
@@ -293,7 +303,7 @@ public class PanelBillController {
 				StringBuilder messageError = new StringBuilder("");
 				float SumPrice = 0;
 				String Bill_ID = panelBill.getBill_ID().getText();
-				String Customer_ID = panelBill.getCustomer_ID().getText();
+				String Customer_Phone = panelBill.getCustomer_ID().getText();
 				String User_ID = panelBill.getUser_ID().getText();
 				String Table_ID = panelBill.getTable_ID().getText();
 				String Payment_ID = panelBill.getPayment_ID().getText();
@@ -304,8 +314,10 @@ public class PanelBillController {
                 BillModel tmp = new BillModel();
 				
 				tmp.setStatus(Status);
-				if(Customer_ID != null) {
-					CustomerModel cusDao = customerDao.findByID(Customer_ID);
+				if(Customer_Phone != null) {
+					Integer cusID = billDao.findCusByPhone(Customer_Phone).getID();
+					panelBill.getCustomer_ID().setText(cusID+"");
+					CustomerModel cusDao = customerDao.findByID(cusID+"");
 					tmp.setCustomer(cusDao);
 					tmp.setCustomerID(cusDao.getID());
 				}
@@ -453,11 +465,12 @@ public class PanelBillController {
 			}
 			
 		});
-		/*
+		
 		panelBill.getDetailsBill().addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				
 				int rowSelect = panelBill.getTableBill().getSelectedRow();
 				String id = MapUtil.convertObjectToString(panelBill.getTableBill().getValueAt(rowSelect, 0));
         		String cusID = MapUtil.convertObjectToString(panelBill.getTableBill().getValueAt(rowSelect, 1));
@@ -465,60 +478,86 @@ public class PanelBillController {
         		String date = MapUtil.convertObjectToString(panelBill.getTableBill().getValueAt(rowSelect, 3));
         		String sumPrice = MapUtil.convertObjectToString(panelBill.getTableBill().getValueAt(rowSelect, 4));
         		
-				if(rowSelect!=-1) {
-					BillModel tmpBill = billDao.findByID(id);
-					ArrayList<BillDetailsModel> tmpBillDetail = billDetailsDao.findByBillID(id);
-					//System.out.println(tmpBillDetail.size());
-					JFrame FrameDetails = new JFrame();
-					FrameDetails.set
-					JDialog Details = new JDialog();
-					Details.setLayout(new GridLayout(4,1));
-					//Details.setSize(400, 600);
-					Details.setLocationRelativeTo(null);
-					JLabel rowBillId = new JLabel("Mã hóa đơn : "+id);
-					Details.add(rowBillId);
-					JLabel rowCusId = new JLabel("Mã Khách Hàng : "+cusID);
-					Details.add(rowCusId);
-					JLabel rowUserId = new JLabel("Mã Nhân Viên : "+userID);
-					Details.add(rowUserId);
-					JLabel rowDate = new JLabel("Ngày hóa đơn : "+date);
-					Details.add(rowDate);
-				    JLabel rowProductList = new JLabel("Sản Phẩm : ");
-					Details.add(rowProductList);
-					
-					JScrollPane scrollPane = new JScrollPane(); 
-					Details.add(scrollPane);
-
-					JTable tableDetails = new JTable();
-					scrollPane.setViewportView(tableDetails);
-					
-					DefaultTableModel DeftableDetails = new DefaultTableModel() {
-					};
-					String[] columnName = {"Tên sản phẩm","Số lượng","Thành Tiền"};
-					for(String x: columnName) {
-						DeftableDetails.addColumn(x);
-						
-					}
-					
-					for(BillDetailsModel x : tmpBillDetail) {
-						Vector<String> rowdataDetails = new Vector<String>();
-						rowdataDetails.add(x.getProduct().getName());
-						rowdataDetails.add(x.getQuantityProduct()+"");
-						rowdataDetails.add((x.getQuantityProduct()*x.getProduct().getPrice())+"");
-						DeftableDetails.addRow(rowdataDetails);
-					}
-					tableDetails.setModel(DeftableDetails);
+        		try {
+        			if(rowSelect!=-1) {
+    					ArrayList<BillDetailsModel> tmpBillDetail = billDetailsDao.findByBillID(id);
+    					
+    					
+    					JDialog dialogBill = new JDialog();
+    					dialogBill.setLayout(new BorderLayout());
+    					JPanel panelBillHeader = new JPanel();
+    					panelBillHeader.setLayout(new GridLayout(13,1));
+    					JLabel white = new JLabel();
+    				    panelBillHeader.add( white);
+    				    
+    					JLabel rowBillId = new JLabel("    Mã hóa đơn : "+id);
+    					panelBillHeader.add(rowBillId);
+    					JLabel white1 = new JLabel();
+    				    panelBillHeader.add( white1);
+    				    
+    					JLabel rowCusId = new JLabel("    Mã Khách Hàng : "+cusID);
+    					panelBillHeader.add(rowCusId);
+    					JLabel white2 = new JLabel();
+    				    panelBillHeader.add( white2);
+    				    
+    					JLabel rowUserId = new JLabel("    Mã Nhân Viên : "+userID);
+    					panelBillHeader.add(rowUserId);
+    					JLabel white3 = new JLabel();
+    				    panelBillHeader.add( white3);
+    				    
+    					JLabel rowDate = new JLabel("    Ngày hóa đơn : "+date);
+    					panelBillHeader.add(rowDate);
+    					JLabel white4 = new JLabel();
+    				    panelBillHeader.add( white4);
+    				    
+    				    JLabel rowPrice = new JLabel("    Giá trị hóa đơn : "+ sumPrice);
+    				    panelBillHeader.add(rowPrice);
+    				    JLabel white5 = new JLabel();
+    				    panelBillHeader.add( white5);
+    				    
+    				    JLabel cart = new JLabel("     Danh sách mặt hàng : ");
+    				    panelBillHeader.add(cart);
+    				    JLabel white6 = new JLabel();
+    				    panelBillHeader.add( white6);
+    					dialogBill.add(panelBillHeader,BorderLayout.NORTH);
+    					
+    					DefaultTableModel model =  new DefaultTableModel() {};
+    					String column[] = {"Hàng hóa", "Số Lượng","Đơn giá", "Thành tiền"};
+    					for(String x: column) {
+    						model.addColumn(x);
+    					}
+    					
+    					JScrollPane scrollPaneCart = new JScrollPane();
+    					dialogBill.add(scrollPaneCart,BorderLayout.CENTER);
+    					
+    					JTable tableCart = new JTable();
+    					scrollPaneCart.setViewportView(tableCart);
+    					tableCart.setRowHeight(20);
+    					
+    					 tableCart.setModel(model);
+    					 
+    					 for(BillDetailsModel x: tmpBillDetail) {
+    						 Vector<String> detaData = new Vector<String>();
+    						 detaData.add(x.getProduct().getName());
+    						 detaData.add(x.getQuantityProduct()+"");
+    						 detaData.add(x.getProduct().getPrice()+"");
+    						 detaData.add(x.getProduct().getPrice()*x.getQuantityProduct()+"");
+    						 model.addRow(detaData);
+    					 }
+    					dialogBill.setSize(500, 700);
+    					dialogBill.setLocationRelativeTo(null);
+    					dialogBill.setVisible(true);
+    				}
+    				else JOptionPane.showMessageDialog(panelBill,"Bạn chưa chọn hóa đơn để xem chi tiết");
+    		
+				} catch (Exception e2) {
+					// TODO: handle exception
+				}
 				
-					
-					Details.setVisible(true);
-				}
-				else {
-					JOptionPane.showMessageDialog(panelBill,"Bạn chưa chọn dữ liệu");
-				}
 			}
 		});
-		*/
 	}	
+	
 	
 	public boolean validateForm2(BillModel bill,StringBuilder res) {		
 		if(ValidateUtils.checkEmptyAndNull(bill.getUser()+"")) {
@@ -634,6 +673,17 @@ public class PanelBillController {
 			PageNumber = TableRowLength/PageSize;
 		}else {
 			PageNumber = TableRowLength/PageSize +1;
+		}
+		if(PageNumber==1) {
+			panelBill.getPage2().setVisible(false);
+			panelBill.getPage3().setVisible(false);
+		}
+		else if(PageNumber==2) {
+			panelBill.getPage2().setVisible(true);
+			panelBill.getPage3().setVisible(false);
+		}
+		else {
+			panelBill.getPage3().setVisible(true);
 		}
 		for(int i=0;i<PageNumber;i++) {
 			ArrayList<BillModel> tmp = new ArrayList<BillModel>();
@@ -1060,6 +1110,13 @@ public class PanelBillController {
 		}
 		renderTable(AllPageInformation.get(0));
 		renderButton();
+	}
+	
+	public LinkedHashMap<String, String> getCartList() {
+		return cartList;
+	}
+	public void setCartList(LinkedHashMap<String, String> cartList) {
+		this.cartList = cartList;
 	}
 }
 

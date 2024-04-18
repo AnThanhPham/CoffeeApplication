@@ -10,15 +10,15 @@ import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 
+import controller.PanelBillController;
+
 public class ButtonEditor extends DefaultCellEditor{
 
 	protected JButton btn;
 	private String lb1;
 	private boolean clicked;
-	
 	public ButtonEditor(JTextField txt) {
 		super(txt);
-		
 		btn = new JButton();
 		btn.setOpaque(true);
 		
@@ -26,6 +26,15 @@ public class ButtonEditor extends DefaultCellEditor{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				String action = e.getActionCommand();
+				if (action.equals("+")) {
+                   
+                } else if (action.equals("-")) {
+               
+                } else if (action.equals("delete")) {
+                	
+                }
+				
 				fireEditingStopped();
 			}
 		});
@@ -42,7 +51,7 @@ public class ButtonEditor extends DefaultCellEditor{
 	@Override
 	public Object getCellEditorValue() {
 		if(clicked) {
-			JOptionPane.showMessageDialog(btn, lb1+" click");
+			
 		}
 		clicked=false;
 		return new String(lb1);

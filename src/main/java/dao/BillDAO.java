@@ -156,6 +156,30 @@ public class BillDAO extends DAO implements AbstractDAO<BillModel>{
 	    	return res;
 	 }
 	 
+	 public CustomerModel findCusByPhone(String phone) {
+	    	CustomerModel res = null;
+	    	try {
+	    		String sql = "select * from customer where phone = ? limit 1";
+	    		PreparedStatement ps = conn.prepareStatement(sql);
+	    		ps.setString(1, phone);
+	    		ResultSet rs = ps.executeQuery();
+	    		CustomerModel tmp = new CustomerModel();
+	    		if(rs.next()) {
+	    			tmp.setID(rs.getInt(1));
+	    			tmp.setName(rs.getString(2));
+	    			tmp.setPhone(rs.getString(3));
+	    			tmp.setAddress(rs.getString(4));	    			
+	    			tmp.setEmail(rs.getString(5));
+	    		}
+	    		if(Integer.valueOf(tmp.getID()) != null) {
+	    			res = tmp;
+	    		}
+	    	}catch(Exception ex) {
+	    		ex.printStackTrace();
+	    	}
+	    	return res;
+	    }
+	 
 	 public ProductModel findProductByName(String name) {
 	    	ProductModel res = null;
 	    	try {
