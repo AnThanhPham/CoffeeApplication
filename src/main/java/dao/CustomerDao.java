@@ -12,6 +12,11 @@ import java.util.ArrayList;
 
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+
 
 public class CustomerDao extends DAO implements AbstractDAO<CustomerModel>{
 	public CustomerDao() {
@@ -98,8 +103,7 @@ public class CustomerDao extends DAO implements AbstractDAO<CustomerModel>{
 			}
 	        return duplicate;
 	    }
-	 
-	 
+
 	 public CustomerModel findByID(String id) {
 	    	CustomerModel res = null;
 	    	try {
@@ -123,6 +127,7 @@ public class CustomerDao extends DAO implements AbstractDAO<CustomerModel>{
 	    	}
 	    	return res;
 	    }
+
 	 public ArrayList<CustomerModel> findByFullname(String fullname) {
 	    	ArrayList<CustomerModel> res = new ArrayList<>();
 	    	try {
@@ -145,3 +150,5 @@ public class CustomerDao extends DAO implements AbstractDAO<CustomerModel>{
 	    	return res;
 	    }
 }
+
+
