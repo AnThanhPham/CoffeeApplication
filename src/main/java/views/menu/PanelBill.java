@@ -15,21 +15,31 @@ import javax.swing.SwingConstants;
 import javax.swing.table.*;
 
 import controller.PanelBillController;
-import model.BillModel;
+import dao.BillDAO;
+import model.BillDetailsModel;
 
 import javax.swing.JScrollPane;
 
 public class PanelBill extends JPanel {
 	private JLabel jlabel;
-	private JLabel MaHD;
-	private JLabel MaKH;
-	private JLabel MaNV;
-	private JLabel NgayHD;
-	private JLabel TongTien;
+	private JLabel TodayDate;
 	
 	private JButton AddBill;
 	private JButton DeleteBill;
+	private JButton EditBill;
 	private JButton DetailsBill;
+	private JButton SaveBill;
+	//private JButton addBillProduct;
+	private JButton Cart;
+	//page
+	private JButton Page1;
+	private JButton Page2;
+	private JButton Page3; 
+	private JButton PageBefore;
+	private JButton PageNext; 
+	private JButton PageFirst;
+	private JButton Fitter;
+	private JButton RefreshFitter;
 	
 	private Font FLabel;
 	private Font FLabelText;
@@ -38,15 +48,23 @@ public class PanelBill extends JPanel {
 	private JComboBox<String> FDay;
 	private JComboBox<String> FMonth;
 	private JComboBox<String> FYear;
+	private JComboBox<String> Sort;
+	private JComboBox<String> Status_item;
 	
-	private JTextField FBillForm;
-	private JTextField FBillTo;
-	private JTextField FMaHD;
+	private JTextField Bill_Date;
+	private JTextField Bill_ID;
+	private JTextField Customer_ID;
+	private JTextField User_ID;
+	private JTextField Table_ID;
+	private JTextField Payment_ID;
+	private JTextField FindBillID;
 	
 	private JTable TableBill;
 	private JScrollPane scrollPaneTable;
 	
-	private PanelBillController panelBillController;
+    private PanelBillController panelBillController;
+	private BillDetailsModel billDetailsModel;
+	private BillDAO billDao = new BillDAO();
 	
 	public PanelBill() {
 		setLayout(null);
@@ -60,71 +78,101 @@ public class PanelBill extends JPanel {
 		CreateBody();
 		
 		panelBillController = new PanelBillController(this);
+
 	}
 
 	public void CreateHeader() {
-		jlabel = new JLabel("Mã HĐ");
-		jlabel.setBounds(70,70,60,30);
+		
+		TodayDate = new JLabel();
+		TodayDate.setBounds(60,10,237,30);
+		TodayDate.setFont(FBtnBill);
+		add(TodayDate);
+		
+		jlabel = new JLabel("Mã Hóa Đơn");
+		jlabel.setBounds(60,50,100,30);
 		jlabel.setFont(FLabel);
 		add(jlabel);
 		
-		MaHD = new JLabel("0",SwingConstants.CENTER);
-		MaHD.setBounds(130,70,70,30);
-		MaHD.setFont(FLabelText);
-		MaHD.setBackground(Color.WHITE);
-		MaHD.setOpaque(true);
-		add(MaHD);
+		Bill_ID = new JTextField();
+		Bill_ID.setBounds(180,50,120,30);
+		Bill_ID.setFont(FLabelText);
+		add(Bill_ID);
 		
-		jlabel = new JLabel("Mã KH");
-		jlabel.setBounds(210,70,60,30);
+		jlabel = new JLabel("Sđt Khách Hàng");
+		jlabel.setBounds(330,95,120,30);
 		jlabel.setFont(FLabel);
 		add(jlabel);
 		
-		MaKH = new JLabel("0",SwingConstants.CENTER);
-		MaKH.setBounds(270,70,70,30);
-		MaKH.setFont(FLabelText);
-		MaKH.setBackground(Color.WHITE);
-		MaKH.setOpaque(true);
-		add(MaKH);
+		Customer_ID = new JTextField();
+		Customer_ID.setBounds(450,95,120,30);
+		Customer_ID.setFont(FLabelText);
+		add(Customer_ID);
 		
-		jlabel = new JLabel("Mã NV");
-		jlabel.setBounds(350,70,60,30);
+		jlabel = new JLabel("Mã Nhân Viên");
+		jlabel.setBounds(330,50,100,30);
 		jlabel.setFont(FLabel);
 		add(jlabel);
 		
-		MaNV = new JLabel("0",SwingConstants.CENTER);
-		MaNV.setBounds(410,70,70,30);
-		MaNV.setFont(FLabelText);
-		MaNV.setBackground(Color.WHITE);
-		MaNV.setOpaque(true);
-		add(MaNV);
+		User_ID = new JTextField();
+		User_ID.setBounds(450,50,120,30);
+		User_ID.setFont(FLabelText);
+		add(User_ID);
 		
-		jlabel = new JLabel("Ngày HĐ"); // thời gian tạo hóa đơn + hiển thị
-		jlabel.setBounds(70,110,100,30);
+		
+		jlabel = new JLabel("Bàn số");
+		jlabel.setBounds(60,185,60,30);
 		jlabel.setFont(FLabel);
 		add(jlabel);
 		
-		NgayHD = new JLabel("  0-0-0 00::00::00.0");
-		NgayHD.setBounds(170,110,310,30);
-		NgayHD.setFont(FLabelText);
-		NgayHD.setBackground(Color.WHITE);
-		NgayHD.setOpaque(true);
-		add(NgayHD);
+		Table_ID = new JTextField();
+		Table_ID.setBounds(180,185,119,30);
+		Table_ID.setFont(FLabelText);
+		add(Table_ID);
+		
+		jlabel = new JLabel("Thanh Toán");
+		jlabel.setBounds(60,139,90,30);
+		jlabel.setFont(FLabel);
+		add(jlabel);
+		
+		Payment_ID = new JTextField();
+		Payment_ID.setBounds(180,140,120,30);
+		Payment_ID.setFont(FLabelText);
+		add(Payment_ID);
+		
+		jlabel = new JLabel("Ngày Hóa Đơn"); // thời gian tạo hóa đơn + hiển thị
+		jlabel.setBounds(60,95,120,30);
+		jlabel.setFont(FLabel);
+		add(jlabel);
+		
+		Bill_Date = new JTextField();
+		Bill_Date.setBounds(180,95,120,30);
+		Bill_Date.setBackground(Color.WHITE);
+		Bill_Date.setOpaque(true);
+		Bill_Date.setFont(FLabelText);
+		add(Bill_Date);
+		
+		jlabel = new JLabel("Trạng Thái"); // thời gian tạo hóa đơn + hiển thị
+		jlabel.setBounds(330,140,90,30);
+		jlabel.setFont(FLabel);
+		add(jlabel);
+		
+		Status_item = new JComboBox<String>();
+		Status_item.setBounds(450,140,120,30);
+		Status_item.addItem("Done");
+		Status_item.addItem("Waiting");
+		add(Status_item);
 
-		jlabel = new JLabel("Tổng Tiền"); // dòng tổng tiền + hiển thị 
-		jlabel.setBounds(70,150,100,30);
-		jlabel.setFont(FLabel);
-		add(jlabel);
 		
-		TongTien = new JLabel("   0.0");
-		TongTien.setBounds(170,150,310,30);
-		TongTien.setFont(FLabelText);
-		TongTien.setBackground(Color.WHITE);
-		TongTien.setOpaque(true);
-		add(TongTien);
-		
+		Cart = new JButton(); // thêm hóa đơn
+		Cart.setBounds(630,50,160,40);
+		Cart.setFont(FBtnBill);
+		Cart.setBackground(Color.ORANGE);
+		Cart.setOpaque(true);
+		Cart.setText("Giỏ hàng");
+		add(Cart);
+        
 		AddBill = new JButton(); // thêm hóa đơn
-		AddBill.setBounds(650,70,200,50);
+		AddBill.setBounds(800,50,160,40);
 		AddBill.setFont(FBtnBill);
 		AddBill.setBackground(Color.GREEN);
 		AddBill.setOpaque(true);
@@ -132,164 +180,277 @@ public class PanelBill extends JPanel {
 		add(AddBill);
 		
 		DeleteBill = new JButton(); // xóa hóa đơn
-		DeleteBill.setBounds(650,130,200,50);
+		DeleteBill.setBounds(800,160,160,40);
 		DeleteBill.setFont(FBtnBill);
 		DeleteBill.setBackground(Color.RED);
 		DeleteBill.setOpaque(true);
 		DeleteBill.setText("Xóa Hóa Đơn");
 		add(DeleteBill);
 		
+		EditBill = new JButton(); // hóa đơn chi tiết 
+		EditBill.setBounds(630,105,160,40);
+		EditBill.setFont(FBtnBill);
+		EditBill.setBackground(Color.YELLOW);
+		EditBill.setOpaque(true);
+		EditBill.setText("Chỉnh Hóa Đơn");
+		add(EditBill);
+		
 		DetailsBill = new JButton(); // hóa đơn chi tiết 
-		DetailsBill.setBounds(900,70,200,50);
+		DetailsBill.setBounds(800,105,160,40);
 		DetailsBill.setFont(FBtnBill);
-		DetailsBill.setBackground(Color.YELLOW);
+		DetailsBill.setBackground(Color.BLUE);
 		DetailsBill.setOpaque(true);
 		DetailsBill.setText("Chi Tiết Hóa Đơn");
 		add(DetailsBill);
 		
+		SaveBill = new JButton(); // hóa đơn chi tiết 
+		SaveBill.setBounds(630,160,160,40);
+		SaveBill.setFont(FBtnBill);
+		SaveBill.setBackground(Color.LIGHT_GRAY);
+		SaveBill.setOpaque(true);
+		SaveBill.setText("Lưu Hóa Đơn");
+		add(SaveBill);
 	}
-	
-	 @Override
+
+	@Override
 	protected void paintComponent(Graphics g) {
 	        super.paintComponent(g);
 
 	        Graphics g2 = (Graphics) g;
 
 	        // Vẽ đường thẳng ngăn cách giữa 2 phần
-	        g2.drawLine(70, 210, 1170, 210);
+	        g2.drawLine(60, 290, 1180, 290);
 	    }
 	 
 	public void CreateBody() {
 		// time
-		jlabel = new JLabel("Thời gian : ");
-		jlabel.setBounds(70,240,80,30);
+		jlabel = new JLabel("Thời gian ");
+		jlabel.setBounds(60,320,75,30);
 		jlabel.setFont(FLabel);
 		add(jlabel);
 		
+		
 		FDay = new JComboBox<String>();
+		FDay.addItem("day");
 		for(int i=1;i<=31;i++) {
 			if(i<10) FDay.addItem("0"+String.valueOf(i));
 			else FDay.addItem(String.valueOf(i));
 		}
-		FDay.setBounds(150,240,60,30);
+		FDay.setBounds(135,320,55,30);
 		add(FDay);
 		
 		FMonth = new JComboBox<String>();
+		FMonth.addItem("month");
 		for(int i=1;i<=12;i++) {
 			if(i<10) FMonth.addItem("0"+String.valueOf(i));
 			else FMonth.addItem(String.valueOf(i));
 		}
-		FMonth.setBounds(220,240,60,30);
+		FMonth.setBounds(200,320,70,30);
 		add(FMonth);
 		
 		FYear = new JComboBox<String>();
-		for(int i=2000;i<=2024;i++)
+		FYear.addItem("year");
+		for(int i=2020;i<=2024;i++)
 			FYear.addItem(String.valueOf(i));
-		FYear.setBounds(290,240,60,30);
+		FYear.setBounds(275,320,70,30);
 		add(FYear);
 		
-		// Giá
-		jlabel = new JLabel("Giá (VNĐ):");
-		jlabel.setBounds(450,240,100,30);
-		jlabel.setFont(FLabel);
-		add(jlabel);
+		Fitter = new JButton("Lọc");
+		Fitter.setBounds(885,300,75,30);
+		add(Fitter);
 		
-		FBillForm = new JTextField();
-		FBillForm.setBounds(550,240,100,30);
-		FBillForm.setFont(FLabelText);
-		add(FBillForm);
-		
-		jlabel = new JLabel("-",SwingConstants.CENTER);
-		jlabel.setBounds(650,240,30,30);
-		jlabel.setFont(FLabel);
-		add(jlabel);
-		
-		FBillTo = new JTextField();
-		FBillTo.setBounds(680,240,100,30);
-		FBillTo.setFont(FLabelText);
-		add(FBillTo);
-		
+		RefreshFitter = new JButton("Làm mới");
+		RefreshFitter.setBounds(885,335,75,30);
+		add(RefreshFitter);
 		// lọc mã
-		jlabel = new JLabel("Mã HĐ");
-		jlabel.setBounds(850,240,70,30);
+		jlabel = new JLabel("Tìm Mã Hóa Đơn");
+		jlabel.setBounds(360,320,120,30);
 		jlabel.setFont(FLabel);
 		add(jlabel);
 		
-		FMaHD = new JTextField() ;
-		FMaHD.setBounds(920,240,150,30);
-		FMaHD.setFont(FLabelText);
-		add(FMaHD);
-	
+		jlabel = new JLabel("Sắp Xếp Theo ");
+		jlabel.setBounds(614,320,110,30);
+		jlabel.setFont(FLabel);
+		add(jlabel);
+		
+		FindBillID = new JTextField();
+		FindBillID.setBounds(490,320,100,30);
+		FindBillID.setFont(FLabelText);
+		add(FindBillID);
+		
+		Sort = new JComboBox<String>();
+		Sort.setBounds(715,320,150,30);
+		Sort.addItem("Mã hóa đơn mới nhất");
+		Sort.addItem("Mã hóa đơn cũ nhất");
+		Sort.addItem("Ngày mới nhất");
+		Sort.addItem("Ngày Cũ nhất");
+		add(Sort);
+		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(70, 304, 884, 332);
+		scrollPane.setBounds(60, 380, 900, 290);
 		add(scrollPane);
 		
 		TableBill = new JTable();
 		scrollPane.setViewportView(TableBill);
-		TableBill.setModel(new DefaultTableModel(
-			new Object[][] {
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-			},
-			new String[] {
-				"M\u00E3 H\u00F3a \u0110\u01A1n", "M\u00E3 Kh\u00E1ch H\u00E0ng", "M\u00E3 Nh\u00E2n Vi\u00EAn", "Ng\u00E0y H\u00F3a \u0110\u01A1n", "T\u1ED5ng Ti\u1EC1n"
-			}
-		) {
-			Class[] columnTypes = new Class[] {
-				String.class, String.class, String.class, String.class, String.class
-			};
-			public Class getColumnClass(int columnIndex) {
-				return columnTypes[columnIndex];
-			}
-			public boolean isCellEditable(int row, int column) {
-				return false;
-			}
-		});
-		TableBill.getColumnModel().getColumn(1).setPreferredWidth(100);
-		TableBill.getColumnModel().getColumn(2).setPreferredWidth(100);
-		TableBill.getColumnModel().getColumn(3).setPreferredWidth(100);
-		TableBill.getColumnModel().getColumn(4).setPreferredWidth(100);
+		TableBill.setRowHeight(20);
+		
+		JTableHeader header = TableBill.getTableHeader();
+		header.setReorderingAllowed(false);
+		
+		// Page
+		PageBefore = new JButton("Trang trước");
+		PageBefore.setBounds(310, 687, 100, 30);
+		add(PageBefore);
+		
+		PageFirst = new JButton("Trang Đầu");
+		PageFirst.setBounds(210, 687, 90, 30);
+		add(PageFirst);
+		
+		Page1 = new JButton("1");
+		Page1.setBounds(430, 687, 60, 30);
+		Page1.setBackground(Color.orange);
+		add(Page1);
+		
+		Page2 = new JButton("2");
+		Page2.setBounds(505, 687, 60, 30);
+		add(Page2);
+		
+		Page3 = new JButton("3");
+		Page3.setBounds(575, 687, 60, 30);
+		add(Page3);
+		
+		PageNext = new JButton("Trang kế tiếp");
+		PageNext.setBounds(660, 687, 100, 30);
+		add(PageNext);
 		
 	}
 	
 	
-	
-	
+	public JButton getRefreshFitter() {
+		return RefreshFitter;
+	}
+
+	public void setRefreshFitter(JButton refreshFitter) {
+		RefreshFitter = refreshFitter;
+	}
+
+	public JTextField getBill_Date() {
+		return Bill_Date;
+	}
+
+	public void setBill_Date(JTextField datetime) {
+		Bill_Date = datetime;
+	}
+
+	public JButton getPage1() {
+		return Page1;
+	}
+
+	public void setPage1(JButton page1) {
+		Page1 = page1;
+	}
+
+	public JButton getPage2() {
+		return Page2;
+	}
+
+	public void setPage2(JButton page2) {
+		Page2 = page2;
+	}
+
+	public JButton getPage3() {
+		return Page3;
+	}
+
+	public void setPage3(JButton page3) {
+		Page3 = page3;
+	}
+
+	public JButton getPageNext() {
+		return PageNext;
+	}
+
+	public void setPageNext(JButton pageNext) {
+		PageNext = pageNext;
+	}
+
+	public JButton getPageBefore() {
+		return PageBefore;
+	}
+
+	public void setPageBefore(JButton pageBefore) {
+		PageBefore = pageBefore;
+	}
+
+	public JTextField getBill_ID() {
+		return Bill_ID;
+	}
+
+	public void setBill_ID(JTextField bill_ID) {
+		Bill_ID = bill_ID;
+	}
+
+	public JTextField getCustomer_ID() {
+		return Customer_ID;
+	}
+
+	public void setCustomer_ID(JTextField customer_ID) {
+		Customer_ID = customer_ID;
+	}
+
+	public JTextField getUser_ID() {
+		return User_ID;
+	}
+
+	public void setUser_ID(JTextField user_ID) {
+		User_ID = user_ID;
+	}
+
+	public JTextField getTable_ID() {
+		return Table_ID;
+	}
+
+	public void setTable_ID(JTextField table_ID) {
+		Table_ID = table_ID;
+	}
+
+	public JTextField getPayment_ID() {
+		return Payment_ID;
+	}
+
+	public void setPayment_ID(JTextField payment_ID) {
+		Payment_ID = payment_ID;
+	}
+
+	public JTextField getFindBillID() {
+		return FindBillID;
+	}
+
+	public void setFindBillID(JTextField findBillID) {
+		FindBillID = findBillID;
+	}
+
+	public PanelBillController getPanelBillController() {
+		return panelBillController;
+	}
+
+	public void setPanelBillController(PanelBillController panelBillController) {
+		this.panelBillController = panelBillController;
+	}
+
+	public BillDetailsModel getBillDetailsModel() {
+		return billDetailsModel;
+	}
+
+	public void setBillDetailsModel(BillDetailsModel billDetailsModel) {
+		this.billDetailsModel = billDetailsModel;
+	}
+
 	public JLabel getJlabel() {
 		return jlabel;
 	}
 	public void setJlabel(JLabel jlabel) {
 		this.jlabel = jlabel;
-	}
-	public JLabel getMaHD() {
-		return MaHD;
-	}
-	public void setMaHD(JLabel maHD) {
-		MaHD = maHD;
-	}
-	public JLabel getMaKH() {
-		return MaKH;
-	}
-	public void setMaKH(JLabel maKH) {
-		MaKH = maKH;
-	}
-	public JLabel getMaNV() {
-		return MaNV;
-	}
-	public void setMaNV(JLabel maNV) {
-		MaNV = maNV;
-	}
-	public JLabel getNgayHD() {
-		return NgayHD;
-	}
-	public void setNgayHD(JLabel ngayHD) {
-		NgayHD = ngayHD;
-	}
-	public JLabel getTongTien() {
-		return TongTien;
-	}
-	public void setTongTien(JLabel tongTien) {
-		TongTien = tongTien;
 	}
 	public JButton getAddBill() {
 		return AddBill;
@@ -303,11 +464,11 @@ public class PanelBill extends JPanel {
 	public void setDeleteBill(JButton deleteBill) {
 		DeleteBill = deleteBill;
 	}
-	public JButton getDetailsBill() {
-		return DetailsBill;
+	public JButton getEditBill() {
+		return EditBill;
 	}
-	public void setDetailsBill(JButton detailsBill) {
-		DetailsBill = detailsBill;
+	public void setEditBill(JButton editBill) {
+		EditBill = editBill;
 	}
 	public Font getFLabel() {
 		return FLabel;
@@ -345,24 +506,7 @@ public class PanelBill extends JPanel {
 	public void setFYear(JComboBox<String> fYear) {
 		FYear = fYear;
 	}
-	public JTextField getFBillForm() {
-		return FBillForm;
-	}
-	public void setFBillForm(JTextField fBillForm) {
-		FBillForm = fBillForm;
-	}
-	public JTextField getFBillTo() {
-		return FBillTo;
-	}
-	public void setFBillTo(JTextField fBillTo) {
-		FBillTo = fBillTo;
-	}
-	public JTextField getFMaHD() {
-		return FMaHD;
-	}
-	public void setFMaHD(JTextField fMaHD) {
-		FMaHD = fMaHD;
-	}
+	
 	public JTable getTableBill() {
 		return TableBill;
 	}
@@ -375,5 +519,76 @@ public class PanelBill extends JPanel {
 	public void setScrollPaneTable(JScrollPane scrollPaneTable) {
 		this.scrollPaneTable = scrollPaneTable;
 	}
+	public JComboBox<String> getStatus_item() {
+		return Status_item;
+	}
 
+	public void setStatus_item(JComboBox<String> status_item) {
+		Status_item = status_item;
+	}
+
+	public JButton getDetailsBill() {
+		return DetailsBill;
+	}
+
+	public void setDetailsBill(JButton detailsBill) {
+		DetailsBill = detailsBill;
+	}
+
+	public BillDAO getBillDao() {
+		return billDao;
+	}
+
+	public void setBillDao(BillDAO billDao) {
+		this.billDao = billDao;
+	}
+
+	public JButton getSaveBill() {
+		return SaveBill;
+	}
+
+	public void setSaveBill(JButton saveBill) {
+		SaveBill = saveBill;
+	}
+
+	public JButton getPageFirst() {
+		return PageFirst;
+	}
+
+	public JButton getFitter() {
+		return Fitter;
+	}
+
+	public void setFitter(JButton fitter) {
+		Fitter = fitter;
+	}
+
+	public JComboBox<String> getSort() {
+		return Sort;
+	}
+
+	public void setSort(JComboBox<String> sort) {
+		Sort = sort;
+	}
+
+	public JLabel getTodayDate() {
+		return TodayDate;
+	}
+
+	public void setTodayDate(JLabel todayDate) {
+		TodayDate = todayDate;
+	}
+
+	public JButton getCart() {
+		return Cart;
+	}
+
+	public void setCart(JButton cart) {
+		Cart = cart;
+	}
+
+	public void setPageFirst(JButton pageFirst) {
+		PageFirst = pageFirst;
+	}
+	
 }
