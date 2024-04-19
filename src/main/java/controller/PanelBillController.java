@@ -353,8 +353,8 @@ public class PanelBillController {
 					e1.printStackTrace();
 				}   
 				
-				
 				// add BillDetails
+				
 				ArrayList<BillDetailsModel > BillDetaList = new ArrayList<BillDetailsModel>();
 				cartList.forEach((key,value)->{
 					BillDetailsModel tmpBillDetails = new BillDetailsModel();
@@ -371,15 +371,21 @@ public class PanelBillController {
 					
             		if(validateForm(tmp, messageError)) {
             			tmp.setID(nextID);
+            			if(cartList.size() ==0 )
+    					    JOptionPane.showMessageDialog(panelBill, "Hóa đơn chưa có sản phẩm ");
+    					else
+    					{
             			billDao.insert(tmp);
             			for(int i=0;i<BillDetaList.size();i++) {
             				if(validateFormBillDetails(BillDetaList.get(i), messageError)) {
             					BillDetaList.get(i).setID(billDetailsDao.findBillDetailsAll().getLast().getID()+1);
             					BillDetaList.get(i).setBill(tmp); 
             					BillDetaList.get(i).setBillID(nextID);
-                        		billDetailsDao.insert(BillDetaList.get(i));
+            					if(cartList.size() ==0 )
+            					    JOptionPane.showMessageDialog(panelBill, "Hóa đơn chưa có sản phẩm ");
+            					else billDetailsDao.insert(BillDetaList.get(i));
                     			SumPrice += BillDetaList.get(i).getProduct().getPrice()*BillDetaList.get(i).getQuantityProduct();
-                    			System.out.println(BillDetaList.get(i).getBill().getID() +"   "+BillDetaList.get(i).getBillID());
+                    		//	System.out.println(BillDetaList.get(i).getBill().getID() +"   "+BillDetaList.get(i).getBillID());
                     			
                     		}else {
                     			JOptionPane.showMessageDialog(panelBill, messageError.toString());
@@ -387,7 +393,7 @@ public class PanelBillController {
             			}
     					tmp.setBillTotal(SumPrice);
             			billDao.changePrice(SumPrice,nextID);
-            			 			
+    					}		
             		}else {
             			JOptionPane.showMessageDialog(panelBill, messageError.toString());
             		}
@@ -401,9 +407,11 @@ public class PanelBillController {
         					BillDetaList.get(i).setID(billDetailsDao.findBillDetailsAll().getLast().getID()+1);
         					BillDetaList.get(i).setBill(tmp);
         					BillDetaList.get(i).setBillID(Integer.parseInt(Bill_ID));
-                    		billDetailsDao.insert(BillDetaList.get(i));
+        					if(cartList.size() ==0 )
+        					    JOptionPane.showMessageDialog(panelBill, "Hóa đơn chưa có sản phẩm ");
+        					else billDetailsDao.insert(BillDetaList.get(i));
                 			SumPrice += BillDetaList.get(i).getProduct().getPrice()*BillDetaList.get(i).getQuantityProduct();
-                			System.out.println("222222222211");
+                			//System.out.println("222222222211");
                     		       			
                 		}else {
                 			JOptionPane.showMessageDialog(panelBill, messageError.toString());
@@ -413,8 +421,12 @@ public class PanelBillController {
         			System.out.println(SumPrice+"         d");
         			if(validateForm2(tmp, messageError)) {
         				tmp.setID(Integer.parseInt(Bill_ID));
-        				billDao.update(tmp);
-        				billDao.changePrice(SumPrice,Integer.parseInt(Bill_ID));
+        				if(cartList.size() ==0 )
+    					    JOptionPane.showMessageDialog(panelBill, "Hóa đơn chưa có sản phẩm ");
+    					else {
+    						billDao.update(tmp);
+        				    billDao.changePrice(SumPrice,Integer.parseInt(Bill_ID));
+    					}
         			}else {
         				JOptionPane.showMessageDialog(panelBill, messageError.toString());
         			}
@@ -472,14 +484,14 @@ public class PanelBillController {
 			public void actionPerformed(ActionEvent e) {
 				
 				int rowSelect = panelBill.getTableBill().getSelectedRow();
-				String id = MapUtil.convertObjectToString(panelBill.getTableBill().getValueAt(rowSelect, 0));
-        		String cusID = MapUtil.convertObjectToString(panelBill.getTableBill().getValueAt(rowSelect, 1));
-        		String userID = MapUtil.convertObjectToString(panelBill.getTableBill().getValueAt(rowSelect, 2));
-        		String date = MapUtil.convertObjectToString(panelBill.getTableBill().getValueAt(rowSelect, 3));
-        		String sumPrice = MapUtil.convertObjectToString(panelBill.getTableBill().getValueAt(rowSelect, 4));
-        		
-        		try {
         			if(rowSelect!=-1) {
+        				String id = MapUtil.convertObjectToString(panelBill.getTableBill().getValueAt(rowSelect, 0));
+                		String cusID = MapUtil.convertObjectToString(panelBill.getTableBill().getValueAt(rowSelect, 1));
+                		String userID = MapUtil.convertObjectToString(panelBill.getTableBill().getValueAt(rowSelect, 2));
+                		String date = MapUtil.convertObjectToString(panelBill.getTableBill().getValueAt(rowSelect, 3));
+                		String sumPrice = MapUtil.convertObjectToString(panelBill.getTableBill().getValueAt(rowSelect, 4));
+                		
+                		
     					ArrayList<BillDetailsModel> tmpBillDetail = billDetailsDao.findByBillID(id);
     					
     					
@@ -549,11 +561,6 @@ public class PanelBillController {
     					dialogBill.setVisible(true);
     				}
     				else JOptionPane.showMessageDialog(panelBill,"Bạn chưa chọn hóa đơn để xem chi tiết");
-    		
-				} catch (Exception e2) {
-					// TODO: handle exception
-				}
-				
 			}
 		});
 	}	
@@ -840,10 +847,9 @@ public class PanelBillController {
 			    
 			 // System.out.println(p1+" "+p2+" "+p3);
 			    if(CurrentPage==1) {
-			    	System.out.println(p1+" "+p2+" "+p3);
+			    	//System.out.println(p1+" "+p2+" "+p3);
 			    	renderButton();
 			    	JOptionPane.showMessageDialog(panelBill, "Không có dữ liệu");
-			    	
 			    }
 			    if(p1==PageNumber) {
 			    	panelBill.getPage2().setVisible(true);
@@ -855,6 +861,7 @@ public class PanelBillController {
 			    	renderTable(AllPageInformation.get(p1+1));
 			    	panelBill.getPage3().setText(p1+2+"");
 			    	setColorPage3();
+			    	
 			    }
 			    else {
 			    	if(CurrentPage==p1 && CurrentPage != 1) {
@@ -1112,11 +1119,5 @@ public class PanelBillController {
 		renderButton();
 	}
 	
-	public LinkedHashMap<String, String> getCartList() {
-		return cartList;
-	}
-	public void setCartList(LinkedHashMap<String, String> cartList) {
-		this.cartList = cartList;
-	}
 }
 
