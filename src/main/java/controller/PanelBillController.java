@@ -76,7 +76,7 @@ public class PanelBillController {
 		this.panelBill = panelBill;
 		ArrayList<BillModel> rowDataList = billDao.findAll();	
 		Pagination(rowDataList);
-		renderTable(AllPageInformation.getFirst());
+		renderTable(AllPageInformation.get(0));
 		addEventHeader();
 		addEvent();	
 		FindID();
@@ -416,7 +416,7 @@ public class PanelBillController {
 				
 				DisableInput();
 				Pagination(billDao.findAll());
-				renderTable(AllPageInformation.getFirst());
+				renderTable(AllPageInformation.get(0));
 			}
 		});
 		
