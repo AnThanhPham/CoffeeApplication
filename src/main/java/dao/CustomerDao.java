@@ -1,10 +1,22 @@
 package dao;
 
 import model.CustomerModel;
+import views.menu.PanelCustomer;
+import model.CustomerModel;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+
+import javax.swing.JComboBox;
+import javax.swing.JPanel;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+
 
 public class CustomerDao extends DAO implements AbstractDAO<CustomerModel>{
 	public CustomerDao() {
@@ -91,6 +103,7 @@ public class CustomerDao extends DAO implements AbstractDAO<CustomerModel>{
 			}
 	        return duplicate;
 	    }
+
 	 public CustomerModel findByID(String id) {
 	    	CustomerModel res = null;
 	    	try {
@@ -114,4 +127,28 @@ public class CustomerDao extends DAO implements AbstractDAO<CustomerModel>{
 	    	}
 	    	return res;
 	    }
+
+	 public ArrayList<CustomerModel> findByFullname(String fullname) {
+	    	ArrayList<CustomerModel> res = new ArrayList<>();
+	    	try {
+	    		String sql = "select * from customer where name like CONCAT('%',?,'%')";
+	    		PreparedStatement ps = conn.prepareStatement(sql);
+	    		ps.setString(1, fullname);
+	    		ResultSet rs = ps.executeQuery();
+	    		while(rs.next()) {
+	    			CustomerModel tmp = new CustomerModel();
+	    			tmp.setID(rs.getInt(1));
+	    			tmp.setName(rs.getString(2));
+	    			tmp.setEmail(rs.getString(5));
+	    			tmp.setPhone(rs.getString(3));
+	    			tmp.setAddress(rs.getString(4));
+	    			res.add(tmp);
+	    		}
+	    	}catch(Exception ex) {
+	    		ex.printStackTrace();
+	    	}
+	    	return res;
+	    }
 }
+
+
