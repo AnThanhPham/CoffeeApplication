@@ -1,19 +1,12 @@
 package controller;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.print.Pageable;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -31,40 +24,25 @@ import java.util.Vector;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
-
-import javax.swing.DefaultCellEditor;
-import javax.swing.DefaultListModel;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
-import javax.swing.event.AncestorEvent;
-import javax.swing.event.AncestorListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.JTableHeader;
-
-import org.apache.pivot.wtk.Mouse;
 
 import dao.BillDAO;
 import dao.BillDetailsDAO;
 import dao.CustomerDao;
 import dao.CategoryDAO;
 import dao.PaymentDAO;
-import dao.ProductDAO;
 import dao.TableDAO;
 import dao.UserDAO;
 import model.BillDetailsModel;
@@ -77,19 +55,12 @@ import model.TableModel;
 import model.UserModel;
 import util.MapUtil;
 import util.ValidateUtils;
-import util.button.ButtonEditor;
-import util.button.ButtonRenderer;
 import views.menu.PanelBill;
-
-import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
-
 
 public class PanelBillController {
 	private PanelBill panelBill;
 	private BillDAO billDao = new BillDAO();
 	private BillDetailsDAO billDetailsDao = new BillDetailsDAO();
-	private ProductDAO productDao = new ProductDAO();
-	private ArrayList<ProductModel> productList = billDao.findProductAll(); 
 	private CustomerDao customerDao = new CustomerDao();
 	private CategoryDAO categoryDao = new CategoryDAO();
 	private TableDAO tableDao = new TableDAO();
@@ -375,8 +346,8 @@ public class PanelBillController {
 				
 				if(ValidateUtils.checkEmptyAndNull(Bill_ID)) {
         			// them moi
-					int nextID = billDao.findAll().getLast().getID()+1; 
-					
+					int nextID = billDao.findAll().get(billDao.findAll().size()-1).getID()+1;
+					System.out.println(nextID);
             		if(validateForm(tmp, messageError)) {
             			tmp.setID(nextID);
             			if(cartList.size() ==0 )
@@ -386,7 +357,8 @@ public class PanelBillController {
             			billDao.insert(tmp);
             			for(int i=0;i<BillDetaList.size();i++) {
             				if(validateFormBillDetails(BillDetaList.get(i), messageError)) {
-            					BillDetaList.get(i).setID(billDetailsDao.findBillDetailsAll().getLast().getID()+1);
+            					int nextDetaID = billDetailsDao.findBillDetailsAll().get(billDetailsDao.findBillDetailsAll().size()-1).getID()+1;
+            					BillDetaList.get(i).setID(nextDetaID);
             					BillDetaList.get(i).setBill(tmp); 
             					BillDetaList.get(i).setBillID(nextID);
             					if(cartList.size() ==0 )
@@ -412,7 +384,8 @@ public class PanelBillController {
         			}
         			for(int i=0;i<BillDetaList.size();i++) {
         				if(validateFormBillDetails2(BillDetaList.get(i), messageError)) {
-        					BillDetaList.get(i).setID(billDetailsDao.findBillDetailsAll().getLast().getID()+1);
+        					int nextDetaID = billDetailsDao.findBillDetailsAll().get(billDetailsDao.findBillDetailsAll().size()-1).getID()+1;
+        					BillDetaList.get(i).setID(nextDetaID);
         					BillDetaList.get(i).setBill(tmp);
         					BillDetaList.get(i).setBillID(Integer.parseInt(Bill_ID));
         					if(cartList.size() ==0 )
