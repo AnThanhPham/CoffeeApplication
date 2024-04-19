@@ -16,6 +16,7 @@ import com.mysql.cj.jdbc.result.ResultSetMetaData;
 
 import model.BillDetailsModel;
 import model.BillModel;
+import model.CategoryModel;
 import model.CustomerModel;
 import model.PaymentModel;
 import model.ProductModel;
@@ -124,6 +125,51 @@ public class BillDAO extends DAO implements AbstractDAO<BillModel>{
     	return res;
 	}
 	
+	public static ArrayList<CategoryModel> findCategoryAll(){
+		ArrayList<CategoryModel> res = new ArrayList<>();
+		try {
+			String sql = "select * from category";
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()) {
+				CategoryModel tmp = new CategoryModel();
+				tmp.setID(rs.getInt(1));
+				tmp.setCategoryName(rs.getString(2));
+				tmp.setDescription(rs.getString(3));
+				res.add(tmp);
+			}
+		}catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		return res;
+	}
+	
+
+	public ArrayList<ProductModel> findProductByCategoryId(String id){
+		ArrayList<ProductModel> res = new ArrayList<ProductModel>();
+		try {
+			String sql = "select * from product where categoryid = ? ";
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setString(1, id);
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()){
+				ProductModel product = new ProductModel();
+				
+				product.setID(rs.getInt(1));
+				product.setPrice(rs.getFloat(2));
+				product.setName(rs.getString(3));
+				product.setDescription(rs.getString(4));
+				product.setImage(rs.getString(5));
+				product.setCategory(categoryDao.findByID(rs.getInt(6)+""));
+				res.add(product);
+			}
+		}catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		return res;
+	}
+	
 	 public BillModel findByID(String id) {
 	    	BillModel res = null;
 	    	try {
@@ -204,7 +250,31 @@ public class BillDAO extends DAO implements AbstractDAO<BillModel>{
 	    	}
 	    	return res;
 	    }
-	 
+	 /*
+	 public ArrayList<ProductModel> findProductByFullName(String name) {
+		 ArrayList<ProductModel> res = null;
+	    	try {
+	    		String sql = "select * from product where name like CONCAT('%',?,'%')"; 
+	    		PreparedStatement ps = conn.prepareStatement(sql);
+	    		ps.setString(1, name);
+	    		ResultSet rs = ps.executeQuery();
+	    		ProductModel tmp = new ProductModel();
+	    		while(rs.next()) {
+	    			tmp.setID(rs.getInt(1));
+	    			tmp.setPrice(rs.getFloat(2));
+	    			tmp.setName(rs.getString(3));
+	    			tmp.setDescription(rs.getString(4));
+	    			tmp.setImage(rs.getString(5));
+	    			tmp.setCategory(categoryDao.findByID(rs.getInt(6)+""));
+	    			res.add(tmp);
+	    		}
+	    		
+	    	}catch(Exception ex) {
+	    		ex.printStackTrace();
+	    	}
+	    	return res;
+	    }
+	 */
 	 public boolean checkUser(String id) {
 		 boolean result = false;
 		 try {

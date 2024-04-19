@@ -62,12 +62,14 @@ import org.apache.pivot.wtk.Mouse;
 import dao.BillDAO;
 import dao.BillDetailsDAO;
 import dao.CustomerDao;
+import dao.CategoryDAO;
 import dao.PaymentDAO;
 import dao.ProductDAO;
 import dao.TableDAO;
 import dao.UserDAO;
 import model.BillDetailsModel;
 import model.BillModel;
+import model.CategoryModel;
 import model.CustomerModel;
 import model.PaymentModel;
 import model.ProductModel;
@@ -89,6 +91,7 @@ public class PanelBillController {
 	private ProductDAO productDao = new ProductDAO();
 	private ArrayList<ProductModel> productList = billDao.findProductAll(); 
 	private CustomerDao customerDao = new CustomerDao();
+	private CategoryDAO categoryDao = new CategoryDAO();
 	private TableDAO tableDao = new TableDAO();
 	private PaymentDAO paymentDao = new PaymentDAO();
 	private UserDAO userDao = new UserDAO();
@@ -179,17 +182,45 @@ public class PanelBillController {
 				 JFrame frameCart = new JFrame();
 				 frameCart.setLayout(new FlowLayout());
 			     
+				 JLabel CategoryLabel = new JLabel("                                          Loại sản phẩm ");
+				 JComboBox<String> CategoryList = new JComboBox<String>();
+				 CategoryList.addItem("Chọn loại sản phẩm ");
+				 for(CategoryModel item: categoryDao.CategoryList()) {
+					 CategoryList.addItem(item.getCategoryName());
+			        }
+				 JLabel white = new JLabel("                              ");
 				 JLabel productLabel = new JLabel("Tên sản phẩm ");
 				 JComboBox<String> productList = new JComboBox<String>();
 				 productList.addItem("Chọn 1 sản phẩm ");
-				 for(ProductModel item: billDao.findProductAll()) {
-					 productList.addItem(item.getID() + "  "+item.getName());
-			        }
-			      AutoCompleteDecorator.decorate(productList);
-			 
+				 
+				 for(ProductModel item: billDao.findProductAll()) 
+					    productList.addItem(item.getName());
+				 
+				 CategoryList.addActionListener(new ActionListener() {
+					    @Override
+					    public void actionPerformed(ActionEvent e) {
+					        productList.removeAllItems();       
+					        int idx= CategoryList.getSelectedIndex();
+					        productList.addItem("Chọn 1 sản phẩm ");
+					        if ( idx == 0) {
+					        	for (ProductModel item : billDao.findProductAll()) {
+					                productList.addItem(item.getName());
+					            }
+					            
+					        } else {
+					            for (ProductModel item : billDao.findProductByCategoryId(idx+"")) {
+					                productList.addItem(item.getName());
+					            }
+					        }
+					    }
+					});
+
 				 JLabel QuantityLabel = new JLabel("Số lượng ");
 				 JTextField QuantityProduct = new JTextField(10);
 				 JButton saveData = new JButton("Thêm vào giỏ hàng");
+				 frameCart.add(CategoryLabel);
+				 frameCart.add(CategoryList);
+				 frameCart.add(white);
 				 frameCart.add(productLabel);
 				 frameCart.add(productList);
 				 frameCart.add(QuantityLabel);
@@ -211,19 +242,7 @@ public class PanelBillController {
 						model.addColumn(x);
 					}
 					 tableCart.setModel(model);
-					 /*
-					 tableCart.getColumnModel().getColumn(1).setCellRenderer(new ButtonRenderer());
-					 tableCart.getColumnModel().getColumn(1).setCellEditor(new ButtonEditor(new JTextField()));
-					 tableCart.getColumnModel().getColumn(1).setPreferredWidth(3);
 					 
-					 tableCart.getColumnModel().getColumn(3).setCellRenderer(new ButtonRenderer());
-					 tableCart.getColumnModel().getColumn(3).setCellEditor(new ButtonEditor(new JTextField()));
-					 tableCart.getColumnModel().getColumn(3).setPreferredWidth(3);
-					 
-					 tableCart.getColumnModel().getColumn(4).setCellRenderer(new ButtonRenderer());
-					 tableCart.getColumnModel().getColumn(4).setCellEditor(new ButtonEditor(new JTextField()));
-					 tableCart.getColumnModel().getColumn(4).setPreferredWidth(3);
-					 */
 				 if(rowSelect !=-1) {
 					 
 					 String id = MapUtil.convertObjectToString(panelBill.getTableBill().getValueAt(rowSelect, 0));
@@ -232,18 +251,16 @@ public class PanelBillController {
 						 cartList.put(x.getProduct().getName(), x.getQuantityProduct()+"");
 					 }
 				 }
-					 else {
+				 else {
 					 }
 					
 					
 					saveData.addActionListener(new ActionListener() {
 						@Override
 						public void actionPerformed(ActionEvent e) {
-							int productIdx =  productList.getSelectedIndex();
+							String ProductName =  productList.getSelectedItem().toString();
 						//	System.out.println(productIdx);
-								if(productIdx != 0 && (QuantityProduct.getText() !="" && Integer.parseInt(QuantityProduct.getText()) !=0)) {
-									
-									String ProductName = productDao.findByID(productIdx+"").getName();
+								if( productList.getSelectedIndex() != 0 && (QuantityProduct.getText() !="" && Integer.parseInt(QuantityProduct.getText()) !=0)) {
 									Integer Quantity = Integer.parseInt(QuantityProduct.getText());
 									
 									if(cartList.containsKey(ProductName)) {
@@ -269,15 +286,6 @@ public class PanelBillController {
 						// model.addRow(new Object[] { x.getKey(),"+",x.getValue(),"-","delete"});
 						 model.addRow(new Object[] { x.getKey(),x.getValue()});
 					}
-					
-					
-
-					/*
-					System.out.println(cartList.size());
-					cartList.forEach((key,value)->{
-						System.out.println(key+"  "+value);
-					});
-					*/
 				 frameCart.setSize(500, 500);
 				frameCart.setLocationRelativeTo(null);
 				frameCart.setVisible(true);
@@ -450,6 +458,7 @@ public class PanelBillController {
 						cartList.put(x.getProduct().getName(), x.getQuantityProduct()+"");
 					}
 				}
+				else JOptionPane.showMessageDialog(panelBill,"Bạn chưa chọn hóa đơn để chỉnh sửa");
 			}
 		});
 		
@@ -560,7 +569,7 @@ public class PanelBillController {
     					dialogBill.setLocationRelativeTo(null);
     					dialogBill.setVisible(true);
     				}
-    				else JOptionPane.showMessageDialog(panelBill,"Bạn chưa chọn hóa đơn để xem chi tiết");
+        			else JOptionPane.showMessageDialog(panelBill,"Bạn chưa chọn hóa đơn để xem chi tiết");
 			}
 		});
 	}	
@@ -897,8 +906,6 @@ public class PanelBillController {
 			
 			@Override
 			public void keyTyped(KeyEvent e) {
-				// TODO Auto-generated method stub
-				
 			}
 			
 			@Override
@@ -924,7 +931,6 @@ public class PanelBillController {
 			
 			@Override
 			public void keyPressed(KeyEvent e) {
-				// TODO Auto-generated method stub
 			  }
 			});
 			
