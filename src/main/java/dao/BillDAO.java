@@ -1,29 +1,16 @@
 package dao;
 
-import java.beans.JavaBean;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.TreeMap;
 
-import javax.swing.table.DefaultTableModel;
-
-import com.mysql.cj.jdbc.result.ResultSetMetaData;
-
-import model.BillDetailsModel;
 import model.BillModel;
 import model.CategoryModel;
 import model.CustomerModel;
-import model.PaymentModel;
 import model.ProductModel;
-import model.TableModel;
-import model.BillModel;
-import model.BillModel;
-import views.menu.PanelBill;
 
 public class BillDAO extends DAO implements AbstractDAO<BillModel>{
 	private UserDAO userDao = new UserDAO();
