@@ -11,7 +11,10 @@ public class BillModel {
 	private UserModel  User;
 	private TableModel Table;
 	private PaymentModel Payment;
-	
+	private Integer CustomerID;
+	private Integer UserID;
+	private Integer TableID;
+	private Integer PaymentID;
 	
 	public BillModel(int iD, Date billDate, float billTotal, String status, CustomerModel customer, UserModel user,
 			TableModel table, PaymentModel payment) {
@@ -90,7 +93,38 @@ public class BillModel {
 	public void setPayment(PaymentModel payment) {
 		Payment = payment;
 	}
-	
+
+	public int getCustomerID() {
+		return CustomerID;
+	}
+
+	public void setCustomerID(int customerID) {
+		CustomerID = customerID;
+	}
+
+	public int getUserID() {
+		return UserID;
+	}
+
+	public void setUserID(int userID) {
+		UserID = userID;
+	}
+
+	public int getTableID() {
+		return TableID;
+	}
+
+	public void setTableID(int tableID) {
+		TableID = tableID;
+	}
+
+	public int getPaymentID() {
+		return PaymentID;
+	}
+
+	public void setPaymentID(int paymentID) {
+		PaymentID = paymentID;
+	}
 	
 }
 

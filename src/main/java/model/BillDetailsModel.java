@@ -5,6 +5,8 @@ public class BillDetailsModel {
 	private int QuantityProduct;
 	private BillModel Bill;
 	private ProductModel Product;
+	private Integer BillID;
+	private Integer ProductID;
 	
 	
 	public BillDetailsModel(int iD, int quantityProduct, BillModel bill, ProductModel product) {
@@ -46,6 +48,22 @@ public class BillDetailsModel {
 
 	public void setProduct(ProductModel product) {
 		Product = product;
+	}
+
+	public Integer getBillID() {
+		return BillID;
+	}
+
+	public void setBillID(Integer billID) {
+		BillID = billID;
+	}
+
+	public Integer getProductID() {
+		return ProductID;
+	}
+
+	public void setProductID(Integer productID) {
+		ProductID = productID;
 	}
 	
 	
