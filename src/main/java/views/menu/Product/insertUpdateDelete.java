@@ -23,6 +23,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -33,21 +34,21 @@ import model.ProductModel;
 import util.ImageFilter;
 import views.menu.PanelProduct;
 
-public class insertUpdateDelete extends JDialog {
+public class insertUpdateDelete extends JFrame {
 	int categoryId;
 	String name;
 	public insertUpdateDelete(ProductModel model,boolean isInsert) {
 		
-		JDialog dialog= new JDialog();
+		//JDialog dialog= new JDialog();
 		JLabel topDialog = new JLabel();
 		JLabel centerDialog = new JLabel();
 		JPanel bottomDialog = new JPanel();
-		dialog.setVisible(true);
-		dialog.setMinimumSize(new Dimension(400,400));
-		dialog.setLayout(new BorderLayout());	
-		dialog.add(topDialog, BorderLayout.NORTH);
-		dialog.add(bottomDialog, BorderLayout.SOUTH);
-		dialog.add(centerDialog);
+		this.setVisible(true);
+		this.setMinimumSize(new Dimension(400,400));
+		this.setLayout(new BorderLayout());	
+		this.add(topDialog, BorderLayout.NORTH);
+		this.add(bottomDialog, BorderLayout.SOUTH);
+		this.add(centerDialog);
 		
 		// set top dialog
 		if(isInsert==true) {
@@ -272,9 +273,9 @@ public class insertUpdateDelete extends JDialog {
 					
 					
 					ProductDAO.insert(model);
-					dialog.dispose();
+					insertUpdateDelete.this.dispose();
 					System.out.println("Mã ID"+ categoryId);
-					JOptionPane.showMessageDialog(dialog, "Thêm thành công","Thông báo",JOptionPane.INFORMATION_MESSAGE);
+					JOptionPane.showMessageDialog(insertUpdateDelete.this, "Thêm thành công","Thông báo",JOptionPane.INFORMATION_MESSAGE);
 					PanelProduct.getIns().reLoad(true);
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
@@ -282,7 +283,7 @@ public class insertUpdateDelete extends JDialog {
 					e1.printStackTrace();
 //					System.out.println(e1.printStackTrace());
 //					System.out.println("\n" + e1.getNextException());
-					JOptionPane.showMessageDialog(dialog, "Thêm thất bại","Thông báo",JOptionPane.INFORMATION_MESSAGE);
+					JOptionPane.showMessageDialog(insertUpdateDelete.this, "Thêm thất bại","Thông báo",JOptionPane.INFORMATION_MESSAGE);
 					
 					} 
 
@@ -309,12 +310,12 @@ public class insertUpdateDelete extends JDialog {
 					model.setDescription(desField.getText());
 					model.setImage(imgField.getText());
 					ProductDAO.update(model);
-					dialog.dispose();
-					JOptionPane.showMessageDialog(dialog, "Sửa thành công","Thông báo",JOptionPane.INFORMATION_MESSAGE);
+					insertUpdateDelete.this.dispose();
+					JOptionPane.showMessageDialog(insertUpdateDelete.this, "Sửa thành công","Thông báo",JOptionPane.INFORMATION_MESSAGE);
 					PanelProduct.getIns().reLoad(true);
 					
 				} catch (Exception e2) {
-					JOptionPane.showMessageDialog(dialog, e2.toString(),"Thông báo",JOptionPane.INFORMATION_MESSAGE);
+					JOptionPane.showMessageDialog(insertUpdateDelete.this, e2.toString(),"Thông báo",JOptionPane.INFORMATION_MESSAGE);
 
 				}
 				
@@ -330,13 +331,13 @@ public class insertUpdateDelete extends JDialog {
 				// TODO Auto-generated method stub
 				try {
 					ProductDAO.delete(model);
-					dialog.dispose();
-					JOptionPane.showMessageDialog(dialog, "Xóa thành công","Thông báo",JOptionPane.INFORMATION_MESSAGE);
+					insertUpdateDelete.this.dispose();
+					JOptionPane.showMessageDialog(insertUpdateDelete.this, "Xóa thành công","Thông báo",JOptionPane.INFORMATION_MESSAGE);
 					PanelProduct.getIns().reLoad(true);
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					
-					JOptionPane.showMessageDialog(dialog, "Xóa thất bại","Thông báo",JOptionPane.INFORMATION_MESSAGE);
+					JOptionPane.showMessageDialog(insertUpdateDelete.this, "Xóa thất bại","Thông báo",JOptionPane.INFORMATION_MESSAGE);
 				} 
 				
 			}
@@ -349,9 +350,9 @@ public class insertUpdateDelete extends JDialog {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				int result= JOptionPane.showConfirmDialog(dialog, "Bạn có chắc chắn thoát","Thông báo", JOptionPane.YES_NO_OPTION);
+				int result= JOptionPane.showConfirmDialog(insertUpdateDelete.this, "Bạn có chắc chắn thoát","Thông báo", JOptionPane.YES_NO_OPTION);
 				if (result==JOptionPane.YES_OPTION) {
-					dialog.dispose();
+					insertUpdateDelete.this.dispose();
 					
 				}
 				
