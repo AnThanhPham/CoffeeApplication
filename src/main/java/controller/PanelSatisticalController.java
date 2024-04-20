@@ -3,12 +3,17 @@ package controller;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.TreeSet;
+
+import javax.swing.JOptionPane;
 
 import org.jfree.data.category.DefaultCategoryDataset;
 
 import dao.BillDAO;
+import model.BillModel;
 import views.menu.PanelStatistical;
 
 public class PanelSatisticalController {
@@ -22,6 +27,16 @@ public class PanelSatisticalController {
 	
 	public void graph() {
 		 DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+		 statistical.getYear().addItem("Chọn năm");
+		 
+		 TreeSet<String> yearchoose = new TreeSet<String>();
+		 for(BillModel x: billDao.findAll()) {
+			 String yearList[] = String.valueOf(x.getBillDate()).split("-");
+			yearchoose.add(yearList[0]);
+		 }
+		 for(String x: yearchoose) {
+			 statistical.getYear().addItem(x);
+		 }
 		// dataset.setValue(0, null, null);
 		 statistical.getYear().addActionListener(new ActionListener() {
 			
@@ -42,6 +57,7 @@ public class PanelSatisticalController {
 					//System.out.println(map.size());
 					statistical.getChart().getCategoryPlot().setDataset(dataset);
 				 }
+				 else JOptionPane.showMessageDialog(statistical, "Bạn chưa chọn năm để xem biểu đồ doanh thu");
 			}
 		});
 		 

@@ -26,22 +26,11 @@ public class PanelStatistical extends JPanel {
     	 DefaultCategoryDataset dataset = new DefaultCategoryDataset();
     	 /*
          dataset.setValue(10, "Tháng 1", "");
-         dataset.setValue(20, "Tháng 2", "");
-         dataset.setValue(30, "Tháng 3", "");
-         dataset.setValue(40, "Tháng 4", "");
-         dataset.setValue(10, "Tháng 5", "");
-         dataset.setValue(20, "Tháng 6", "");
-         dataset.setValue(30, "Tháng 7", "");
-         dataset.setValue(40, "Tháng 8", "");
-         dataset.setValue(50, "Tháng 9", ""); 
-         dataset.setValue(40, "Tháng 10", "");
-         dataset.setValue(10, "Tháng 11", "");
-         dataset.setValue(20	, "Tháng 12", "");
          */
          // Create a bar chart
         chart = ChartFactory.createBarChart(
-        		  "Sample Statistical Chart",
-                  "Thống kê doanh thu",
+        		  "Thống kê doanh thu",
+                  "",
                   "Value",
                   dataset,
                   PlotOrientation.VERTICAL,
@@ -60,9 +49,6 @@ public class PanelStatistical extends JPanel {
          add(chartPanel);  
          
          Year = new JComboBox<String>();
-         for(int i=2020;i<=2024;i++) {
-        	 Year.addItem(i+"");
-         }
          add(Year);
     }
 

@@ -10,7 +10,10 @@ import java.util.TreeMap;
 import model.BillModel;
 import model.CategoryModel;
 import model.CustomerModel;
+import model.PaymentModel;
 import model.ProductModel;
+import model.TableModel;
+import model.UserModel;
 
 public class BillDAO extends DAO implements AbstractDAO<BillModel>{
 	private UserDAO userDao = new UserDAO();
@@ -58,6 +61,183 @@ public class BillDAO extends DAO implements AbstractDAO<BillModel>{
 	    return data;
 	}
 	
+	public PaymentModel findPaymentByName(String name) {
+    	PaymentModel res = null;
+    	try {
+    		String sql = "select * from payment where PaymentName = ? limit 1";
+    		PreparedStatement ps = conn.prepareStatement(sql);
+    		ps.setString(1, name);
+    		ResultSet rs = ps.executeQuery();
+    		PaymentModel tmp = new PaymentModel();
+    		if(rs.next()) {
+    			tmp.setID(rs.getInt(1));
+    			tmp.setPaymentName(rs.getString(2));
+    		}
+    		if(Integer.toString(tmp.getID()) != null) {
+    			res = tmp;
+    		}
+    	}catch(Exception ex) {
+    		ex.printStackTrace();
+    	}
+    	return res;
+    }
+	public ArrayList<PaymentModel> findAllPayment() {
+		ArrayList<PaymentModel> res = new ArrayList<PaymentModel>();
+    	try {
+    		String sql = "select * from payment";
+    		PreparedStatement ps = conn.prepareStatement(sql);
+    		ResultSet rs = ps.executeQuery();
+    		
+    		while(rs.next()) {
+    			PaymentModel tmp = new PaymentModel();
+    			tmp.setID(rs.getInt(1));
+    			tmp.setPaymentName(rs.getString(2));
+    			res.add(tmp);
+    		}
+    	}catch(Exception ex) {
+    		ex.printStackTrace();
+    	}
+    	return res;
+    }
+	
+	 public ArrayList<TableModel> findTableByStatus(String status) {
+		 ArrayList<TableModel> res = new ArrayList<TableModel>();
+	    	try {
+	    		String sql = "select * from tablee where Status = ?";
+	    		PreparedStatement ps = conn.prepareStatement(sql);
+	    		ps.setString(1, status);
+	    		ResultSet rs = ps.executeQuery();
+	    		
+	    		while(rs.next()) {
+	    			TableModel tmp = new TableModel();
+	    			tmp.setID(rs.getInt(1));
+	    			tmp.setTableNumber(rs.getString(2));
+	    			tmp.setStatus(rs.getString(3));
+	    			tmp.setQuantityCustomer(rs.getInt(4));
+	    			res.add(tmp);
+	    		}
+	    	}catch(Exception ex) {
+	    		ex.printStackTrace();
+	    	}
+	    	return res;
+	    }
+	 
+	 public ArrayList<TableModel> findTableAll() {
+		 ArrayList<TableModel> res = new ArrayList<TableModel>();
+	    	try {
+	    		String sql = "select * from tablee";
+	    		PreparedStatement ps = conn.prepareStatement(sql);
+	    		ResultSet rs = ps.executeQuery();
+	    		
+	    		while(rs.next()) {
+	    			TableModel tmp = new TableModel();
+	    			tmp.setID(rs.getInt(1));
+	    			tmp.setTableNumber(rs.getString(2));
+	    			tmp.setStatus(rs.getString(3));
+	    			tmp.setQuantityCustomer(rs.getInt(4));
+	    			res.add(tmp);
+	    		}
+	    	}catch(Exception ex) {
+	    		ex.printStackTrace();
+	    	}
+	    	return res;
+	    }
+	 
+	 public ArrayList<UserModel> findUserByRoleID(String roleid) {
+	    	ArrayList<UserModel> res = new ArrayList<>();
+	    	try {
+	    		String sql = "select * from user where roleid = ?";
+	    		PreparedStatement ps = conn.prepareStatement(sql);
+	    		ps.setString(1, roleid);
+	    		ResultSet rs = ps.executeQuery();
+	    		while(rs.next()) {
+	    			UserModel tmp = new UserModel();
+	    			tmp.setID(rs.getInt(1));
+	    			tmp.setUserName(rs.getString(2));
+	    			tmp.setPhone(rs.getString(3));
+	    			tmp.setAddress(rs.getString(4));
+	    			if(rs.getString(5)!=null) {
+	    				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	    				java.util.Date utilDate = dateFormat.parse(rs.getString(5));
+	    				java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
+	    				tmp.setDateWork(sqlDate);    				
+	    			}
+	    			tmp.setPassword(rs.getString(7));
+	    			tmp.setFullName(rs.getString(8));
+	    			tmp.setRole(RoleDAO.getRoleByID(rs.getInt(9)));
+	    			tmp.setCode(rs.getString(10));
+	    			tmp.setStatus(rs.getString(11));
+	    			tmp.setEmail(rs.getString(12));
+	    			tmp.setGender(rs.getString(13));
+	    			tmp.setImage(rs.getString(14));
+	    			res.add(tmp);
+	    		}
+	    	}catch(Exception ex) {
+	    		ex.printStackTrace();
+	    	}
+	    	return res;
+	    }
+	 
+	 public UserModel findUserByUserName(String UserName) {
+	    	UserModel res = null;
+	    	try {
+	    		String sql = "select * from user where UserName = ? limit 1";
+	    		PreparedStatement ps = conn.prepareStatement(sql);
+	    		ps.setString(1, UserName);
+	    		ResultSet rs = ps.executeQuery();
+	    		UserModel tmp = new UserModel();
+	    		if(rs.next()) {
+	    			tmp.setID(rs.getInt(1));
+	    			tmp.setUserName(rs.getString(2));
+	    			tmp.setPhone(rs.getString(3));
+	    			tmp.setAddress(rs.getString(4));
+	    			if(rs.getString(5)!=null) {
+	    				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	    				java.util.Date utilDate = dateFormat.parse(rs.getString(5));
+	    				java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
+	    				tmp.setDateWork(sqlDate);    				
+	    			}
+	    			tmp.setPassword(rs.getString(7));
+	    			tmp.setFullName(rs.getString(8));
+	    			tmp.setRole(RoleDAO.getRoleByID(rs.getInt(9)));
+	    			tmp.setCode(rs.getString(10));
+	    			tmp.setStatus(rs.getString(11));
+	    			tmp.setEmail(rs.getString(12));
+	    			tmp.setGender(rs.getString(13));
+	    			tmp.setImage(rs.getString(14));
+	    		}
+	    		if(tmp.getID()!=null) {
+	    			res = tmp;
+	    		}
+	    	}catch(Exception ex) {
+	    		ex.printStackTrace();
+	    	}
+	    	return res;
+	    }
+	 
+	 public TableModel findTableByNumber(String number) {
+	    	TableModel res = null;
+	    	try {
+	    		String sql = "select * from tablee where TableNumber = ? limit 1";
+	    		PreparedStatement ps = conn.prepareStatement(sql);
+	    		ps.setString(1, number);
+	    		ResultSet rs = ps.executeQuery();
+	    		TableModel tmp = new TableModel();
+	    		if(rs.next()) {
+	    			tmp.setID(rs.getInt(1));
+	    			tmp.setTableNumber(rs.getString(2));
+	    			tmp.setStatus(rs.getString(3));
+	    			tmp.setQuantityCustomer(rs.getInt(4));
+	    		}
+	    		if(Integer.toString(tmp.getID()) != null) {
+	    			res = tmp;
+	    		}
+	    	}catch(Exception ex) {
+	    		ex.printStackTrace();
+	    	}
+	    	return res;
+	    }
+	 
 	public ArrayList<ProductModel> findProductAll() {
 		ArrayList<ProductModel> data = new ArrayList<ProductModel>();
 		try {

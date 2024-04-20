@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -74,6 +75,8 @@ public class PanelBillController {
 	
 	public PanelBillController(PanelBill panelBill) {
 		this.panelBill = panelBill;
+		UpdateComboboxHeader();
+		updatePrice();
 		ArrayList<BillModel> rowDataList = billDao.findAll();	
 		Pagination(rowDataList);
 		renderTable(AllPageInformation.get(0));
@@ -82,6 +85,33 @@ public class PanelBillController {
 		FindID();
 		addEventBody();
 		addPageButton();
+	}
+	public void UpdateComboboxHeader() {
+		
+		panelBill.getUser_Name().addItem("Chọn nhân viên");
+		for(UserModel x: billDao.findUserByRoleID("2")){
+			panelBill.getUser_Name().addItem(x.getUserName());
+		}
+		
+		panelBill.getPayment_Name().addItem("Cách thanh toán");
+		for(PaymentModel x: billDao.findAllPayment()) {
+			panelBill.getPayment_Name().addItem(x.getPaymentName());
+		}
+		
+		panelBill.getStatus_item().addItem("Chọn Trạng Thái");
+		LinkedHashSet<String> status = new LinkedHashSet<String>();
+		for(BillModel x: billDao.findAll()) {
+			status.add(x.getStatus());
+		}
+		
+		panelBill.getTable_Number().addItem("Chọn số bàn");
+		for(TableModel x: billDao.findTableByStatus("Available")) {
+			panelBill.getTable_Number().addItem(x.getTableNumber());
+		}
+		
+		for(String x: status) {
+			panelBill.getStatus_item().addItem(x);
+		}
 	}
 	public void renderTable(ArrayList<BillModel> rowData) {
 		DefaultTableModel model = new DefaultTableModel() {
@@ -112,6 +142,17 @@ public class PanelBillController {
 		panelBill.getTableBill().setModel(model);
 	}
 	
+	public void updatePrice() {
+		for(BillModel x: billDao.findAll()) {
+			ArrayList<BillDetailsModel> res = billDetailsDao.findByBillID(x.getID()+"");
+			float sum =0;
+					for(BillDetailsModel tmp: res) {
+						sum+=tmp.getQuantityProduct()*tmp.getProduct().getPrice();
+					}
+				billDao.changePrice(sum, x.getID());
+		}
+	}
+	
 	public void addEvent() {
 		//private Date utilDate;
 		DisableInput();
@@ -132,10 +173,19 @@ public class PanelBillController {
 	             	BillModel bill = billDao.findByID(id);
 	        		panelBill.getBill_ID().setText(id);
 	        		panelBill.getBill_Date().setText(DateTime);
-	        		panelBill.getCustomer_ID().setText(billDao.findCusByPhone(CusPhone).getID()+"");
-	        		panelBill.getUser_ID().setText(UserID);
-	        		panelBill.getPayment_ID().setText(bill.getPayment().getID()+"");
-	        		panelBill.getTable_ID().setText(bill.getTable().getID()+"");
+	        		panelBill.getCustomer_Phone().setText(bill.getCustomer().getPhone());
+	        		panelBill.getUser_Name().setSelectedItem(bill.getUser().getUserName());
+	        		panelBill.getPayment_Name().setSelectedItem(bill.getPayment().getPaymentName());
+	        		
+	        		panelBill.getTable_Number().removeAllItems();
+	        		panelBill.getTable_Number().addItem("Chọn số bàn");
+	        		for(TableModel x: billDao.findTableAll()) {
+	        			panelBill.getTable_Number().addItem(x.getTableNumber());
+	        			//System.out.println(x.getTableNumber());
+	        		}
+	        		
+	        		panelBill.getTable_Number().setSelectedItem(bill.getTable().getTableNumber());
+	        		
 	        		panelBill.getStatus_item().setSelectedItem(bill.getStatus());
 	        	}
 	        	
@@ -188,7 +238,7 @@ public class PanelBillController {
 
 				 JLabel QuantityLabel = new JLabel("Số lượng ");
 				 JTextField QuantityProduct = new JTextField(10);
-				 JButton saveData = new JButton("Thêm vào giỏ hàng");
+ 				 JButton saveData = new JButton("Thêm vào giỏ hàng");
 				 frameCart.add(CategoryLabel);
 				 frameCart.add(CategoryList);
 				 frameCart.add(white);
@@ -271,9 +321,15 @@ public class PanelBillController {
 				resetInput();
 				panelBill.getTableBill().clearSelection();
 				cartList.clear();
+				
+				panelBill.getTable_Number().removeAllItems();
+				panelBill.getTable_Number().addItem("Chọn số bàn");
+				for(TableModel x: billDao.findTableByStatus("Available")) {
+					panelBill.getTable_Number().addItem(x.getTableNumber());
+				}
 			}
 		});
-		// insert đúng nhưng update sai ??
+
 		
 		
 		panelBill.getSaveBill().addActionListener(new ActionListener() {
@@ -282,10 +338,10 @@ public class PanelBillController {
 				StringBuilder messageError = new StringBuilder("");
 				float SumPrice = 0;
 				String Bill_ID = panelBill.getBill_ID().getText();
-				String Customer_Phone = panelBill.getCustomer_ID().getText();
-				String User_ID = panelBill.getUser_ID().getText();
-				String Table_ID = panelBill.getTable_ID().getText();
-				String Payment_ID = panelBill.getPayment_ID().getText();
+				String Customer_Phone = panelBill.getCustomer_Phone().getText();
+				String User_Name = panelBill.getUser_Name().getSelectedItem().toString();
+				String Table_Number = panelBill.getTable_Number().getSelectedItem().toString();
+				String Payment_Name = panelBill.getPayment_Name().getSelectedItem().toString();
 				String Status = (String) panelBill.getStatus_item().getSelectedItem();
 				
 				String dateWork = panelBill.getBill_Date().getText();
@@ -295,7 +351,6 @@ public class PanelBillController {
 				tmp.setStatus(Status);
 				if(Customer_Phone != null) {
 					Integer cusID = billDao.findCusByPhone(Customer_Phone).getID();
-					panelBill.getCustomer_ID().setText(cusID+"");
 					CustomerModel cusDao = customerDao.findByID(cusID+"");
 					tmp.setCustomer(cusDao);
 					tmp.setCustomerID(cusDao.getID());
@@ -303,15 +358,15 @@ public class PanelBillController {
 				else {
 					tmp.setCustomerID(0);
 				}
-				TableModel tablee = tableDao.findByID(Table_ID);
+				TableModel tablee = billDao.findTableByNumber(Table_Number);
 				tmp.setTable(tablee);
 				tmp.setTableID(tablee.getID());
 				
-				UserModel user = userDao.findByID(User_ID);
+				UserModel user = billDao.findUserByUserName(User_Name);
 				tmp.setUser(user);
 				tmp.setUserID(user.getID());
 				
-				PaymentModel payment = paymentDao.findByID(Payment_ID);
+				PaymentModel payment = billDao.findPaymentByName(Payment_Name);
 				tmp.setPayment(payment);
 				tmp.setPaymentID(payment.getID());
 				
@@ -322,10 +377,10 @@ public class PanelBillController {
         				SimpleDateFormat DateInput = new SimpleDateFormat("dd-MM-yyyy");
         	            SimpleDateFormat DateOutput = new SimpleDateFormat("yyyy-MM-dd");
         	            java.util.Date date = DateInput.parse(dateWork);
-        	          ///  System.out.println(date);
+        	        
         	            String outputParse = DateOutput.format(date);
         	            tmp.setBillDate(java.sql.Date.valueOf(outputParse));
-        	          ///  System.out.println(outputParse);
+        	        
         			}
         			else tmp.setBillDate(null);
 				} catch (Exception e1) {
@@ -347,7 +402,7 @@ public class PanelBillController {
 				if(ValidateUtils.checkEmptyAndNull(Bill_ID)) {
         			// them moi
 					int nextID = billDao.findAll().get(billDao.findAll().size()-1).getID()+1;
-					System.out.println(nextID);
+					//System.out.println(nextID);
             		if(validateForm(tmp, messageError)) {
             			tmp.setID(nextID);
             			if(cartList.size() ==0 )
@@ -399,7 +454,7 @@ public class PanelBillController {
                 		}
         			}
         			tmp.setBillTotal(SumPrice);
-        			System.out.println(SumPrice+"         d");
+        			//System.out.println(SumPrice+"         d");
         			if(validateForm2(tmp, messageError)) {
         				tmp.setID(Integer.parseInt(Bill_ID));
         				if(cartList.size() ==0 )
@@ -595,10 +650,11 @@ public class PanelBillController {
 	
 	public void resetInput() {
 		panelBill.getBill_ID().setText("");
-		panelBill.getCustomer_ID().setText("");
-		panelBill.getUser_ID().setText("");
-		panelBill.getTable_ID().setText("");
-		panelBill.getPayment_ID().setText("");
+		panelBill.getCustomer_Phone().setText("");
+		panelBill.getUser_Name().setSelectedIndex(0);
+		panelBill.getTable_Number().setSelectedIndex(0);
+		panelBill.getPayment_Name().setSelectedIndex(0);
+		panelBill.getStatus_item().setSelectedIndex(0);
 		
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 		LocalDateTime current = LocalDateTime.now();
@@ -607,19 +663,21 @@ public class PanelBillController {
 	}
 	public void EnableInput() {
 		//panelBill.getBill_ID().setEnabled(true);
-		panelBill.getCustomer_ID().setEnabled(true);
-		panelBill.getUser_ID().setEnabled(true);
-		panelBill.getTable_ID().setEnabled(true);
-		panelBill.getPayment_ID().setEnabled(true);	
+		panelBill.getCustomer_Phone().setEnabled(true);
+		panelBill.getUser_Name().setEnabled(true);
+		panelBill.getTable_Number().setEnabled(true);
+		panelBill.getPayment_Name().setEnabled(true);	
 		panelBill.getBill_Date().setEnabled(true);
+		panelBill.getStatus_item().setEnabled(true);
 	}
 	public void DisableInput() {
 		panelBill.getBill_ID().setEnabled(false);
-		panelBill.getCustomer_ID().setEnabled(false);
-		panelBill.getUser_ID().setEnabled(false);
-		panelBill.getTable_ID().setEnabled(false);
-		panelBill.getPayment_ID().setEnabled(false);
+		panelBill.getCustomer_Phone().setEnabled(false);
+		panelBill.getUser_Name().setEnabled(false);
+		panelBill.getTable_Number().setEnabled(false);
+		panelBill.getPayment_Name().setEnabled(false);
 		panelBill.getBill_Date().setEnabled(false);
+		panelBill.getStatus_item().setEnabled(false);
 	}
 	
 	public void resetTable() {
