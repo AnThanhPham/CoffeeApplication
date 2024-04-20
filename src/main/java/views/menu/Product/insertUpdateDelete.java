@@ -32,11 +32,25 @@ import javax.swing.JTextField;
 import dao.ProductDAO;
 import model.ProductModel;
 import util.ImageFilter;
+import util.ValidateUtils;
 import views.menu.PanelProduct;
 
 public class insertUpdateDelete extends JFrame {
 	int categoryId;
+	public JTextField getNameField() {
+		return nameField;
+	}
+	public void setNameField(JTextField nameField) {
+		this.nameField = nameField;
+	}
+	public JTextField getPriceField() {
+		return priceField;
+	}
+	public void setPriceField(JTextField priceField) {
+		this.priceField = priceField;
+	}
 	String name;
+	private JTextField nameField,priceField;
 	public insertUpdateDelete(ProductModel model,boolean isInsert) {
 		
 		//JDialog dialog= new JDialog();
@@ -78,11 +92,11 @@ public class insertUpdateDelete extends JFrame {
 		
 		JLabel nameProduct= new JLabel("Tên");
 		nameProduct.setFont(centerFont);
-		JTextField nameField= new JTextField( model.getName());
+		 nameField= new JTextField( model.getName());
 		
 		JLabel priceProduct= new JLabel("Giá");
 		priceProduct.setFont(centerFont);
-		JTextField priceField= new JTextField((int)model.getPrice()+"");
+		 priceField= new JTextField((int)model.getPrice()+"");
 		
 		JLabel desProduct= new JLabel("Mô Tả");
 		desProduct.setFont(centerFont);
@@ -257,8 +271,29 @@ public class insertUpdateDelete extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				//int categoryId;
+				insertUpdateDelete check= insertUpdateDelete.this;
 				try {
-					
+					if(ValidateUtils.checkEmptyAndNull(check.getNameField().getText())){
+						JOptionPane.showMessageDialog(check, "Tên sản phẩm không được trống","Thông báo",JOptionPane.INFORMATION_MESSAGE);
+						
+						return ;
+					}
+					if(ValidateUtils.checkEmptyAndNull((String)check.getPriceField().getText())) {
+						JOptionPane.showMessageDialog(check, "Giá sản phẩm không được trống","Thông báo",JOptionPane.INFORMATION_MESSAGE);
+						
+						return; 
+					}
+					if(PanelProduct.getIns().getController().checkPrice((String)check.getPriceField().getText())== false) {
+						JOptionPane.showMessageDialog(check, "Giá phải là số dương");
+						return ;
+					}
+					for(String x: ProductDAO.listName()) {
+						if(check.getNameField().getText()==x) {
+							JOptionPane.showMessageDialog(check, "Tên sản phẩm đã tồn tại");
+							return ;
+						}
+					}
+
 //					model.setID(Integer.parseInt(idField.getText()));
 					model.setPrice(Integer.parseInt(priceField.getText()));
 					model.setName(nameField.getText());
@@ -277,7 +312,8 @@ public class insertUpdateDelete extends JFrame {
 					System.out.println("Mã ID"+ categoryId);
 					JOptionPane.showMessageDialog(insertUpdateDelete.this, "Thêm thành công","Thông báo",JOptionPane.INFORMATION_MESSAGE);
 					PanelProduct.getIns().getController().reload(true);
-				} catch (Exception e1) {
+				 
+					}catch (Exception e1) {
 					// TODO Auto-generated catch block
 //					System.out.println(e1.getErrorCode());
 					e1.printStackTrace();
@@ -285,7 +321,9 @@ public class insertUpdateDelete extends JFrame {
 //					System.out.println("\n" + e1.getNextException());
 					JOptionPane.showMessageDialog(insertUpdateDelete.this, "Thêm thất bại","Thông báo",JOptionPane.INFORMATION_MESSAGE);
 					
-					} 
+					}
+				
+
 
 				
 				

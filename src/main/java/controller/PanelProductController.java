@@ -3,14 +3,19 @@ package controller;
 import java.awt.GridLayout;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
 
 import dao.ProductDAO;
 import model.ProductModel;
+import util.ValidateUtils;
 import views.menu.PanelProduct;
 import views.menu.Product.ItemProduct;
 import views.menu.Product.PagePanel;
+import views.menu.Product.insertUpdateDelete;
 
 public class PanelProductController {
 	private PanelProduct panelProduct;
@@ -79,6 +84,33 @@ public class PanelProductController {
 			panelProduct.getCenterCenterPanel().setVisible(true);
 	
 		}
+	
+	// Hàm validate checkPrice có hợp lệ không
+	public static boolean checkPrice(String price) {
+	    String regex = "^[0-9]\\d{0,18}$"; // Chuỗi số dương không có ký tự đặc biệt, có tối đa 19 chữ số (từ 1 đến 9999999999999999999)
+	    Pattern pattern = Pattern.compile(regex);
+	    Matcher matcher = pattern.matcher(price);
+	    return matcher.matches();
+	}
+	//Hàm check rỗng ở file validateUtils
+	public static void validateNamePriceProduct(insertUpdateDelete check) {
+		// check xem name, gia co bỏ trống hay không
+		if(ValidateUtils.checkEmptyAndNull(check.getNameField().getText())){
+			JOptionPane.showMessageDialog(check, "Tên sản phẩm không được trống","Thông báo",JOptionPane.INFORMATION_MESSAGE);
+			
+			return ;
+		}
+		if(ValidateUtils.checkEmptyAndNull((String)check.getPriceField().getText())) {
+			JOptionPane.showMessageDialog(check, "Giá sản phẩm không được trống","Thông báo",JOptionPane.INFORMATION_MESSAGE);
+			return ;
+		}
+		if(checkPrice((String)check.getPriceField().getText())==false) {
+			JOptionPane.showMessageDialog(check, "Giá phải là số");
+			return ;
+			
+		}
+		
+	}
 	
 		
 		

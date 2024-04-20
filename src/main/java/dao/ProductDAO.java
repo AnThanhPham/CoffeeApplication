@@ -43,6 +43,25 @@ private static  CategoryDAO categoryDao = new CategoryDAO();
     	return res;
     }
 	
+	// Hàm lấy ra list tên sản phẩm
+	public static List<String>  listName() throws SQLException {
+		List<String> listResult= new ArrayList<String>();
+		java.sql.Statement stm1= conn.createStatement();
+		
+		String sql="select productname from Product  " ; 
+		ResultSet rs= stm1.executeQuery(sql);
+
+		while(rs.next()) {
+
+			listResult.add(rs.getString("productname"));
+
+		}
+		return listResult;
+	}
+	
+	
+	
+	
 	public static String selectCategoryName(int id) throws SQLException {
 	    PreparedStatement stm = null;
 	    ResultSet rs = null;
