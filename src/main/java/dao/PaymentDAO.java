@@ -2,27 +2,22 @@ package dao;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
 
 import model.PaymentModel;
-import model.TableModel;
 
-public class TableDAO extends DAO implements AbstractDAO<TableModel>{
-	public TableDAO() {
-		super();
-	}
-	public TableModel findByID(String id) {
-    	TableModel res = null;
+public class PaymentDAO extends DAO implements AbstractDAO<PaymentModel>{
+	public PaymentModel findByID(String id) {
+    	PaymentModel res = null;
     	try {
-    		String sql = "select * from tablee where id = ? limit 1";
+    		String sql = "select * from payment where id = ? limit 1";
     		PreparedStatement ps = conn.prepareStatement(sql);
     		ps.setString(1, id);
     		ResultSet rs = ps.executeQuery();
-    		TableModel tmp = new TableModel();
+    		PaymentModel tmp = new PaymentModel();
     		if(rs.next()) {
     			tmp.setID(rs.getInt(1));
-    			tmp.setTableNumber(rs.getString(2));
-    			tmp.setStatus(rs.getString(3));
-    			tmp.setQuantityCustomer(rs.getInt(4));
+    			tmp.setPaymentName(rs.getString(2));
     		}
     		if(Integer.toString(tmp.getID()) != null) {
     			res = tmp;
@@ -32,23 +27,23 @@ public class TableDAO extends DAO implements AbstractDAO<TableModel>{
     	}
     	return res;
     }
+
+	@Override
+	public void insert(PaymentModel t) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void delete(PaymentModel t) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void update(PaymentModel t) {
+		// TODO Auto-generated method stub
+		
+	}
 	
-	@Override
-	public void insert(TableModel t) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void delete(TableModel t) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void update(TableModel t) {
-		// TODO Auto-generated method stub
-		
-	}
-
 }
