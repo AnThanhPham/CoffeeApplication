@@ -394,6 +394,7 @@ class ItemProduct extends JPanel {
 
 class insertUpdateDelete extends JDialog {
 	int categoryId;
+	String name;
 	public insertUpdateDelete(ProductModel model,boolean isInsert) {
 		
 		JDialog dialog= new JDialog();
@@ -411,7 +412,12 @@ class insertUpdateDelete extends JDialog {
 		if(isInsert==true) {
 			topDialog.setText("Thêm sản phẩm");
 			
-		}else topDialog.setText("Chi tiết sản phẩm");
+		}else {
+			topDialog.setText("Chi tiết sản phẩm");
+		}
+		
+		
+		
 		topDialog.setVerticalAlignment(JLabel.CENTER);
 		topDialog.setHorizontalAlignment(JLabel.CENTER);
 		topDialog.setFont(new Font(Font.SANS_SERIF, Font.BOLD,18));
@@ -494,9 +500,11 @@ class insertUpdateDelete extends JDialog {
 		
 		
 		
-// sửa chọn link ảnh		
+// sửa chọn link ảnh
+		//gbc.weightx=0.0;
 		gbc.gridx= 2;
-		choseImage.setPreferredSize(new Dimension(100,100));
+		choseImage.setPreferredSize(new Dimension(20,10));
+		
 		
 		centerDialog.add(choseImage,gbc);
 		JFileChooser fc = new JFileChooser();
@@ -553,7 +561,7 @@ class insertUpdateDelete extends JDialog {
 		
 		
 		
-		
+		gbc.weightx=0.7;
 		gbc.gridx=1;
 		gbc.gridy= 5;
 		String typeCategoryname[];
@@ -570,12 +578,26 @@ class insertUpdateDelete extends JDialog {
 						}
 						typeProduct.setModel(new DefaultComboBoxModel<String>(typeCategoryname));
 						
+						
+						if(isInsert==false) {
+							try {
+								
+								name= ProductDAO.selectCategoryName(model.getID());
+								typeProduct.setSelectedItem(name);
+							} catch (SQLException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+						}
+						
+						
 						centerDialog.add(typeProduct,gbc);
 					} catch (SQLException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
-					}			
+					}
 					
+				
 				
 		
 		
@@ -602,20 +624,30 @@ class insertUpdateDelete extends JDialog {
 					model.setImage(imgField.getText());
 				    categoryId= ProductDAO.selectCategoryId((String)typeProduct.getSelectedItem());// chuyển tên loại sp thành id loại sp;
 					model.getCategory().setID(categoryId);
+					
+					
 					System.out.println((String)typeProduct.getSelectedItem()+"\n");
 					//model.getCategory().setCategoryName(typeProduct.getToolTipText());
+					
+					
 					ProductDAO.insert(model);
 					dialog.dispose();
 					System.out.println("Mã ID"+ categoryId);
 					JOptionPane.showMessageDialog(dialog, "Thêm thành công","Thông báo",JOptionPane.INFORMATION_MESSAGE);
 					PanelProduct.getIns().reLoad(true);
-				} catch (SQLException e1) {
+				} catch (Exception e1) {
 					// TODO Auto-generated catch block
-					System.out.println(e1.getErrorCode());
-					System.out.println("\n" + e1.getNextException());
+//					System.out.println(e1.getErrorCode());
+					e1.printStackTrace();
+//					System.out.println(e1.printStackTrace());
+//					System.out.println("\n" + e1.getNextException());
 					JOptionPane.showMessageDialog(dialog, "Thêm thất bại","Thông báo",JOptionPane.INFORMATION_MESSAGE);
 					
 					} 
+
+				
+				
+				
 				System.out.println("Lỗi: "+(String)typeProduct.getSelectedItem()+"\n");
 				System.out.println("Mã Loại:"+ categoryId);
 				

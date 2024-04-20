@@ -43,6 +43,21 @@ private static  CategoryDAO categoryDao = new CategoryDAO();
     	return res;
     }
 	
+	public static String selectCategoryName(int id) throws SQLException {
+	    PreparedStatement stm = null;
+	    ResultSet rs = null;
+	    String name="" ;
+        String sql = "SELECT product.id, categoryName FROM category join product on product.categoryid= category.id WHERE product.id= " + id;
+	        stm = conn.prepareStatement(sql);
+	        rs = stm.executeQuery();
+
+	        if (rs.next()) {
+	            name = rs.getString("categoryName");
+	        }
+	     return name;
+
+	}
+	
 	public static int selectCategoryId(String name) throws SQLException {
 	    PreparedStatement stm = null;
 	    ResultSet rs = null;
