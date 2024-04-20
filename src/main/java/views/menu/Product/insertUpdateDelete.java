@@ -276,7 +276,7 @@ public class insertUpdateDelete extends JFrame {
 					insertUpdateDelete.this.dispose();
 					System.out.println("Mã ID"+ categoryId);
 					JOptionPane.showMessageDialog(insertUpdateDelete.this, "Thêm thành công","Thông báo",JOptionPane.INFORMATION_MESSAGE);
-					PanelProduct.getIns().reLoad(true);
+					PanelProduct.getIns().getController().reload(true);
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 //					System.out.println(e1.getErrorCode());
@@ -312,7 +312,7 @@ public class insertUpdateDelete extends JFrame {
 					ProductDAO.update(model);
 					insertUpdateDelete.this.dispose();
 					JOptionPane.showMessageDialog(insertUpdateDelete.this, "Sửa thành công","Thông báo",JOptionPane.INFORMATION_MESSAGE);
-					PanelProduct.getIns().reLoad(true);
+					PanelProduct.getIns().getController().reload(true);
 					
 				} catch (Exception e2) {
 					JOptionPane.showMessageDialog(insertUpdateDelete.this, e2.toString(),"Thông báo",JOptionPane.INFORMATION_MESSAGE);
@@ -333,7 +333,7 @@ public class insertUpdateDelete extends JFrame {
 					ProductDAO.delete(model);
 					insertUpdateDelete.this.dispose();
 					JOptionPane.showMessageDialog(insertUpdateDelete.this, "Xóa thành công","Thông báo",JOptionPane.INFORMATION_MESSAGE);
-					PanelProduct.getIns().reLoad(true);
+					PanelProduct.getIns().getController().reload(true);
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					

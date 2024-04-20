@@ -44,6 +44,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.MatteBorder;
 
+import controller.PanelProductController;
 import dao.ProductDAO;
 import model.CategoryModel;
 import model.ProductModel;
@@ -54,6 +55,8 @@ import views.menu.Product.TImage;
 import views.menu.Product.insertUpdateDelete;
 
 public class PanelProduct extends JPanel {
+	private PanelProductController controller;
+
 	JPanel centerCenterPanel = new JPanel();
 	JPanel northCenterPanel = new JPanel();
 	JPanel southCenterPanel = new JPanel();
@@ -63,16 +66,11 @@ public class PanelProduct extends JPanel {
 	JTextField searchTextField = new JTextField();// Thanh tìm kiếm
 	JButton submit = new JButton("Tìm"); // nuts submit
 	JButton insertProduct = new JButton("Thêm sản phẩm"); // Them san pham
-	
-	
-	
-	
 	JLabel searchLabel = new JLabel("Tìm kiếm");
 	JLabel menu = new JLabel("Loại: ");
 
 	
 	String typeCategoryname[];
-	
 	 JComboBox<String> typeProduct= new JComboBox<>();
 	private static PanelProduct ins;
 	List<ProductModel> listProduct = ProductDAO.selectAll();
@@ -81,66 +79,12 @@ public class PanelProduct extends JPanel {
 		return ins;
 	}
 	
-	public void reLoad(boolean isSelectAll) throws SQLException {
-		if(isSelectAll==true) {
-			try {
-				List<String> categoryList= ProductDAO.selectCategory();
-				typeCategoryname= new String[categoryList.size()+1];
-				typeCategoryname[0]= "Tất cả";
-				for(int i=0; i<categoryList.size(); i++) {
-					typeCategoryname[i+1]= categoryList.get(i);
-					
-				}
-				typeProduct.setModel(new DefaultComboBoxModel<String>(typeCategoryname));
-				
-			} catch (SQLException e1) {
-				
-				
-				e1.printStackTrace();
-			}
-			listProduct= ProductDAO.selectAll();
-		}else
-			listProduct= ProductDAO.search(searchTextField.getText(),typeProduct.getSelectedItem().toString());
-		
-			
-		int amountPageNumber = ((listProduct.size()-1 )/ 8) +1 ;
-		PagePanel[] pageNumber = new PagePanel[amountPageNumber + 1];
-		
-		southCenterPanel.removeAll(); // trước khi gọi lại các trang ta xóa hết những thứ trước đi
-		for (int i = 1; i <= amountPageNumber; i++) {
-			pageNumber[i] = new PagePanel(i);
-			southCenterPanel.add(pageNumber[i]);
-		}
-	    showPage(1);
-		
-	}
 	
-
-	public void showPage(int pageNumber) {
-		
-		centerCenterPanel.setLayout(new GridLayout(2, 4, 20, 20));
-		centerCenterPanel.removeAll();
-		ItemProduct[] itemProduct = new ItemProduct[8];
-		for (int i = 0; i < 8; i++) {
-			try {
-				itemProduct[i] = new ItemProduct(listProduct.get(i + (pageNumber - 1) * 8));
-			} catch (Exception e) {
-				ProductModel empty = new ProductModel();
-				itemProduct[i] = new ItemProduct(null);
-				// TODO: handle exception
-			}
-			centerCenterPanel.add(itemProduct[i]);
-		}
-		centerCenterPanel.setVisible(false);
-		centerCenterPanel.setVisible(true);
-
-	}
-
 	
 	
 
 	public PanelProduct() {
-		
+		controller= new PanelProductController(this);
 		ins = this;
 		// set layout cho panel chinh
 		this.setLayout(new BorderLayout());
@@ -189,8 +133,8 @@ public class PanelProduct extends JPanel {
 				try {
 					 listProduct = ProductDAO.search(searchTextField.getText(),typeProduct.getSelectedItem().toString());
 					 System.out.println(searchTextField.getText());
-					 reLoad(true);
-					 reLoad(false);
+					 controller.reload(true);
+					 controller.reload(false);
 					
 				} catch (SQLException e1) {
 					//JOptionPane.showMessageDialog(dialog,e.toString(),"Thông Báo", JOptionPane.MESSAGE_PROPERTY );
@@ -219,8 +163,8 @@ public class PanelProduct extends JPanel {
 				try {
 					 listProduct = ProductDAO.search(searchTextField.getText(),typeProduct.getSelectedItem().toString());
 					 System.out.println(searchTextField.getText());
-					 reLoad(true);
-					 reLoad(false);
+					 //controller.reload(true);
+					 controller.reload(false);
 					
 				} catch (SQLException e1) {
 					//JOptionPane.showMessageDialog(dialog,e.toString(),"Thông Báo", JOptionPane.MESSAGE_PROPERTY );
@@ -250,9 +194,9 @@ public class PanelProduct extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					if(typeProduct.getSelectedIndex()==0) {
-						reLoad(true);
+						controller.reload(true);
 					}else {
-						reLoad(false);
+						controller.reload(false);
 					}
 					
 				} catch (SQLException e1) {
@@ -306,19 +250,22 @@ public class PanelProduct extends JPanel {
 			}
 		});
 
-		// set centerCenterpanel
-		showPage(1);
-
 // southCenterpanel
 		try {
-			reLoad(true);
+			controller.reload(true);
 		} catch (SQLException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-	
-
 	}
+
+	public PanelProductController getController() {
+		return controller;
+	}
+
+
+
+
 
 	public static void main(String[] args) {
 		JFrame jf = new JFrame();
@@ -328,13 +275,72 @@ public class PanelProduct extends JPanel {
 		jf.setDefaultCloseOperation(jf.EXIT_ON_CLOSE);
 
 	}
+	public JPanel getCenterCenterPanel() {
+		return centerCenterPanel;
+	}
 
+
+	public JPanel getNorthCenterPanel() {
+		return northCenterPanel;
+	}
+
+
+	public JPanel getSouthCenterPanel() {
+		return southCenterPanel;
+	}
+
+
+	public JPanel getCenterPanel() {
+		return centerPanel;
+	}
+
+
+	public JPanel getEastPanel() {
+		return eastPanel;
+	}
+
+
+	public JPanel getWestPanel() {
+		return westPanel;
+	}
+
+
+	public JTextField getSearchTextField() {
+		return searchTextField;
+	}
+
+
+	public JButton getSubmit() {
+		return submit;
+	}
+
+
+	public JButton getInsertProduct() {
+		return insertProduct;
+	}
+
+
+	public JLabel getSearchLabel() {
+		return searchLabel;
+	}
+
+
+	public JLabel getMenu() {
+		return menu;
+	}
+
+
+	public String[] getTypeCategoryname() {
+		return typeCategoryname;
+	}
+
+
+	public JComboBox<String> getTypeProduct() {
+		return typeProduct;
+	}
+
+
+	public List<ProductModel> getListProduct() {
+		return listProduct;
+	}
 }
-
-// tao them class cho itemProduct
-
-
-
-
-
-// Cat anh

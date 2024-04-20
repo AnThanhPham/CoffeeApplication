@@ -53,7 +53,7 @@ public class PagePanel extends JLabel {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				// TODO Auto-generated method stub
-				PanelProduct.getIns().showPage(pageNumber);
+				PanelProduct.getIns().getController().showPage(pageNumber);
 
 			}
 		});
