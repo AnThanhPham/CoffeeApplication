@@ -31,7 +31,7 @@ import model.ProductModel;
 import model.TableModel;
 
 public class PanelOrderTable extends JPanel {
-	JLabel title= new JLabel("Quản Lý Đặt Bàn");
+	JLabel title= new JLabel("Quản Lý Bàn");
 	Font fontTitle= new Font("Consolas", Font.BOLD,22);
 	TableModel model= new TableModel();
 	JPanel centerPanel= new JPanel();
@@ -92,26 +92,28 @@ public class PanelOrderTable extends JPanel {
 }
  class ItemTable extends JButton {
 	 
+	 
 	 	TableModel tm;
 	 	
-		JLabel tableItem;
+		JLabel tableName;
 
 		ItemTable( TableModel model){
 			tm= model;
 			
-			tableItem = new JLabel();
+			tableName = new JLabel();
 			
 			
-			tableItem.setText("Bàn "+ model.getID());
-			tableItem.setForeground(new Color(0xFFE0E6));
-			tableItem.setFont(new Font(Font.SANS_SERIF,Font.BOLD,22));
-			tableItem.setVerticalAlignment(JLabel.CENTER);
-			tableItem.setHorizontalAlignment(JLabel.CENTER);
+			tableName.setText("Bàn "+ model.getID());
+			tableName.setForeground(Color.white);
+			tableName.setFont(new Font(Font.SANS_SERIF,Font.PLAIN,22));
+			tableName.setHorizontalAlignment(JButton.CENTER);
+			tableName.setVerticalAlignment(JButton.CENTER);
+			this.setLayout(new BorderLayout());
 			
 			
 			
 			
-			this.add(tableItem);
+			this.add(tableName);
 			this.addActionListener(new ActionListener() {
 				
 				@Override

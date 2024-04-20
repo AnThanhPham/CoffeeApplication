@@ -8,19 +8,50 @@ import model.CategoryModel;
 import model.ProductModel;
 
 public class ProductDAO extends DAO  {
+	public static int selectCategoryId(String name) throws SQLException {
+	    PreparedStatement stm = null;
+	    ResultSet rs = null;
+	    int categoryId = -1; // Giá trị mặc định nếu không tìm thấy id
+	        //String sql = "SELECT id FROM category WHERE name = ? LIMIT 1";
+        String sql = "SELECT id FROM category WHERE categoryName= N'" + name +"'";
+	        stm = conn.prepareStatement(sql);
+	        rs = stm.executeQuery();
+
+	        if (rs.next()) {
+	            categoryId = rs.getInt("id");
+	        }
+	     return categoryId;
+	    
+	}
 
 	
 	public static void insert(ProductModel t) throws SQLException {
-		// TODO Auto-generated method stub
-			new DAO();
-			
-			Statement stm1= conn.createStatement();
-			 String sql= "insert product value( " + t.getID()+" ,"+t.getPrice()+",N'"+t.getName()+"',N'"+
-					 								t.getDescription()+"',N'"+t.getImage()+"',"+
-					 								t.getCategory().getID()+")";
-			 stm1.execute(sql);
-	
-	}
+		Statement stm= conn.createStatement();
+		String sql= "insert into product(price,name,description,image,categoryId) value(" +
+					t.getPrice() +
+					",N'" + t.getName() + "',N'"+
+					t.getDescription()+
+					"',N'"+t.getImage()+"',"+
+					t.getCategory().getID()+")";
+		System.out.println(sql);
+		stm.execute(sql);
+		
+		
+		
+		
+//		Statement stm= conn.createStatement();
+//		String sql= "insert into product(price,name,description,image,categoryId) value(" +
+//					t.getPrice() +
+//					",N'" + t.getName() + "',N'"+
+//					t.getDescription()+
+//					"',N'"+t.getImage()+"',"+
+//					t.getCategory().getID()+")";
+//		System.out.println(sql);
+//		stm.execute(sql);
+		
+
+
+}
 		
 
 	
@@ -54,7 +85,10 @@ public class ProductDAO extends DAO  {
 	public static List<ProductModel>  search(String t, String searchCategory) throws SQLException {
 		List<ProductModel> listResult= new ArrayList<ProductModel>();
 		Statement stm1= conn.createStatement();
-		String sql="select * from Product join Category on category.ID= Product.categoryID where name like '%"+ t + "%' and categoryName= N'"+ searchCategory +"'" ; 
+		if(searchCategory.equals("Tất cả")) {
+			searchCategory  = "%";
+		} 
+		String sql="select * from Product join Category on category.ID= Product.categoryID where name like '%"+ t + "%' and categoryName like N'"+ searchCategory +"'" ; 
 		stm1.execute(sql);
 		ResultSet rs= stm1.executeQuery(sql);
 		

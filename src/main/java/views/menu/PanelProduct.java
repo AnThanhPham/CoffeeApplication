@@ -16,6 +16,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.sql.SQLException;
@@ -55,22 +58,10 @@ public class PanelProduct extends JPanel {
 	JLabel searchLabel = new JLabel("Tìm kiếm");
 	JLabel menu = new JLabel("Loại: ");
 
-	// CenterPanel
-//	JLabel product1 = new JLabel();
-//	JLabel nameProduct1 = new JLabel("Ten: Trà dâu");
-//	JLabel priceProduct1 = new JLabel("Gia: 55.000");
-//	JLabel descriptionPr1 = new JLabel("Sản phẩm là sự kết hợp từ dâu tây, trà nhài,..");
-//	JPanel leftCenterpanel = new JPanel();
-
 	
 	String typeCategoryname[];
 	
 	 JComboBox<String> typeProduct= new JComboBox<>();
-	 	
-	 //JComboBox<String> typeProduct= new JComboBox<>(new String []{"cafe","banhngot","nước ép"});
-//	JMenuBar outMenu = new JMenuBar();
-//	JMenu menu1 = new JMenu("Menu");
-//	String[] typeProduct = { "cafe", "nuoc ngot", "banh ngot", "Nuoc ep" };
 	private static PanelProduct ins;
 	List<ProductModel> listProduct = ProductDAO.selectAll();
 
@@ -80,22 +71,25 @@ public class PanelProduct extends JPanel {
 	
 	public void reLoad(boolean isSelectAll) throws SQLException {
 		if(isSelectAll==true) {
+			try {
+				List<String> categoryList= ProductDAO.selectCategory();
+				typeCategoryname= new String[categoryList.size()+1];
+				typeCategoryname[0]= "Tất cả";
+				for(int i=0; i<categoryList.size(); i++) {
+					typeCategoryname[i+1]= categoryList.get(i);
+					
+				}
+				typeProduct.setModel(new DefaultComboBoxModel<String>(typeCategoryname));
+				
+			} catch (SQLException e1) {
+				
+				
+				e1.printStackTrace();
+			}
 			listProduct= ProductDAO.selectAll();
 		}else
 			listProduct= ProductDAO.search(searchTextField.getText(),typeProduct.getSelectedItem().toString());
 		
-		try {
-			typeCategoryname= new String[ProductDAO.selectCategory().size()];
-			for(int i=0; i<typeCategoryname.length; i++) {
-				typeCategoryname[i]= ProductDAO.selectCategory().get(i);
-				
-			}
-			typeProduct.setModel(new DefaultComboBoxModel<String>(typeCategoryname));
-			
-		} catch (SQLException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
 			
 		int amountPageNumber = ((listProduct.size()-1 )/ 8) +1 ;
 		PagePanel[] pageNumber = new PagePanel[amountPageNumber + 1];
@@ -120,7 +114,7 @@ public class PanelProduct extends JPanel {
 				itemProduct[i] = new ItemProduct(listProduct.get(i + (pageNumber - 1) * 8));
 			} catch (Exception e) {
 				ProductModel empty = new ProductModel();
-				itemProduct[i] = new ItemProduct(empty);
+				itemProduct[i] = new ItemProduct(null);
 				// TODO: handle exception
 			}
 			centerCenterPanel.add(itemProduct[i]);
@@ -129,6 +123,9 @@ public class PanelProduct extends JPanel {
 		centerCenterPanel.setVisible(true);
 
 	}
+
+	
+	
 
 	public PanelProduct() {
 		
@@ -172,6 +169,36 @@ public class PanelProduct extends JPanel {
 		
 		centerTop.add(searchLabel);
 		centerTop.add(searchTextField);
+		searchTextField.addKeyListener(new KeyListener() {
+			
+			@Override
+			public void keyTyped(KeyEvent e) {
+				
+				try {
+					 listProduct = ProductDAO.search(searchTextField.getText(),typeProduct.getSelectedItem().toString());
+					 System.out.println(searchTextField.getText());
+					 reLoad(true);
+					 reLoad(false);
+					
+				} catch (SQLException e1) {
+					//JOptionPane.showMessageDialog(dialog,e.toString(),"Thông Báo", JOptionPane.MESSAGE_PROPERTY );
+					System.out.println(e1.toString());
+				}
+				
+			}
+			
+			@Override
+			public void keyReleased(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void keyPressed(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 		centerTop.add(submit);
 		submit.addActionListener(new ActionListener() {
 			
@@ -180,6 +207,7 @@ public class PanelProduct extends JPanel {
 				try {
 					 listProduct = ProductDAO.search(searchTextField.getText(),typeProduct.getSelectedItem().toString());
 					 System.out.println(searchTextField.getText());
+					 reLoad(true);
 					 reLoad(false);
 					
 				} catch (SQLException e1) {
@@ -189,6 +217,8 @@ public class PanelProduct extends JPanel {
 				
 			}
 		});
+		
+		
 		
 		rightTop.add(insertProduct);
 		insertProduct.addActionListener(new ActionListener() {
@@ -207,7 +237,12 @@ public class PanelProduct extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					reLoad(false);
+					if(typeProduct.getSelectedIndex()==0) {
+						reLoad(true);
+					}else {
+						reLoad(false);
+					}
+					
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -290,6 +325,11 @@ class ItemProduct extends JPanel {
 	JLabel southItem;
 
 	ItemProduct(ProductModel model){
+		if(model==null) {
+			this.setVisible(false);
+			return ;
+		}
+		
 		centerItem = new TImage(new ImageIcon(model.getImage()));
 		southItem = new JLabel();
 		
@@ -345,6 +385,7 @@ class ItemProduct extends JPanel {
 }
 
 class insertUpdateDelete extends JDialog {
+	int categoryId;
 	public insertUpdateDelete(ProductModel model,boolean isInsert) {
 		
 		JDialog dialog= new JDialog();
@@ -391,7 +432,8 @@ class insertUpdateDelete extends JDialog {
 		JTextField imgField= new JTextField(model.getImage());
 		JLabel categoryProduct= new JLabel("Loại");
 		categoryProduct.setFont(centerFont);
-		JTextField categoryField= new JTextField(model.getCategory().getID()+"");
+		//JTextField categoryField= new JTextField(model.getCategory().getID()+"");
+		//JComboBox<int>categoryField= new Produc 
 	// cot trai	
 		gbc.insets= new Insets(0, 10,0,10);   // set padding
 		gbc.weightx= 0.3;  // set ti le cho ben trai ( con lai la ti le thua)
@@ -400,7 +442,7 @@ class insertUpdateDelete extends JDialog {
 		gbc.anchor= GridBagConstraints.LINE_START; // căn vị trí của component( tất cả các loại J)so với ô- cụ thể đây là căn đầu dòng
 		gbc.gridx= 0;
 		gbc.gridy= 0;
-		centerDialog.add(idProduct,gbc);
+		//centerDialog.add(idProduct,gbc);
 		gbc.gridy= 1;
 		centerDialog.add(nameProduct,gbc);
 		gbc.gridy= 2;
@@ -422,7 +464,8 @@ class insertUpdateDelete extends JDialog {
 		
 		gbc.gridx= 1;
 		gbc.gridy= 0;
-		centerDialog.add(idField,gbc);
+		idField.setEnabled(false);
+		//centerDialog.add(idField,gbc);
 		gbc.gridy= 1;
 		centerDialog.add(nameField,gbc);
 		gbc.gridy= 2;
@@ -432,7 +475,35 @@ class insertUpdateDelete extends JDialog {
 		gbc.gridy= 4;
 		centerDialog.add(imgField,gbc);
 		gbc.gridy= 5;
-		centerDialog.add(categoryField,gbc);
+//		centerDialog.add(categoryField,gbc);
+
+		String typeCategoryname[];
+		 JComboBox<String> typeProduct= new JComboBox<>();
+		 typeProduct.setBackground(Color.white);
+		List<ProductModel> listProduct = ProductDAO.selectAll();
+					List<String> categoryList;
+					try {
+						categoryList = ProductDAO.selectCategory();
+						typeCategoryname= new String[categoryList.size()];
+						for(int i=0; i<categoryList.size(); i++) {
+							typeCategoryname[i]= categoryList.get(i);
+							
+						}
+						typeProduct.setModel(new DefaultComboBoxModel<String>(typeCategoryname));
+						
+						centerDialog.add(typeProduct,gbc);
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}			
+					
+				
+		
+		
+		
+		
+		
+		
 //set soundDialog
 		Font fontSouth= new Font(Font.SANS_SERIF,Font.BOLD,14);
 		bottomDialog.setPreferredSize(new Dimension(100,60));
@@ -442,22 +513,33 @@ class insertUpdateDelete extends JDialog {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				//int categoryId;
 				try {
-					model.setID(Integer.parseInt(idField.getText()));
+					
+//					model.setID(Integer.parseInt(idField.getText()));
 					model.setPrice(Integer.parseInt(priceField.getText()));
 					model.setName(nameField.getText());
 					model.setDescription(desField.getText());
 					model.setImage(imgField.getText());
-					model.getCategory().setID(Integer.parseInt(categoryField.getText()));
+				    categoryId= ProductDAO.selectCategoryId((String)typeProduct.getSelectedItem());// chuyển tên loại sp thành id loại sp;
+					model.getCategory().setID(categoryId);
+					System.out.println((String)typeProduct.getSelectedItem()+"\n");
+					//model.getCategory().setCategoryName(typeProduct.getToolTipText());
 					ProductDAO.insert(model);
 					dialog.dispose();
+					System.out.println("Mã ID"+ categoryId);
 					JOptionPane.showMessageDialog(dialog, "Thêm thành công","Thông báo",JOptionPane.INFORMATION_MESSAGE);
 					PanelProduct.getIns().reLoad(true);
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
-					
+					System.out.println(e1.getErrorCode());
+					System.out.println("\n" + e1.getNextException());
 					JOptionPane.showMessageDialog(dialog, "Thêm thất bại","Thông báo",JOptionPane.INFORMATION_MESSAGE);
-				} 
+					
+					} 
+				System.out.println("Lỗi: "+(String)typeProduct.getSelectedItem()+"\n");
+				System.out.println("Mã Loại:"+ categoryId);
+				
 				
 				
 			}
@@ -536,9 +618,9 @@ class insertUpdateDelete extends JDialog {
 			bottomDialog.add(cancel);
 		}
 		
-		
-		
 	}
+		
+						
 	
 }
 
