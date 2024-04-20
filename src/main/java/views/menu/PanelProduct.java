@@ -12,6 +12,7 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Menu;
+import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
@@ -21,6 +22,10 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -29,6 +34,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -36,10 +42,12 @@ import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.border.MatteBorder;
 
 import dao.ProductDAO;
 import model.CategoryModel;
 import model.ProductModel;
+import util.ImageFilter;
 
 public class PanelProduct extends JPanel {
 	JPanel centerCenterPanel = new JPanel();
@@ -414,26 +422,35 @@ class insertUpdateDelete extends JDialog {
 		// set center dialog
 		centerDialog.setLayout(new GridBagLayout());
 		GridBagConstraints gbc=new GridBagConstraints();
+		
 		JLabel idProduct= new JLabel("ID");
 		idProduct.setFont(centerFont);
 		JTextField idField= new JTextField(model.getID()+"");
 		if(isInsert==false) idField.setEditable(false);//ko đc sửa
+		
 		JLabel nameProduct= new JLabel("Tên");
 		nameProduct.setFont(centerFont);
 		JTextField nameField= new JTextField( model.getName());
+		
 		JLabel priceProduct= new JLabel("Giá");
 		priceProduct.setFont(centerFont);
 		JTextField priceField= new JTextField(model.getPrice()+"");
+		
 		JLabel desProduct= new JLabel("Mô Tả");
 		desProduct.setFont(centerFont);
 		JTextField desField= new JTextField(model.getDescription());
+		
 		JLabel imgProduct= new JLabel("Link Ảnh");
 		imgProduct.setFont(centerFont);
 		JTextField imgField= new JTextField(model.getImage());
+		JButton choseImage= new JButton("Chọn");
+		
+		
 		JLabel categoryProduct= new JLabel("Loại");
 		categoryProduct.setFont(centerFont);
 		//JTextField categoryField= new JTextField(model.getCategory().getID()+"");
 		//JComboBox<int>categoryField= new Produc 
+		
 	// cot trai	
 		gbc.insets= new Insets(0, 10,0,10);   // set padding
 		gbc.weightx= 0.3;  // set ti le cho ben trai ( con lai la ti le thua)
@@ -474,9 +491,71 @@ class insertUpdateDelete extends JDialog {
 		centerDialog.add(desField,gbc);
 		gbc.gridy= 4;
 		centerDialog.add(imgField,gbc);
+		
+		
+		
+// sửa chọn link ảnh		
+		gbc.gridx= 2;
+		choseImage.setPreferredSize(new Dimension(100,100));
+		
+		centerDialog.add(choseImage,gbc);
+		JFileChooser fc = new JFileChooser();
+		choseImage.addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				fc.addChoosableFileFilter(new ImageFilter());
+				fc.setAcceptAllFileFilterUsed(false);
+				int returnVal = fc.showOpenDialog(centerDialog);
+				if (returnVal == JFileChooser.APPROVE_OPTION) {
+		            File file = fc.getSelectedFile();
+		            try {
+						Files.copy(file.toPath(),new File("src/main/java/img/product/anh"+ model.getID() +".png").toPath(),StandardCopyOption.REPLACE_EXISTING);
+						System.out.println(file.getAbsolutePath());
+			            imgField.setText("src/main/java/img/product/anh"+ model.getID() +".png");
+		
+		            } catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+		            
+		        } else {
+		            System.out.println("Open command cancelled by user.");
+		        }
+			}
+		});
+		
+		
+		
+		
+		
+		
+		gbc.gridx=1;
 		gbc.gridy= 5;
-//		centerDialog.add(categoryField,gbc);
-
 		String typeCategoryname[];
 		 JComboBox<String> typeProduct= new JComboBox<>();
 		 typeProduct.setBackground(Color.white);
