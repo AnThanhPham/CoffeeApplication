@@ -46,16 +46,19 @@ private static  CategoryDAO categoryDao = new CategoryDAO();
 	// Hàm lấy ra list tên sản phẩm
 	public static List<String>  listName() throws SQLException {
 		List<String> listResult= new ArrayList<String>();
-		java.sql.Statement stm1= conn.createStatement();
-		
-		String sql="select productname from Product  " ; 
-		ResultSet rs= stm1.executeQuery(sql);
+		try {
+	        java.sql.Statement stm1 = conn.createStatement();
+	        String sql = "select name from Product";
+	        ResultSet rs = stm1.executeQuery(sql);
 
-		while(rs.next()) {
-
-			listResult.add(rs.getString("productname"));
-
-		}
+	        while (rs.next()) {
+	            listResult.add(rs.getString("name"));
+	        }
+	        rs.close();
+	        stm1.close();
+	    } catch (SQLException e) {
+	        e.printStackTrace(); // hoặc log.error("Error occurred:", e);
+	    }
 		return listResult;
 	}
 	

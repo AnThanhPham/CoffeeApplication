@@ -272,10 +272,11 @@ public class insertUpdateDelete extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				//int categoryId;
 				insertUpdateDelete check= insertUpdateDelete.this;
+				String nameText= check.getNameField().getText();
+				
 				try {
 					if(ValidateUtils.checkEmptyAndNull(check.getNameField().getText())){
 						JOptionPane.showMessageDialog(check, "Tên sản phẩm không được trống","Thông báo",JOptionPane.INFORMATION_MESSAGE);
-						
 						return ;
 					}
 					if(ValidateUtils.checkEmptyAndNull((String)check.getPriceField().getText())) {
@@ -287,12 +288,26 @@ public class insertUpdateDelete extends JFrame {
 						JOptionPane.showMessageDialog(check, "Giá phải là số dương");
 						return ;
 					}
-					for(String x: ProductDAO.listName()) {
-						if(check.getNameField().getText()==x) {
-							JOptionPane.showMessageDialog(check, "Tên sản phẩm đã tồn tại");
-							return ;
+					
+					try {
+						List<String> productList = ProductDAO.listName();
+						for(String x: productList) {
+							if(nameText.equalsIgnoreCase(x)==false) {
+								continue;
+							}else {
+								JOptionPane.showMessageDialog(check, "Tên sản phẩm đã tồn tại");
+								return ;
+							}
 						}
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
 					}
+					
+//					for(String x: ProductDAO.listName()) {
+//						System.out.println("tên:"+ x+ "\n");
+//					}
+//					
 
 //					model.setID(Integer.parseInt(idField.getText()));
 					model.setPrice(Integer.parseInt(priceField.getText()));
@@ -341,7 +356,40 @@ public class insertUpdateDelete extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				insertUpdateDelete check= insertUpdateDelete.this;
+				String nameText= check.getNameField().getText();
 				try {
+					
+					if(ValidateUtils.checkEmptyAndNull(check.getNameField().getText())){
+						JOptionPane.showMessageDialog(check, "Tên sản phẩm không được trống","Thông báo",JOptionPane.INFORMATION_MESSAGE);
+						return ;
+					}
+					if(ValidateUtils.checkEmptyAndNull((String)check.getPriceField().getText())) {
+						JOptionPane.showMessageDialog(check, "Giá sản phẩm không được trống","Thông báo",JOptionPane.INFORMATION_MESSAGE);
+						
+						return; 
+					}
+					if(PanelProduct.getIns().getController().checkPrice((String)check.getPriceField().getText())== false) {
+						JOptionPane.showMessageDialog(check, "Giá phải là số dương");
+						return ;
+					}
+					try {
+						List<String> productList = ProductDAO.listName();
+						for(String x: productList) {
+							if(nameText.equalsIgnoreCase(x)==false) {
+								continue;
+							}else {
+								JOptionPane.showMessageDialog(check, "Tên sản phẩm đã tồn tại");
+								return ;
+							}
+						}
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					
+					
+					
 					model.setID(Integer.parseInt(idField.getText()));
 					model.setPrice(Integer.parseInt(priceField.getText()));
 					model.setName(nameField.getText());
