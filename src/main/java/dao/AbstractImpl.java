@@ -186,12 +186,6 @@ public class AbstractImpl {
 				Object value = field.get(t);
 				String fieldName = field.getName();
 				if(value != null) {
-						if(!fieldName.equalsIgnoreCase("id")) {
-							if(field.getType().getName().equals("java.lang.String")) {
-								res.append(fieldName+" = '"+value+"' ,");
-							}else if(field.getType().getName().equals("java.lang.Integer")) {
-								res.append(fieldName+" = "+value+" ,");
-							}
 					if(!fieldName.equalsIgnoreCase("Customer")
 							&& !fieldName.equalsIgnoreCase("User")
 							&& !fieldName.equalsIgnoreCase("Table")) {
@@ -204,8 +198,7 @@ public class AbstractImpl {
 						}
 					}
 				}
-			}
-		} 
+			} 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -225,8 +218,6 @@ public class AbstractImpl {
 				field.setAccessible(true);
 				Object value = field.get(t);
 				if(value != null) {
-						res.append(field.getName()+",");
-						sql2.append("'"+value+"',");
 					if(!field.getName().equalsIgnoreCase("Customer")
 						&& !field.getName().equalsIgnoreCase("User")
 						&& !field.getName().equalsIgnoreCase("Table")

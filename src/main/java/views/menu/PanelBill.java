@@ -40,6 +40,7 @@ public class PanelBill extends JPanel {
 	private JButton PageFirst;
 	private JButton Fitter;
 	private JButton RefreshFitter;
+	private JButton CheckNumberCustomer;
 	
 	private Font FLabel;
 	private Font FLabelText;
@@ -82,6 +83,9 @@ public class PanelBill extends JPanel {
 	}
 
 	public void CreateHeader() {
+		CheckNumberCustomer = new JButton("Kiểm tra sđt");
+		CheckNumberCustomer.setBounds(445,140,145,30);
+		add(CheckNumberCustomer);
 		
 		TodayDate = new JLabel();
 		TodayDate.setBounds(60,10,237,30);
@@ -152,12 +156,12 @@ public class PanelBill extends JPanel {
 		add(Bill_Date);
 		
 		jlabel = new JLabel("Trạng Thái"); // thời gian tạo hóa đơn + hiển thị
-		jlabel.setBounds(325,140,95,30);
+		jlabel.setBounds(320,185,95,30);
 		jlabel.setFont(FLabel);
 		add(jlabel);
 		
 		Status_item = new JComboBox<String>();
-		Status_item.setBounds(445,140,145,30);
+		Status_item.setBounds(445,185,145,30);
 		add(Status_item);
 
 		
@@ -587,6 +591,14 @@ public class PanelBill extends JPanel {
 
 	public void setPayment_Name(JComboBox<String> payment_Name) {
 		Payment_Name = payment_Name;
+	}
+
+	public JButton getCheckNumberCustomer() {
+		return CheckNumberCustomer;
+	}
+
+	public void setCheckNumberCustomer(JButton checkNumberCustomer) {
+		CheckNumberCustomer = checkNumberCustomer;
 	}
 	
 	
