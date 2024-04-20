@@ -28,7 +28,7 @@ private static  CategoryDAO categoryDao = new CategoryDAO();
     		ProductModel tmp = new ProductModel();
     		if(rs.next()) {
     			tmp.setID(rs.getInt(1));
-    			tmp.setPrice(rs.getFloat(2));
+    			tmp.setPrice((int)rs.getFloat(2));
     			tmp.setName(rs.getString(3));
     			tmp.setDescription(rs.getString(4));
     			tmp.setImage(rs.getString(5));
@@ -128,7 +128,7 @@ private static  CategoryDAO categoryDao = new CategoryDAO();
 		while(rs.next()) {
 
 			int id=rs.getInt(1);
-			double price= rs.getDouble(2);
+			int price= (int) rs.getDouble(2);
 			String name= rs.getString(3);
 			String des= rs.getString(4);
 			String image= rs.getString(5);
@@ -174,7 +174,7 @@ private static  CategoryDAO categoryDao = new CategoryDAO();
 			while(rs.next()) {
 				
 				int id=rs.getInt(1);
-				double price= rs.getDouble(2);
+				int price= (int) rs.getDouble(2);
 				String name= rs.getString(3);
 				String des= rs.getString(4);
 				String image= rs.getString(5);

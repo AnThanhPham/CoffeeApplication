@@ -2,14 +2,14 @@ package model;
 
 public class ProductModel {
 	private int ID;
-	private double Price;
+	private int Price;
 	private String Name;
 	private String Description;
 	private String Image;
 	private CategoryModel Category;
 	
 	
-	public ProductModel(int iD, double price, String name, String description, String image, CategoryModel category) {
+	public ProductModel(int iD, int price, String name, String description, String image, CategoryModel category) {
 		ID = iD;
 		Price = price;
 		Name = name;
@@ -35,11 +35,11 @@ public class ProductModel {
 		ID = iD;
 	}
 
-	public double getPrice() {
+	public int getPrice() {
 		return Price;
 	}
 
-	public void setPrice(double price) {
+	public void setPrice(int price) {
 		Price = price;
 	}
 

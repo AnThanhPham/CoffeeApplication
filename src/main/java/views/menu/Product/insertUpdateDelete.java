@@ -82,7 +82,7 @@ public class insertUpdateDelete extends JFrame {
 		
 		JLabel priceProduct= new JLabel("Giá");
 		priceProduct.setFont(centerFont);
-		JTextField priceField= new JTextField(model.getPrice()+"");
+		JTextField priceField= new JTextField((int)model.getPrice()+"");
 		
 		JLabel desProduct= new JLabel("Mô Tả");
 		desProduct.setFont(centerFont);
@@ -260,7 +260,7 @@ public class insertUpdateDelete extends JFrame {
 				try {
 					
 //					model.setID(Integer.parseInt(idField.getText()));
-					model.setPrice(Double.parseDouble(priceField.getText()));
+					model.setPrice(Integer.parseInt(priceField.getText()));
 					model.setName(nameField.getText());
 					model.setDescription(desField.getText());
 					model.setImage(imgField.getText());
@@ -305,10 +305,13 @@ public class insertUpdateDelete extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					model.setID(Integer.parseInt(idField.getText()));
-					model.setPrice(Double.parseDouble(priceField.getText()));
+					model.setPrice(Integer.parseInt(priceField.getText()));
 					model.setName(nameField.getText());
 					model.setDescription(desField.getText());
 					model.setImage(imgField.getText());
+					categoryId= ProductDAO.selectCategoryId((String)typeProduct.getSelectedItem());// chuyển tên loại sp thành id loại sp;
+					model.getCategory().setID(categoryId);
+					
 					ProductDAO.update(model);
 					insertUpdateDelete.this.dispose();
 					JOptionPane.showMessageDialog(insertUpdateDelete.this, "Sửa thành công","Thông báo",JOptionPane.INFORMATION_MESSAGE);
