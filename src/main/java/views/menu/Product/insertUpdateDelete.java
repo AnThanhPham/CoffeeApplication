@@ -13,6 +13,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
+import java.lang.ModuleLayer.Controller;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
@@ -38,6 +39,43 @@ import util.ValidateUtils;
 import views.menu.PanelProduct;
 
 public class insertUpdateDelete extends JFrame {
+	JLabel topDialog = new JLabel();
+	JLabel centerDialog = new JLabel();
+	JPanel bottomDialog = new JPanel();
+	//Cột trái
+	JLabel idProduct= new JLabel("ID");
+	JLabel nameProduct= new JLabel("Tên");
+	JLabel priceProduct= new JLabel("Giá");
+	JLabel desProduct= new JLabel("Mô Tả");
+	JLabel imgProduct= new JLabel("Link Ảnh");
+	JButton choseImage= new JButton("Chọn");
+	// loại sp
+	JLabel categoryProduct= new JLabel("Loại");
+	 JComboBox<String> typeProduct= new JComboBox<>();
+	
+	public JComboBox<String> getTypeProduct() {
+		return typeProduct;
+	}
+	// sound dialog
+	JButton insert= new JButton("Thêm");
+	JButton edit= new JButton("Sửa");
+	JButton delete= new JButton("Xóa");
+	JButton cancel= new JButton("Thoát");
+	
+	
+	
+	public JButton getInsert() {
+		return insert;
+	}
+	public JButton getEdit() {
+		return edit;
+	}
+	public JButton getDelete() {
+		return delete;
+	}
+	public JButton getCancel() {
+		return cancel;
+	}
 	int categoryId;
 	public JTextField getNameField() {
 		return nameField;
@@ -52,14 +90,17 @@ public class insertUpdateDelete extends JFrame {
 		this.priceField = priceField;
 	}
 	String name;
-	private JTextField nameField,priceField;
-	TImage imgLabel;
+	private JTextField nameField,priceField, idField,desField, imgField;
+	private ProductModel model;
+	public ProductModel getModel() {
+		return model;
+	}
+	private TImage imgLabel;
+	
 	public insertUpdateDelete(ProductModel model,boolean isInsert) {
-		
+		this.model=model;
 		//JDialog dialog= new JDialog();
-		JLabel topDialog = new JLabel();
-		JLabel centerDialog = new JLabel();
-		JPanel bottomDialog = new JPanel();
+		
 		this.setVisible(true);
 		this.setMinimumSize(new Dimension(500,600));
 		this.setLayout(new BorderLayout());	
@@ -89,33 +130,29 @@ public class insertUpdateDelete extends JFrame {
 		centerDialog.setLayout(new GridBagLayout());
 		GridBagConstraints gbc=new GridBagConstraints();
 		
-		JLabel idProduct= new JLabel("ID");
+		
 		idProduct.setFont(centerFont);
-		JTextField idField= new JTextField(model.getID()+"");
+		idField= new JTextField(model.getID()+"");
 		if(isInsert==false) idField.setEditable(false);//ko đc sửa
 		
-		JLabel nameProduct= new JLabel("Tên");
+		
 		nameProduct.setFont(centerFont);
 		 nameField= new JTextField( model.getName());
 		
-		JLabel priceProduct= new JLabel("Giá");
+		
 		priceProduct.setFont(centerFont);
 		 priceField= new JTextField((int)model.getPrice()+"");
 		
-		JLabel desProduct= new JLabel("Mô Tả");
-		desProduct.setFont(centerFont);
-		JTextField desField= new JTextField(model.getDescription());
 		
-		JLabel imgProduct= new JLabel("Link Ảnh");
+		desProduct.setFont(centerFont);
+		 desField= new JTextField(model.getDescription());
+		
 		imgProduct.setFont(centerFont);
-		JTextField imgField= new JTextField(model.getImage());
-		JButton choseImage= new JButton("Chọn");
-		JPanel imgPanel = new JPanel();
+		 imgField= new JTextField(model.getImage());
+		
 		imgLabel = new TImage(new ImageIcon(model.getImage()));
 		
 		
-		
-		JLabel categoryProduct= new JLabel("Loại");
 		categoryProduct.setFont(centerFont);
 		//JTextField categoryField= new JTextField(model.getCategory().getID()+"");
 		//JComboBox<int>categoryField= new Produc 
@@ -161,11 +198,9 @@ public class insertUpdateDelete extends JFrame {
 		gbc.gridy= 4;
 		gbc.insets.top=10;
 		//centerDialog.add(imgField,gbc);
-		imgPanel.setPreferredSize(new Dimension(100,100));
+		imgLabel.setPreferredSize(new Dimension(100,100));
 		imgLabel.setOpaque(true);
-		centerDialog.add(imgPanel,gbc);
-		imgPanel.setLayout(new BorderLayout());
-		imgPanel.add(imgLabel);
+		centerDialog.add(imgLabel,gbc);
 		
 		
 		
@@ -180,58 +215,7 @@ public class insertUpdateDelete extends JFrame {
 		
 		
 		centerDialog.add(choseImage,gbc);
-		JFileChooser fc = new JFileChooser();
-		choseImage.addMouseListener(new MouseListener() {
-			
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void mousePressed(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void mouseExited(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				fc.addChoosableFileFilter(new ImageFilter());
-				fc.setAcceptAllFileFilterUsed(false);
-				int returnVal = fc.showOpenDialog(centerDialog);
-				if (returnVal == JFileChooser.APPROVE_OPTION) {
-		            File file = fc.getSelectedFile();
-		            try {
-						Files.copy(file.toPath(),new File("src/main/java/img/product/anh"+ model.getID() +".png").toPath(),StandardCopyOption.REPLACE_EXISTING);
-						System.out.println(file.getAbsolutePath());
-			            imgField.setText("src/main/java/img/product/anh"+ model.getID() +".png");
-//			            imgField.setText(file.getAbsolutePath());
-			            imgLabel=new TImage(new ImageIcon(file.getAbsolutePath()));
-			            imgPanel.removeAll();
-			            imgPanel.add(imgLabel);
-		            } catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-		            
-		        } else {
-		            System.out.println("Open command cancelled by user.");
-		        }
-			}
-		});
+		
 		
 		
 		
@@ -242,7 +226,7 @@ public class insertUpdateDelete extends JFrame {
 		//gbc.gridy= 5;
 		gbc.gridy= 6;
 		String typeCategoryname[];
-		 JComboBox<String> typeProduct= new JComboBox<>();
+		
 		 typeProduct.setBackground(Color.white);
 		List<ProductModel> listProduct = ProductDAO.selectAll();
 					List<String> categoryList;
@@ -285,94 +269,8 @@ public class insertUpdateDelete extends JFrame {
 //set soundDialog
 		Font fontSouth= new Font(Font.SANS_SERIF,Font.BOLD,14);
 		bottomDialog.setPreferredSize(new Dimension(100,60));
-		JButton insert= new JButton("Thêm");
 		insert.setFont(fontSouth);
-		insert.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				//int categoryId;
-				insertUpdateDelete check= insertUpdateDelete.this;
-				String nameText= check.getNameField().getText();
-				
-				try {
-					if(ValidateUtils.checkEmptyAndNull(check.getNameField().getText())){
-						JOptionPane.showMessageDialog(check, "Tên sản phẩm không được trống","Thông báo",JOptionPane.INFORMATION_MESSAGE);
-						return ;
-					}
-					if(ValidateUtils.checkEmptyAndNull((String)check.getPriceField().getText())) {
-						JOptionPane.showMessageDialog(check, "Giá sản phẩm không được trống","Thông báo",JOptionPane.INFORMATION_MESSAGE);
-						
-						return; 
-					}
-					if(PanelProduct.getIns().getController().checkPrice((String)check.getPriceField().getText())== false) {
-						JOptionPane.showMessageDialog(check, "Giá phải là số dương");
-						return ;
-					}
-					
-					try {
-						List<String> productList = ProductDAO.listName();
-						for(String x: productList) {
-							if(nameText.equalsIgnoreCase(x)==false) {
-								continue;
-							}else {
-								JOptionPane.showMessageDialog(check, "Tên sản phẩm đã tồn tại");
-								return ;
-							}
-						}
-					} catch (SQLException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-					
-//					for(String x: ProductDAO.listName()) {
-//						System.out.println("tên:"+ x+ "\n");
-//					}
-//					
-
-//					model.setID(Integer.parseInt(idField.getText()));
-					model.setPrice(Integer.parseInt(priceField.getText()));
-					model.setName(nameField.getText());
-					model.setDescription(desField.getText());
-					model.setImage(imgField.getText());
-				    categoryId= ProductDAO.selectCategoryId((String)typeProduct.getSelectedItem());// chuyển tên loại sp thành id loại sp;
-					model.getCategory().setID(categoryId);
-					
-					
-					System.out.println((String)typeProduct.getSelectedItem()+"\n");
-					//model.getCategory().setCategoryName(typeProduct.getToolTipText());
-					
-					
-					ProductDAO.insert(model);
-					insertUpdateDelete.this.dispose();
-					System.out.println("Mã ID"+ categoryId);
-					JOptionPane.showMessageDialog(insertUpdateDelete.this, "Thêm thành công","Thông báo",JOptionPane.INFORMATION_MESSAGE);
-					PanelProduct.getIns().getController().reload(true);
-				 
-					}catch (Exception e1) {
-					// TODO Auto-generated catch block
-//					System.out.println(e1.getErrorCode());
-					e1.printStackTrace();
-//					System.out.println(e1.printStackTrace());
-//					System.out.println("\n" + e1.getNextException());
-					JOptionPane.showMessageDialog(insertUpdateDelete.this, "Thêm thất bại","Thông báo",JOptionPane.INFORMATION_MESSAGE);
-					
-					}
-				
-
-
-				
-				
-				
-				System.out.println("Lỗi: "+(String)typeProduct.getSelectedItem()+"\n");
-				System.out.println("Mã Loại:"+ categoryId);
-				
-				
-				
-			}
-		});
-		
-		JButton edit= new JButton("Sửa");
+	
 		edit.addActionListener(new ActionListener() {
 			
 			@Override
@@ -434,7 +332,6 @@ public class insertUpdateDelete extends JFrame {
 		});
 		edit.setFont(fontSouth);
 		
-		JButton delete= new JButton("Xóa");
 		delete.addActionListener(new ActionListener() {
 			
 			@Override
@@ -454,7 +351,6 @@ public class insertUpdateDelete extends JFrame {
 			}
 		});
 		delete.setFont(fontSouth);
-		JButton cancel= new JButton("Thoát");
 		cancel.setFont(fontSouth);
 		cancel.addActionListener(new ActionListener() {
 			
@@ -481,9 +377,60 @@ public class insertUpdateDelete extends JFrame {
 			bottomDialog.add(delete);
 			bottomDialog.add(cancel);
 		}
-		
+		PanelProduct.getIns().getController().addEventDialog(insertUpdateDelete.this);
 		this.setVisible(false);
 		this.setVisible(true);
+	}
+	public void setImgLabel(TImage imgLabel) {
+		this.imgLabel = imgLabel;
+	}
+	public JLabel getTopDialog() {
+		return topDialog;
+	}
+	public JLabel getCenterDialog() {
+		return centerDialog;
+	}
+	public JPanel getBottomDialog() {
+		return bottomDialog;
+	}
+	public JLabel getIdProduct() {
+		return idProduct;
+	}
+	public JLabel getNameProduct() {
+		return nameProduct;
+	}
+	public JLabel getPriceProduct() {
+		return priceProduct;
+	}
+	public JLabel getDesProduct() {
+		return desProduct;
+	}
+	public JLabel getImgProduct() {
+		return imgProduct;
+	}
+	public JButton getChoseImage() {
+		return choseImage;
+	}
+	public JLabel getCategoryProduct() {
+		return categoryProduct;
+	}
+	public int getCategoryId() {
+		return categoryId;
+	}
+	public String getName() {
+		return name;
+	}
+	public JTextField getIdField() {
+		return idField;
+	}
+	public JTextField getDesField() {
+		return desField;
+	}
+	public JTextField getImgField() {
+		return imgField;
+	}
+	public TImage getImgLabel() {
+		return imgLabel;
 	}
 		
 						
