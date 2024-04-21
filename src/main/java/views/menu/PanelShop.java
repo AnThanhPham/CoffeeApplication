@@ -1,58 +1,606 @@
+
 package views.menu;
 
-import java.awt.Color;
-import java.awt.Font;
+import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import com.mysql.cj.protocol.Resultset;
+import com.mysql.cj.x.protobuf.MysqlxDatatypes.Array;
 
 import controller.PanelShopController;
+import dao.PanelDAO;
+import dao.UserDAO;
+import model.PanelModel;
+import model.ProductModel;
+import model.UserModel;
+import util.MapUtil;
+import views.Main;
 
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
+import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Vector;
 
 public class PanelShop extends JPanel {
 
+	private JLabel jLabelMaHD;
+	private JTextField jTextFieldMaHD;
+	private JLabel jLabelMaKH;
+	private JTextField jTextFieldMaKH;
+	private JComboBox<String> TenNV;
+	private JLabel jLabelNgayLapHD;
+	private JTextField jTextFieldNgayLapHD;
+	private JTextField jTextMaSP;
+	private JButton jButtonMaKH;
+	private JPanel jPanelHead;
+	private JButton jButtonOK;
+	private JButton jButton;
+	private JPanel chiTietView;
+	private JButton jButtonThem;
+	private JLabel tenNV;
+	private JButton jButtonSua;
+	private JButton jButtonXoa;
+	private JLabel jLabelBan;
+	private JTextField jTextGia;
+	private JTextField textBan;
+	private JTextField jText;
+	private JTextField jTextTenSP;
+	private JButton jButtonAdd;
+	private DefaultTableModel model;
+	private JTable jtable;
+	private JTable jTable_1;
+	private JTextField textTien;
+	private ArrayList<PanelModel> ds;
+	private PanelModel panelModel;
+	private ArrayList<UserModel> list;
+	private PanelDAO panelDAO;
+	private UserDAO userDAO = new UserDAO();
+	private List<PanelModel> li = panelDAO.getInstance().selectALL();
+	private DefaultTableModel tableModel = new DefaultTableModel() {
+		public boolean isCellEditable(int row, int column) {
+			return false;
+		}
+	};
 	private PanelShopController panelShopController;
-	private JLabel lblNewLabel;
-	private JButton btnNewButton;
+	Font font_0 = new Font("Segoe UI", Font.PLAIN, 14);
+	Font font_1 = new Font("Arials", Font.PLAIN, 9);
 
 	public PanelShop() {
-		init();	
-		panelShopController =  new PanelShopController(this);
+
+		HeaderPage();
+		CenterPage();
+		panelShopController = new PanelShopController(this);
 	}
-	
-	public void init() {
-		setBackground(Color.GRAY);
+
+	public void HeaderPage() {
+
+		list = userDAO.findAll();
+
 		setLayout(null);
-		setBounds(287, 0, 1063, 826);
+		setBackground(null);
+		setBounds(new Rectangle(50, 0, 1700, 1000));
 
-		lblNewLabel = new JLabel("shop");
-		lblNewLabel.setFont(new Font("SansSerif", Font.PLAIN, 14));
-		lblNewLabel.setBounds(279, 160, 91, 71);
-		add(lblNewLabel);
-		
-		btnNewButton = new JButton("New button");
-		btnNewButton.setBounds(436, 186, 89, 23);
-		add(btnNewButton);
+		jPanelHead = new JPanel(null);
+		jPanelHead.setBackground(null);
+		jPanelHead.setBounds(new Rectangle(148, 43, 1428, 150));
+
+		// Tao ma hd
+		jLabelMaHD = new JLabel("Mã HD");
+		jLabelMaHD.setFont(font_0);
+		jLabelMaHD.setBounds(0, 0, 55, 30);
+		jTextFieldMaHD = new JTextField();
+		jTextFieldMaHD.setBounds(55, 0, 120, 30);
+		jTextFieldMaHD.setHorizontalAlignment(JTextField.CENTER);
+		jTextFieldMaHD.setPreferredSize(new Dimension(80, 30));
+		jTextFieldMaHD.setEnabled(false);
+		jPanelHead.add(jLabelMaHD);
+		jPanelHead.add(jTextFieldMaHD);
+
+		// Tao ma kh
+		jLabelMaKH = new JLabel("Mã KH");
+		jLabelMaKH.setFont(font_0);
+		jLabelMaKH.setBounds(195, 0, 60, 30);
+		jTextFieldMaKH = new JTextField();
+		jTextFieldMaKH.setBounds(255, 0, 100, 30);
+		jTextFieldMaKH.setHorizontalAlignment(JTextField.CENTER);
+		jTextFieldMaKH.setEnabled(false);
+
+		jPanelHead.add(jLabelMaKH);
+		jPanelHead.add(jTextFieldMaKH);
+		jButtonMaKH = new JButton("+");
+		jButtonMaKH.setBounds(350, 0, 30, 30);
+		jButtonMaKH.setFont(font_1);
+		jButtonMaKH.setBackground(new Color(131, 149, 167));
+		jPanelHead.add(jButtonMaKH);
+
+//         //Tao ma nv
+		tenNV = new JLabel("Tên NV");
+		tenNV.setFont(font_0);
+		tenNV.setBounds(415, 0, 50, 30);
+		jPanelHead.add(tenNV);
+		TenNV = new JComboBox<String>();
+		TenNV.addItem("Tên NV");
+		for (UserModel x : list) {
+			TenNV.addItem(x.getUserName());
+		}
+		TenNV.setBounds(475, 0, 100, 30);
+		jPanelHead.add(TenNV);
+//
+		// Tao ngay lap hoa don
+		jLabelNgayLapHD = new JLabel("Ngày Lập Hóa Đơn");
+		jLabelNgayLapHD.setFont(font_0);
+		jLabelNgayLapHD.setBounds(0, 50, 140, 30);
+		jTextFieldNgayLapHD = new JTextField();
+//		jTextFieldNgayLapHD.setText(date+"");
+		jTextFieldNgayLapHD.setBounds(140, 50, 240, 30);
+		jPanelHead.add(jLabelNgayLapHD);
+		jPanelHead.add(jTextFieldNgayLapHD);
+
+		jLabelBan = new JLabel("Bàn Số");
+		jLabelBan.setFont(font_0);
+		jLabelBan.setBounds(415, 50, 60, 30);
+		jPanelHead.add(jLabelBan);
+		textBan = new JTextField();
+		textBan.setBounds(475, 50, 100, 30);
+		jPanelHead.add(textBan);
+//         //Button tao xac nhan 
+		jButtonAdd = new JButton("Thêm Hóa Đơn");
+		jButtonAdd.setFont(font_0);
+		jButtonAdd.setHorizontalAlignment(JButton.CENTER);
+		jButtonAdd.setBounds(603, 50, 150, 30);
+		jButtonAdd.setBackground(Color.gray);
+		jPanelHead.add(jButtonAdd);
+
+		jButtonOK = new JButton("Xác Nhận");
+		jButtonOK.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		jButtonOK.setFont(font_0);
+
+		jButtonOK.setBackground(Color.gray);
+		jButtonOK.setBounds(780, 50, 150, 30);
+		jPanelHead.add(jButtonOK);
+
+		// tao duong ke
+		JSeparator jsep = new JSeparator(SwingConstants.HORIZONTAL);
+		jsep.setBounds(0, 120, 930, 3);
+		jPanelHead.add(jsep);
+
+		// Add phan head vao this
+		this.add(jPanelHead);
+
+		textTien = new JTextField();
+		textTien.setBounds(683, 5, 247, 30);
+		textTien.setHorizontalAlignment(JTextField.CENTER);
+		jPanelHead.add(textTien);
+
+		JLabel lblNewLabel = new JLabel("Tổng Tiền");
+		lblNewLabel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		lblNewLabel.setBounds(603, 0, 77, 30);
+		jPanelHead.add(lblNewLabel);
 	}
 
-	public JLabel getLblNewLabel() {
-		return lblNewLabel;
+	public void CenterPage() {
+
+		// Phan view chi tiet
+
+		chiTietView = new JPanel(null);
+		chiTietView.setVisible(true);
+		chiTietView.setBackground(null);
+
+		chiTietView.setBounds(30, 190, 1600, 600);
+		model = new DefaultTableModel();
+		// Tao Bang
+		model.addColumn("Mã Sản Phẩm");
+		model.addColumn("Tên Sản Phẩm");
+		model.addColumn("Số Lượng");
+		model.addColumn("Giá Mỗi Sản Phẩm");
+
+		model.addColumn("Tổng Tiền");
+
+		jtable = new JTable(model);
+		// sắp xếp dữ liệu dựa trên model
+		TableRowSorter<TableModel> rowSorter = new TableRowSorter<TableModel>(model);
+		jtable.setRowSorter(rowSorter);
+
+		// Chỉnh chiều rộng các cột
+		TableColumnModel tableModel = jtable.getColumnModel();
+
+		tableModel.getColumn(0).setPreferredWidth(50);
+		tableModel.getColumn(1).setPreferredWidth(140);
+		tableModel.getColumn(2).setPreferredWidth(30);
+		tableModel.getColumn(3).setPreferredWidth(20);
+		tableModel.getColumn(4).setPreferredWidth(50);
+
+		// Căn giữa các giá trị
+		DefaultTableCellRenderer centerRender = new DefaultTableCellRenderer();
+		centerRender.setHorizontalAlignment(JLabel.CENTER);
+
+		tableModel.getColumn(0).setCellRenderer(centerRender);
+		tableModel.getColumn(1).setCellRenderer(centerRender);
+		tableModel.getColumn(2).setCellRenderer(centerRender);
+		tableModel.getColumn(3).setCellRenderer(centerRender);
+		tableModel.getColumn(4).setCellRenderer(centerRender);
+
+		// Custom table
+		jtable.setFocusable(false);
+		jtable.setIntercellSpacing(new Dimension(0, 0));
+		jtable.getTableHeader().setFont(font_0);
+		jtable.getTableHeader().setOpaque(false);
+		jtable.getTableHeader().setBackground(new Color(139, 122, 101));
+		jtable.getTableHeader().setForeground(Color.WHITE);
+		jtable.setRowHeight(30);
+		jtable.setShowVerticalLines(true);
+		jtable.setSelectionBackground(Color.DARK_GRAY);
+
+		// add table vào Scroll
+		JScrollPane jScroll = new JScrollPane(jtable);
+		jScroll.setBounds(new Rectangle(120, 0, 935, 450));
+		jScroll.setBackground(null);
+
+		chiTietView.add(jScroll);
+		add(chiTietView);
+
+		jButtonThem = new JButton("Thêm Sản Phẩm");
+		jButtonThem.setFont(font_0);
+		jButtonThem.setVisible(true);
+		jButtonThem.setBackground(Color.gray);
+		jButtonThem.setBounds(new Rectangle(354, 500, 150, 30));
+		chiTietView.add(jButtonThem);
+
+		jButtonSua = new JButton("Sửa Sản Phẩm");
+		jButtonSua.setFont(font_0);
+		jButtonSua.setHorizontalAlignment(JButton.CENTER);
+		jButtonSua.setBackground(Color.gray);
+		jButtonSua.setBounds(new Rectangle(536, 500, 150, 30));
+		chiTietView.add(jButtonSua);
+
+		jButtonXoa = new JButton("Xoá Sản Phẩm");
+		jButtonXoa.setFont(font_0);
+		jButtonXoa.setHorizontalAlignment(jButtonXoa.CENTER);
+		jButtonXoa.setBackground(Color.gray);
+		jButtonXoa.setBounds(new Rectangle(716, 500, 150, 30));
+		chiTietView.add(jButtonXoa);
+
 	}
 
-	public void setLblNewLabel(JLabel lblNewLabel) {
-		this.lblNewLabel = lblNewLabel;
+	public static void main(String args[]) {
+		JFrame jf = new JFrame();
+		jf.setVisible(true);
+		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		jf.setSize(1000, 600);
+		jf.setLocationRelativeTo(null);
+		jf.getContentPane().add(new PanelShop());
+
 	}
 
-	public JButton getBtnNewButton() {
-		return btnNewButton;
+	public class MyTable extends DefaultTableModel {
+
+		MyTable(Vector header, int i) {
+			super(header, i);
+		}
+
+		@Override
+		public boolean isCellEditable(int rowIndex, int mColIndex) {
+			return false;
+		}
+
 	}
 
-	public void setBtnNewButton(JButton btnNewButton) {
-		this.btnNewButton = btnNewButton;
+	public void myTable() {
+		JDialog dialog = new JDialog();
+		Font font_0 = new Font("Segoe UI", Font.PLAIN, 14);
+
+		dialog.setSize(850, 650);
+		dialog.setLocationRelativeTo(null);
+		dialog.setVisible(true);
+
+		jTable_1 = new JTable();
+		JPanel jPanelTable = new JPanel();
+		jPanelTable.setLayout(null);
+
+		String[] colsName = { "Mã sản phẩm", "Tên sản phẩm", "Giá" };
+		tableModel.setColumnIdentifiers(colsName);
+
+		jTable_1.setFocusable(false);
+		jTable_1.setIntercellSpacing(new Dimension(0, 0));
+		jTable_1.getTableHeader().setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		jTable_1.getTableHeader().setOpaque(false);
+		jTable_1.getTableHeader().setBackground(new Color(139, 122, 101));
+		jTable_1.getTableHeader().setForeground(Color.WHITE);
+		jTable_1.setRowHeight(50);
+		jTable_1.setShowVerticalLines(true);
+		jTable_1.setSelectionBackground(new Color(0xE6FFEC));
+
+		JScrollPane scrollPane = new JScrollPane(jTable_1);
+		scrollPane.setBounds(new Rectangle(370, 90, 400, 450));
+		jPanelTable.add(scrollPane);
+
+		dialog.getContentPane().add(jPanelTable);
+		Vector data;
+		for (PanelModel x : li) {
+			data = new Vector();
+			data.add(x.getID());
+			data.add(x.getName());
+			data.add(x.getPrice());
+			tableModel.addRow(data);
+		}
+		jTable_1.setModel(tableModel);
+
+		dialog.getContentPane().add(jPanelTable);
+
+		JLabel jLabel = new JLabel("Mã Sản Phẩm");
+		jLabel.setFont(font_0);
+		jLabel.setBounds(50, 170, 100, 30);
+		jTextMaSP = new JTextField();
+		jTextMaSP.setBounds(new Rectangle(170, 170, 100, 30));
+		jTextMaSP.setEditable(false);
+		jTextMaSP.setHorizontalAlignment(JTextField.CENTER);
+		jPanelTable.add(jLabel);
+		jPanelTable.add(jTextMaSP);
+
+		jLabel = new JLabel("Số Lượng");
+		jLabel.setFont(font_0);
+		jLabel.setBounds(50, 330, 70, 30);
+		jPanelTable.add(jLabel);
+
+		jText = new JTextField();
+
+		jText.setHorizontalAlignment(JTextField.CENTER);
+		jText.setBounds(new Rectangle(170, 330, 100, 30));
+		jPanelTable.add(jText);
+
+		jLabel = new JLabel("Tên Sản Phẩm");
+		jLabel.setFont(font_0);
+		jLabel.setBounds(50, 250, 100, 30);
+		jPanelTable.add(jLabel);
+		jTextTenSP = new JTextField();
+		jTextTenSP.setHorizontalAlignment(JTextField.CENTER);
+		jTextTenSP.setEditable(false);
+		jTextTenSP.setBounds(new Rectangle(170, 250, 100, 30));
+		jPanelTable.add(jTextTenSP);
+
+		jLabel = new JLabel("Đơn Giá");
+		jLabel.setFont(font_0);
+		jLabel.setBounds(50, 410, 100, 30);
+		jPanelTable.add(jLabel);
+		jTextGia = new JTextField();
+		jTextGia.setHorizontalAlignment(JTextField.CENTER);
+		jTextGia.setEditable(false);
+		jTextGia.setBounds(new Rectangle(170, 410, 100, 30));
+		jPanelTable.add(jTextGia);
+
+		jButton = new JButton("Thêm");
+		jButton.setFont(font_0);
+		jButton.setBackground(Color.GRAY);
+		jButton.setBounds(105, 480, 100, 30);
+		jPanelTable.add(jButton);
+		dialog.getContentPane().add(jPanelTable);
+
 	}
-	
-	
+
+	public JLabel getjLabelMaHD() {
+		return jLabelMaHD;
+	}
+
+	public void setjLabelMaHD(JLabel jLabelMaHD) {
+		this.jLabelMaHD = jLabelMaHD;
+	}
+
+	public JTextField getjTextFieldMaHD() {
+		return jTextFieldMaHD;
+	}
+
+	public void setjTextFieldMaHD(JTextField jTextFieldMaHD) {
+		this.jTextFieldMaHD = jTextFieldMaHD;
+	}
+
+	public JLabel getjLabelMaKH() {
+		return jLabelMaKH;
+	}
+
+	public void setjLabelMaKH(JLabel jLabelMaKH) {
+		this.jLabelMaKH = jLabelMaKH;
+	}
+
+	public JTextField getjTextFieldMaKH() {
+		return jTextFieldMaKH;
+	}
+
+	public void setjTextFieldMaKH(JTextField jTextFieldMaKH) {
+		this.jTextFieldMaKH = jTextFieldMaKH;
+	}
+
+	public JComboBox<String> getTenNV() {
+		return TenNV;
+	}
+
+	public void setTenNV(JComboBox<String> tenNV) {
+		TenNV = tenNV;
+	}
+
+	public JLabel getjLabelNgayLapHD() {
+		return jLabelNgayLapHD;
+	}
+
+	public void setjLabelNgayLapHD(JLabel jLabelNgayLapHD) {
+		this.jLabelNgayLapHD = jLabelNgayLapHD;
+	}
+
+	public JTextField getjTextFieldNgayLapHD() {
+		return jTextFieldNgayLapHD;
+	}
+
+	public void setjTextFieldNgayLapHD(JTextField jTextFieldNgayLapHD) {
+		this.jTextFieldNgayLapHD = jTextFieldNgayLapHD;
+	}
+
+	public JButton getjButtonMaKH() {
+		return jButtonMaKH;
+	}
+
+	public void setjButtonMaKH(JButton jButtonMaKH) {
+		this.jButtonMaKH = jButtonMaKH;
+	}
+
+	public JPanel getjPanelHead() {
+		return jPanelHead;
+	}
+
+	public void setjPanelHead(JPanel jPanelHead) {
+		this.jPanelHead = jPanelHead;
+	}
+
+	public JButton getjButtonOK() {
+		return jButtonOK;
+	}
+
+	public void setjButtonOK(JButton jButtonOK) {
+		this.jButtonOK = jButtonOK;
+	}
+
+	public JButton getjButtonThem() {
+		return jButtonThem;
+	}
+
+	public void setjButtonThem(JButton jButtonThem) {
+		this.jButtonThem = jButtonThem;
+	}
+
+	public JLabel getTenNV1() {
+		return tenNV;
+	}
+
+	public void setTenNV(JLabel tenNV) {
+		this.tenNV = tenNV;
+	}
+
+	public JButton getjButtonSua() {
+		return jButtonSua;
+	}
+
+	public void setjButtonSua(JButton jButtonSua) {
+		this.jButtonSua = jButtonSua;
+	}
+
+	public JButton getjButtonXoa() {
+		return jButtonXoa;
+	}
+
+	public void setjButtonXoa(JButton jButtonXoa) {
+		this.jButtonXoa = jButtonXoa;
+	}
+
+	public JLabel getjLabelBan() {
+		return jLabelBan;
+	}
+
+	public void setjLabelBan(JLabel jLabelBan) {
+		this.jLabelBan = jLabelBan;
+	}
+
+	public JTextField getTextBan() {
+		return textBan;
+	}
+
+	public void setTextBan(JTextField textBan) {
+		this.textBan = textBan;
+	}
+
+	public JButton getjButtonAdd() {
+		return jButtonAdd;
+	}
+
+	public void setjButtonAdd(JButton jButtonAdd) {
+		this.jButtonAdd = jButtonAdd;
+	}
+
+	public JTable getJtable() {
+		return jtable;
+	}
+
+	public void setJtable(JTable jtable) {
+		this.jtable = jtable;
+	}
+
+	public JTextField getjTextMaSP() {
+		return jTextMaSP;
+	}
+
+	public void setjTextMaSP(JTextField jTextMaSP) {
+		this.jTextMaSP = jTextMaSP;
+	}
+
+	public JButton getjButton() {
+		return jButton;
+	}
+
+	public void setjButton(JButton jButton) {
+		this.jButton = jButton;
+	}
+
+	public JTextField getjTextGia() {
+		return jTextGia;
+	}
+
+	public void setjTextGia(JTextField jTextGia) {
+		this.jTextGia = jTextGia;
+	}
+
+	public JTextField getjText() {
+		return jText;
+	}
+
+	public void setjText(JTextField jText) {
+		this.jText = jText;
+	}
+
+	public JTextField getjTextTenSP() {
+		return jTextTenSP;
+	}
+
+	public void setjTextTenSP(JTextField jTextTenSP) {
+		this.jTextTenSP = jTextTenSP;
+	}
+
+	public JTable getjTable_1() {
+		return jTable_1;
+	}
+
+	public void setjTable_1(JTable jTable_1) {
+		this.jTable_1 = jTable_1;
+	}
+
+	public DefaultTableModel getModel() {
+		return model;
+	}
+
+	public void setModel(DefaultTableModel model) {
+		this.model = model;
+	}
+
+	public JTextField getTextTien() {
+		return textTien;
+	}
+
+	public void setTextTien(JTextField textTien) {
+		this.textTien = textTien;
+	}
+
 }
