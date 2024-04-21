@@ -12,10 +12,18 @@ public class PanelModel {
 	private float Price;
 //	ProductModel productModel = new ProductModel();
 //	private BillModel billModel = new BillModel();
-//	private BillDetailsModel billDetailsModel = new BillDetailsModel();
-//	private PanelShop panelShop = new PanelShop();
+	private BillDetailsModel billDetailsModel = new BillDetailsModel();
 
-	
+
+//	  private PanelShop panelShop;
+//
+//	    public PanelModel(PanelShop panelShop) {
+//	        this.panelShop = panelShop;
+//	    }
+//
+//	    public PanelShop getPanelShop() {
+//	        return panelShop;
+//	    }
 
 //	public PanelShop getPanelShop() {
 //		return panelShop;
@@ -41,15 +49,15 @@ public class PanelModel {
 		this.Name = name;
 		this.Price = price;
 	}
-//	public PanelModel(int iD, String name, float price, ProductModel productModel, BillModel billModel,BillDetailsModel billDetailsModel) {
-//	super();
-//	ID = iD;
-//	Name = name;
-//	Price = price;
-//	this.productModel = productModel;
-//	this.billModel = billModel;
-//	this.billDetailsModel = billDetailsModel;
-//}
+	public PanelModel(int iD, String name, float price,BillDetailsModel billDetailsModel) {
+	
+	ID = iD;
+	Name = name;
+	Price = price;
+
+	billDetailsModel = billDetailsModel;
+//	panelShop = panelShop;
+}
 	@Override
 	public String toString() {
 		return "PanelModel [ID=" + ID + ", Name=" + Name + ", Price=" + Price + "]";
@@ -101,13 +109,13 @@ public class PanelModel {
 //		this.billModel = billModel;
 //	}
 //
-//	public BillDetailsModel getBillDetailsModel() {
-//		return billDetailsModel;
-//	}
-//
-//	public void setBillDetailsModel(BillDetailsModel billDetailsModel) {
-//		this.billDetailsModel = billDetailsModel;
-//	}
+	public BillDetailsModel getBillDetailsModel() {
+		return billDetailsModel;
+	}
+
+	public void setBillDetailsModel(BillDetailsModel billDetailsModel) {
+		this.billDetailsModel = billDetailsModel;
+	}
 
 	public void setID(int iD) {
 		ID = iD;

@@ -21,8 +21,9 @@ public class PanelDAO extends DAO implements AbstractDAO<PanelModel> {
 	private TableDAO tableDao = new TableDAO();
 	private CategoryDAO categoryDao = new CategoryDAO();
 	private UserDAO userDao = new UserDAO();
-	private BillDetailsModel billDetailsModel = new BillDetailsModel();
 
+	private BillDetailsModel billDetailsModel = new BillDetailsModel();
+	
 	
 	public static PanelDAO getInstance() {
 		return new PanelDAO();
@@ -116,25 +117,6 @@ public class PanelDAO extends DAO implements AbstractDAO<PanelModel> {
     	return res;
 	}
 	
-	@Override
-	public void insert(PanelModel t) {
-		// TODO Auto-generated method stub
-//		String id = t.getPanelShop().getjTextMaSP().getText();
-//		String quantity = t.getPanelShop().getjText().getText();
-//	    try {
-//	        
-//	        
-//	       
-//	        Statement st = conn.createStatement();
-//	        st.executeUpdate("insert into billDetails valuse ("+id+","+quantity+")");
-//	        JOptionPane.showMessageDialog(null, "Thất bại");
-//	        
-//	      conn.close();
-//	    } catch (SQLException e2) {
-//	        e2.printStackTrace();
-//	    }
-		
-		}
 
 	@Override
 	public void delete(PanelModel t) {
@@ -146,5 +128,27 @@ public class PanelDAO extends DAO implements AbstractDAO<PanelModel> {
 	public void update(PanelModel t) {
 		// TODO Auto-generated method stub
 		
+	}
+
+
+	@Override
+	public void insert(PanelModel t) {
+		// TODO Auto-generated method stub
+		//   PanelShop panelShop = t.getPanelShop();
+//
+//	        try {
+//	            String sql = "INSERT INTO billdetails (Quantity,ID) VALUES (?,?)";
+//	            PreparedStatement ps = conn.prepareStatement(sql);
+//	            ps.setInt(1, Integer.parseInt(panelShop.getjTextMaSP().getText()));
+//	            
+//	            // Tiếp tục với việc thiết lập các giá trị khác cho PreparedStatement nếu cần
+//	            
+//	            ps.executeUpdate();
+//	            JOptionPane.showMessageDialog(null, "Thêm sản phẩm thành công!");
+//	        } catch (SQLException e) {
+//	            e.printStackTrace();
+//	            JOptionPane.showMessageDialog(null, "Thêm sản phẩm thất bại!");
+//	        }
+//	    }
 	}
 }

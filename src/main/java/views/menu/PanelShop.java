@@ -61,7 +61,11 @@ public class PanelShop extends JPanel {
 	private JTextField jText;
 	private JTextField jTextTenSP;
 	private JButton jButtonAdd;
-	private DefaultTableModel model;
+	private DefaultTableModel model = new DefaultTableModel() {
+		public boolean isCellEditable(int row,int column) {
+			return false;
+		}
+	};
 	private JTable jtable;
 	private JTable jTable_1;
 	private JTextField textTien;
@@ -205,7 +209,7 @@ public class PanelShop extends JPanel {
 		chiTietView.setBackground(null);
 
 		chiTietView.setBounds(30, 190, 1600, 600);
-		model = new DefaultTableModel();
+		
 		// Tao Bang
 		model.addColumn("Mã Sản Phẩm");
 		model.addColumn("Tên Sản Phẩm");
@@ -216,8 +220,8 @@ public class PanelShop extends JPanel {
 
 		jtable = new JTable(model);
 		// sắp xếp dữ liệu dựa trên model
-		TableRowSorter<TableModel> rowSorter = new TableRowSorter<TableModel>(model);
-		jtable.setRowSorter(rowSorter);
+//		TableRowSorter<TableModel> rowSorter = new TableRowSorter<TableModel>(model);
+//		jtable.setRowSorter(rowSorter);
 
 		// Chỉnh chiều rộng các cột
 		TableColumnModel tableModel = jtable.getColumnModel();

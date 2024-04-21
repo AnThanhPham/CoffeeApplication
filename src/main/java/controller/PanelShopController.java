@@ -7,6 +7,8 @@ import java.awt.Font;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -37,8 +39,9 @@ import util.ValidateUtils;
 import views.menu.PanelBill;
 import views.menu.PanelProduct;
 import views.menu.PanelShop;
+import dao.DAO;
 
-public class PanelShopController {
+public class PanelShopController  {
 
 	private PanelDAO panelDAO;
 	private PanelShop panelShop;
@@ -201,10 +204,10 @@ private BillDetailsModel billDetailsModel = new BillDetailsModel();
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
+				
 				int idx = panelShop.getJtable().getSelectedRow();
 				if (panelShop.getJtable().getSelectedRowCount() == 1) {
-					panelShop.getJtable().editCellAt(idx, 2);
-
+				
 				} else {
 					if (panelShop.getJtable().getRowCount() == 0) {
 						JOptionPane.showMessageDialog(panelShop, "Không có sản phẩm để sửa");
@@ -228,13 +231,10 @@ private BillDetailsModel billDetailsModel = new BillDetailsModel();
 				if(panelShop.getJtable().getModel().getRowCount() == 0) {
 					JOptionPane.showMessageDialog(panelShop, "Không có sản phẩm để xác nhận");
 				}
-			
+			panelDAO.insert(panelModel);
 				// TODO Auto-generated method stub
-		//		String maKH = panelShop.getjTextFieldMaKH().getText();
-				String Ban = panelShop.getTextBan().getText();
-				String TenNV = panelShop.getTenNV().getItemAt(0);
-
-			//	panelDAO.getInstance().insert(panelModel);
+				
+				
 			}
 		});
 	}
@@ -270,5 +270,7 @@ private BillDetailsModel billDetailsModel = new BillDetailsModel();
 		panelShop.getjTextFieldMaHD().setEnabled(false);
 		panelShop.getTextTien().setEnabled(false);
 	}
-
+public void SuaSL() {
+	String soLuong1 = panelShop.getjText().getText();
+}
 }
