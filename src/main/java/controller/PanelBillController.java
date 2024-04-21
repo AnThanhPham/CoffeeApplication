@@ -537,6 +537,7 @@ public class PanelBillController {
     					else
     					{
             			billDao.insert(tmp);
+            			
             			for(int i=0;i<BillDetaList.size();i++) {
             				if(validateFormBillDetails(BillDetaList.get(i), messageError)) {
             					int nextDetaID = billDetailsDao.findBillDetailsAll().get(billDetailsDao.findBillDetailsAll().size()-1).getID()+1;
@@ -555,6 +556,8 @@ public class PanelBillController {
             			}
     					tmp.setBillTotal(SumPrice);
             			billDao.changePrice(SumPrice,nextID);
+            			Pagination(billDao.findAll());
+        				renderTable(AllPageInformation.get(0));
     					}		
             		}else {
             			JOptionPane.showMessageDialog(panelBill, messageError.toString());
@@ -596,9 +599,8 @@ public class PanelBillController {
         		}
 				
 				
-				//DisableInput();
-				Pagination(billDao.findAll());
-				renderTable(AllPageInformation.get(0));
+				
+			
 			}
 		});
 		
@@ -951,15 +953,22 @@ public class PanelBillController {
 			    		setColorPage2();
 			    		renderTable(AllPageInformation.get(--CurrentPage));
 			    	}
+			    	
 			    	JOptionPane.showMessageDialog(panelBill, "Không có dữ liệu");
 			    }
 			    
 			    if(p3==PageNumber) {
 			    	panelBill.getPage1().setText(p1+"");
 			    	panelBill.getPage2().setText(p2+"");
-			    	renderTable(AllPageInformation.get(p3-1));
 			    	panelBill.getPage3().setText(p3+"");
-			    	setColorPage3();
+			    	if(CurrentPage ==p1) {
+			    		renderTable(AllPageInformation.get(CurrentPage));
+				    	setColorPage2();
+			    	}
+			    	if(CurrentPage ==p2) {
+			    		renderTable(AllPageInformation.get(CurrentPage));
+				    	setColorPage3();
+			    	}
 			    }
 			    else {
 			    	if(CurrentPage==p3 && CurrentPage != PageNumber) {
