@@ -1,217 +1,346 @@
 package views.menu;
 
 import java.awt.BorderLayout;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.Insets;
 import java.awt.Menu;
+import java.awt.SystemColor;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.sql.SQLException;
+import java.util.List;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.border.MatteBorder;
 
+import controller.PanelProductController;
+import dao.ProductDAO;
 import model.CategoryModel;
 import model.ProductModel;
+import util.ImageFilter;
+import views.menu.Product.ItemProduct;
+import views.menu.Product.PagePanel;
+import views.menu.Product.TImage;
+import views.menu.Product.insertUpdateDelete;
 
 public class PanelProduct extends JPanel {
+	private PanelProductController controller;
+
 	JPanel centerCenterPanel = new JPanel();
-	JPanel northCenterPanel= new JPanel();
-	JPanel southCenterPanel= new JPanel();
-	JPanel centerPanel= new JPanel();
-	JPanel eastPanel= new JPanel();
-	JPanel westPanel= new JPanel();
-	JTextField searchTextField= new JTextField();// Thanh tìm kiếm
-	JButton  submit= new JButton("Tìm"); // nuts submit
-	JButton insertProduct= new JButton("Thêm sản phẩm"); // Them san pham
-	JLabel searchLabel= new JLabel("Tìm kiếm");
-	JLabel menu= new JLabel("Loại: ");
+	JPanel northCenterPanel = new JPanel();
+	JPanel southCenterPanel = new JPanel();
+	JPanel centerPanel = new JPanel();
+	JPanel eastPanel = new JPanel();
+	JPanel westPanel = new JPanel();
+	JTextField searchTextField = new JTextField();// Thanh tìm kiếm
+	JButton submit = new JButton("Tìm"); // nuts submit
+	JButton insertProduct = new JButton("Thêm sản phẩm"); // Them san pham
+	JLabel searchLabel = new JLabel("Tìm kiếm");
+	JLabel menu = new JLabel("Loại: ");
+
+	
+	String typeCategoryname[];
+	 JComboBox<String> typeProduct= new JComboBox<>();
+	private static PanelProduct ins;
+	List<ProductModel> listProduct = ProductDAO.selectAll();
+
+	public static PanelProduct getIns() {
+		return ins;
+	}
 	
 	
-	// CenterPanel
-	JLabel product1= new JLabel();	
-	JLabel nameProduct1= new JLabel("Ten: Trà dâu");
-	JLabel priceProduct1= new JLabel("Gia: 55.000");
-	JLabel descriptionPr1= new JLabel("Sản phẩm là sự kết hợp từ dâu tây, trà nhài,..");
-	JPanel leftCenterpanel = new JPanel();
 	
-	//JComboBox<String> typeProduct= new JComboBox<>(new String []{"cafe","banh ngot","nước ép"});
-	JMenuBar outMenu= new JMenuBar();
-	JMenu menu1= new JMenu("Menu");
-	String []typeProduct = {"cafe","nuoc ngot","banh ngot","Nuoc ep"};
 	
 
 	public PanelProduct() {
-		
-		
-	// set layout cho panel chinh
+		controller= new PanelProductController(this);
+		ins = this;
+		// set layout cho panel chinh
 		this.setLayout(new BorderLayout());
-		this.add(centerPanel,BorderLayout.CENTER);
-		this.add(eastPanel,BorderLayout.EAST);
-		this.add(westPanel,BorderLayout.WEST);
-	
-	// Set centerPanel
+		this.add(centerPanel, BorderLayout.CENTER);
+		this.add(eastPanel, BorderLayout.EAST);
+		this.add(westPanel, BorderLayout.WEST);
+
+		// Set centerPanel
 		centerPanel.setLayout(new BorderLayout());
-		centerPanel.add(northCenterPanel,BorderLayout.NORTH);
-		centerPanel.add(southCenterPanel,BorderLayout.SOUTH);
+		centerPanel.add(northCenterPanel, BorderLayout.NORTH);
+		centerPanel.add(southCenterPanel, BorderLayout.SOUTH);
 		centerPanel.add(centerCenterPanel);
-		
-		
-	// SEt kich thuoc cho tung phan	
-		northCenterPanel.setPreferredSize(new Dimension(50,50));// setsize cho boder layout
-		southCenterPanel.setPreferredSize(new Dimension(50,50));// setsize cho boder layout
-		eastPanel.setPreferredSize(new Dimension(30,30));// setsize cho boder layout
-		westPanel.setPreferredSize(new Dimension(30,30));// setsize cho boder layout
-		//centerPanel.setBackground(Color.red);
-		
-	// set cac phan trong norrthPanel
+
+		// SEt kich thuoc cho tung phan
+		northCenterPanel.setPreferredSize(new Dimension(50, 50));// setsize cho boder layout
+		southCenterPanel.setPreferredSize(new Dimension(50, 50));// setsize cho boder layout
+		eastPanel.setPreferredSize(new Dimension(30, 30));// setsize cho boder layout
+		westPanel.setPreferredSize(new Dimension(30, 30));// setsize cho boder layout
+		// centerPanel.setBackground(Color.red);
+
+		// set cac phan trong norrthPanel
 		northCenterPanel.setLayout(new BorderLayout());
-		JPanel topNorthPanel= new JPanel();
-		JPanel centerNorthPanel= new JPanel();
+		JPanel topNorthPanel = new JPanel();
+		JPanel centerNorthPanel = new JPanel();
 		northCenterPanel.add(topNorthPanel, BorderLayout.NORTH);
 		northCenterPanel.add(centerNorthPanel);
-		searchTextField.setPreferredSize(new Dimension(300,30));
-		
+		searchTextField.setPreferredSize(new Dimension(300, 30));
+
 		// tao left right center cho topcenterpanel
-		JPanel leftTop= new JPanel();
-		JPanel centerTop= new JPanel();
-		JPanel rightTop= new JPanel();
+		JPanel leftTop = new JPanel(); 
+		JPanel centerTop = new JPanel();
+		JPanel rightTop = new JPanel();
 		topNorthPanel.setLayout(new BorderLayout());
 		topNorthPanel.add(centerTop);
-		topNorthPanel.add(rightTop,BorderLayout.EAST);
-		topNorthPanel.add(leftTop,BorderLayout.WEST);
-		//centerTop.setBackground(Color.gray);
+		topNorthPanel.add(rightTop, BorderLayout.EAST);
+		topNorthPanel.add(leftTop, BorderLayout.WEST);
+		// centerTop.setBackground(Color.gray);
+		
 		centerTop.add(searchLabel);
 		centerTop.add(searchTextField);
-		centerTop.add(submit);
-		rightTop.add(insertProduct);
-		leftTop.add(menu);
-		//leftTop.add(typeProduct);
-		for(int i=0; i<typeProduct.length    ; i++) {
-			menu1.add(typeProduct[i]);
-		}
-		outMenu.add(menu1);
-		leftTop.add(outMenu);
-		
-		
-		
-		
-		// responsive topNorthPane
-		topNorthPanel.addComponentListener(new ComponentListener() {
+		searchTextField.addKeyListener(new KeyListener() {
 			
 			@Override
-			public void componentShown(ComponentEvent e) {
+			public void keyTyped(KeyEvent e) {
+				
+				try {
+					 listProduct = ProductDAO.search(searchTextField.getText(),typeProduct.getSelectedItem().toString());
+					 System.out.println(searchTextField.getText());
+					 controller.reload(true);
+					 controller.reload(false);
+					
+				} catch (SQLException e1) {
+					//JOptionPane.showMessageDialog(dialog,e.toString(),"Thông Báo", JOptionPane.MESSAGE_PROPERTY );
+					System.out.println(e1.toString());
+				}
+				
+			}
+			
+			@Override
+			public void keyReleased(KeyEvent e) {
 				// TODO Auto-generated method stub
 				
 			}
 			
 			@Override
-			
-			public void componentResized(ComponentEvent e) {
-				int width= centerTop.getWidth();
-				System.out.println("width"+ width);
-				// TODO Auto-generated method stub
-				searchTextField.setPreferredSize(new Dimension(width/2,30));
-				searchTextField.setVisible(false);
-				searchTextField.setVisible(true);
-				
-			
-			}
-			
-			@Override
-			public void componentMoved(ComponentEvent e) {
-				// TODO Auto-generated method stub
-				
-				
-			}
-			
-			@Override
-			public void componentHidden(ComponentEvent e) {
+			public void keyPressed(KeyEvent e) {
 				// TODO Auto-generated method stub
 				
 			}
 		});
-
-		// set centerCenterpanel
-		centerCenterPanel.setLayout(new GridLayout(2,4));
-		ProductModel testProductModel = new ProductModel(1,  10000f,"cafe", "cafe cho son", "src/main/java/img/product/img1.png", new CategoryModel(1,"cafe","cafe"));
-		ItemProduct product1= new ItemProduct(testProductModel);
-		ItemProduct product2= new ItemProduct(testProductModel);
-		ItemProduct product3= new ItemProduct(testProductModel);
-		ItemProduct product4= new ItemProduct(testProductModel);
-		ItemProduct product5= new ItemProduct(testProductModel);
-		ItemProduct product6= new ItemProduct(testProductModel);
-		ItemProduct product7= new ItemProduct(testProductModel);
-		ItemProduct product8= new ItemProduct(testProductModel);
-		centerCenterPanel.add(product1);
-		centerCenterPanel.add(product2);
-		centerCenterPanel.add(product3);
-		centerCenterPanel.add(product4);
-		centerCenterPanel.add(product5);
-		centerCenterPanel.add(product6);
-		centerCenterPanel.add(product7);
-		centerCenterPanel.add(product8);
-		
-		southCenterPanel.add(new CirclePanel());
-		southCenterPanel.setBackground(Color.magenta);
-		
-		
-		
+		centerTop.add(submit);
+		submit.addActionListener(new ActionListener() {
 			
-		
-		
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					 listProduct = ProductDAO.search(searchTextField.getText(),typeProduct.getSelectedItem().toString());
+					 System.out.println(searchTextField.getText());
+					 //controller.reload(true);
+					 controller.reload(false);
+					
+				} catch (SQLException e1) {
+					//JOptionPane.showMessageDialog(dialog,e.toString(),"Thông Báo", JOptionPane.MESSAGE_PROPERTY );
+					System.out.println(e1.toString());
+				}
 				
+			}
+		});
+		
+		
+		
+		rightTop.add(insertProduct);
+		insertProduct.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new insertUpdateDelete(new ProductModel(),true);
+			}
+		});
+		
+		
+		leftTop.add(menu);
+		leftTop.add(typeProduct);
+		typeProduct.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					if(typeProduct.getSelectedIndex()==0) {
+						controller.reload(true);
+					}else {
+						controller.reload(false);
+					}
+					
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+			}
+		});
+		
+		
+		
+		// leftTop.add(typeProduct);
+//		for (int i = 0; i < typeProduct.length; i++) {
+//			menu1.add(typeProduct[i]);
+//		}
+//		outMenu.add(menu1);
+//		leftTop.add(outMenu);
+
+		// responsive topNorthPane
+		topNorthPanel.addComponentListener(new ComponentListener() {
+
+			@Override
+			public void componentShown(ComponentEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+
+			public void componentResized(ComponentEvent e) {
+				int width = centerTop.getWidth();
+				System.out.println("width" + width);
+				// TODO Auto-generated method stub
+				searchTextField.setPreferredSize(new Dimension(width / 2, 30));
+				searchTextField.setVisible(false);
+				searchTextField.setVisible(true);
+
+			}
+
+			@Override
+			public void componentMoved(ComponentEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void componentHidden(ComponentEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+// southCenterpanel
+		try {
+			controller.reload(true);
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	}
+
+	public PanelProductController getController() {
+		return controller;
+	}
+
+
+
+
+
 	public static void main(String[] args) {
-		JFrame jf= new JFrame();
+		JFrame jf = new JFrame();
 		jf.setVisible(true);
-		jf.add(new PanelProduct() );
-		jf.setSize(600,400);
-		
+		jf.add(new PanelProduct());
+		jf.setSize(600, 400);
+		jf.setDefaultCloseOperation(jf.EXIT_ON_CLOSE);
+
+	}
+	public JPanel getCenterCenterPanel() {
+		return centerCenterPanel;
 	}
 
-}
 
-
-
-// tao them class cho itemProduct
-class ItemProduct extends JLabel{
-	ItemProduct(ProductModel model){
-		this.setText("<html>"+"Tên: "+model.getName()+ "<br>"+"Giá: "+ model.getPrice()+"</html>");
-		
-		ImageIcon image=new ImageIcon(model.getImage());
-		this.setIcon(image);
-		this.setHorizontalTextPosition(this.CENTER);
-		this.setVerticalTextPosition(this.BOTTOM);
-		this.setForeground(Color.darkGray);
-		this.setFont(new Font("Times New roman",Font.PLAIN,20));
-		
-		
-		
+	public JPanel getNorthCenterPanel() {
+		return northCenterPanel;
 	}
-	
-}
-class CirclePanel extends JPanel{
-	public CirclePanel() {
-		// TODO Auto-generated constructor stub
-		setOpaque(false);
-		this.setPreferredSize(new Dimension(30,30));
+
+
+	public JPanel getSouthCenterPanel() {
+		return southCenterPanel;
 	}
-	@Override
-	protected void paintComponent(Graphics g) {
-		// TODO Auto-generated method stub
-		super.paintComponent(g);
-		g.setColor(Color.gray);
-		g.fillOval(0, 0, g.getClipBounds().width, g.getClipBounds().height);
-		
+
+
+	public JPanel getCenterPanel() {
+		return centerPanel;
+	}
+
+
+	public JPanel getEastPanel() {
+		return eastPanel;
+	}
+
+
+	public JPanel getWestPanel() {
+		return westPanel;
+	}
+
+
+	public JTextField getSearchTextField() {
+		return searchTextField;
+	}
+
+
+	public JButton getSubmit() {
+		return submit;
+	}
+
+
+	public JButton getInsertProduct() {
+		return insertProduct;
+	}
+
+
+	public JLabel getSearchLabel() {
+		return searchLabel;
+	}
+
+
+	public JLabel getMenu() {
+		return menu;
+	}
+
+
+	public String[] getTypeCategoryname() {
+		return typeCategoryname;
+	}
+
+
+	public JComboBox<String> getTypeProduct() {
+		return typeProduct;
+	}
+
+
+	public List<ProductModel> getListProduct() {
+		return listProduct;
 	}
 }
