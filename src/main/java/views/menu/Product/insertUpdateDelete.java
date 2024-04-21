@@ -201,6 +201,7 @@ public class insertUpdateDelete extends JFrame {
 						Files.copy(file.toPath(),new File("src/main/java/img/product/anh"+ model.getID() +".png").toPath(),StandardCopyOption.REPLACE_EXISTING);
 						System.out.println(file.getAbsolutePath());
 			            imgField.setText("src/main/java/img/product/anh"+ model.getID() +".png");
+//			            imgField.setText(file.getAbsolutePath());
 		
 		            } catch (IOException e1) {
 						// TODO Auto-generated catch block
