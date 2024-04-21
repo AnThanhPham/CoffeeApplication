@@ -438,41 +438,46 @@ public class PanelBillController {
 											CheckCusNameLabel.setText("");
 											
 											if(!ValidateUtils.checkEmptyAndNull(Cus_Phone)) {
-												if(isPhoneNumberValid(Customer_Phone)) {
-													Custmp.setPhone(Cus_Phone);
-													CheckCusPhoneLabel.setText("");
-													
-													if(!ValidateUtils.checkEmptyAndNull(Cus_Address)) {
-														String editAddress =  EditCustomerName(Cus_Address);
-														Custmp.setAddress(editAddress);
-														CheckCusAddressLabel.setText("");
-														//System.out.println(editname);
-														//System.out.println(Cus_Phone);
-														//System.out.println(editAddress);
-														//System.out.println(Cus_Email);
+												
+												if(billDao.findCusByPhone(Cus_Phone).getID() ==0) {
+													if(isPhoneNumberValid(Customer_Phone) ) {
+														Custmp.setPhone(Cus_Phone);
 														
-														customerDao.insert(Custmp);
-														if(customerDao.findByID(Custmp.getID()+"").getID() !=0) {
-															JOptionPane.showMessageDialog(panelBill, "Lưu thông tin khách hàng thành công");
-															
-															CheckCusPhoneLabel.setText("");
+														CheckCusPhoneLabel.setText("");
+														
+														if(!ValidateUtils.checkEmptyAndNull(Cus_Address)) {
+															String editAddress =  EditCustomerName(Cus_Address);
+															Custmp.setAddress(editAddress);
 															CheckCusAddressLabel.setText("");
-															CheckCusEmailLabel.setText("");
-															CheckCusNameLabel.setText("");
-														}
-														else JOptionPane.showMessageDialog(panelBill, "Không thể lưu thông tin khách hàng");
-													}else CheckCusAddressLabel.setText("              Địa chỉ không được để trống                                                            ");
-													
-												}
-													
-												else  CheckCusPhoneLabel.setText("           Sđt không hợp lệ                                                            ");
+															//System.out.println(editname);
+															//System.out.println(Cus_Phone);
+															//System.out.println(editAddress);
+															//System.out.println(Cus_Email);
+															
+															customerDao.insert(Custmp);
+															
+															if(customerDao.findByID(Custmp.getID()+"").getID() !=0) {
+																JOptionPane.showMessageDialog(panelBill, "Lưu thông tin khách hàng thành công");
+                                                                 
+																panelBill.getCustomer_Phone().setText(Custmp.getPhone());							
+																	System.out.println(Custmp.getPhone());
+																	
+																CheckCusPhoneLabel.setText("");
+																CheckCusAddressLabel.setText("");
+																CheckCusEmailLabel.setText("");
+																CheckCusNameLabel.setText("");
+															}
+															else JOptionPane.showMessageDialog(panelBill, "Không thể lưu thông tin khách hàng");
+														}else CheckCusAddressLabel.setText("              Địa chỉ không được để trống                                                            ");
+														
+													}else CheckCusPhoneLabel.setText("           Sđt không hợp lệ                                                            ");
+												}else  CheckCusPhoneLabel.setText("           Sđt đã tồn tại                                                           ");
 											}else CheckCusPhoneLabel.setText("            Sđt không được để trống                                                            ");
 										} else CheckCusNameLabel.setText("            Tên không được để trống                                                            ");						
 									}
 									else CheckCusEmailLabel.setText("            Email không hợp lệ                                                            ");
 								}
 								else CheckCusEmailLabel.setText("                Email không được để trống                                                            ");
-								
 								
 								
 							}
