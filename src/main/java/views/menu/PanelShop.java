@@ -16,7 +16,7 @@ import com.mysql.cj.x.protobuf.MysqlxDatatypes.Array;
 import controller.PanelShopController;
 import dao.PanelDAO;
 import dao.UserDAO;
-import model.PanelModel;
+
 import model.ProductModel;
 import model.UserModel;
 import util.MapUtil;
@@ -69,12 +69,13 @@ public class PanelShop extends JPanel {
 	private JTable jtable;
 	private JTable jTable_1;
 	private JTextField textTien;
-	private ArrayList<PanelModel> ds;
-	private PanelModel panelModel;
+//	private ArrayList<PanelModel> ds;
+//	private PanelModel panelModel;
 	private ArrayList<UserModel> list;
 	private PanelDAO panelDAO;
+	private ProductModel productModel = new ProductModel();
 	private UserDAO userDAO = new UserDAO();
-	private List<PanelModel> li = panelDAO.getInstance().selectALL();
+	private List<ProductModel> li = panelDAO.getInstance().findProductAll();
 	private DefaultTableModel tableModel = new DefaultTableModel() {
 		public boolean isCellEditable(int row, int column) {
 			return false;
@@ -338,7 +339,7 @@ public class PanelShop extends JPanel {
 
 		dialog.getContentPane().add(jPanelTable);
 		Vector data;
-		for (PanelModel x : li) {
+		for (ProductModel x : li) {
 			data = new Vector();
 			data.add(x.getID());
 			data.add(x.getName());

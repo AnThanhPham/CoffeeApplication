@@ -9,13 +9,15 @@ import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
+import controller.PanelShopController;
 import model.BillDetailsModel;
 import model.BillModel;
-import model.PanelModel;
+
+import model.ProductModel;
 import model.UserModel;
 import views.menu.PanelShop;
 
-public class PanelDAO extends DAO implements AbstractDAO<PanelModel> {
+public class PanelDAO extends DAO implements AbstractDAO<BillDetailsModel> {
 	private CustomerDao customerDao = new CustomerDao();
 	private PaymentDAO paymentDao = new PaymentDAO();
 	private TableDAO tableDao = new TableDAO();
@@ -31,26 +33,31 @@ public class PanelDAO extends DAO implements AbstractDAO<PanelModel> {
 	
 
 
-	public static ArrayList<PanelModel> selectALL(){
-		ArrayList<PanelModel> result = new ArrayList<PanelModel>();
-		
+	public ArrayList<ProductModel> findProductAll() {
+		ArrayList<ProductModel> data = new ArrayList<ProductModel>();
 		try {
-			Statement st = conn.createStatement();
-			String sql = "SELECT ID,Name,Price FROM product";
-			ResultSet rs = st.executeQuery(sql);
-			while(rs.next()) {
-				int idProduct = rs.getInt(1);
-				String name = rs.getString(2);
-				float price = rs.getFloat(3);
-				PanelModel panelModel = new PanelModel(idProduct,name,price);
-				result.add(panelModel);
+			String sql = "select * from product";
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()){
+				ProductModel product = new ProductModel();
+				
+				product.setID(rs.getInt(1));
+				product.setPrice(rs.getFloat(2));
+				product.setName(rs.getString(3));
+				product.setDescription(rs.getString(4));
+				product.setImage(rs.getString(5));
+				product.setCategory(categoryDao.findByID(rs.getInt(6)+""));
+				data.add(product);
 			}
-		}catch(SQLException e) {
-			e.printStackTrace();
-		}
-		return result;
-		
+		}catch(Exception ex) {
+	    		ex.printStackTrace();
+	    	}
+	    return data;
+			
 	}
+	
 	public ArrayList<BillModel> findAll() {
 		ArrayList<BillModel> data = new ArrayList<BillModel>();
 		try {
@@ -116,39 +123,83 @@ public class PanelDAO extends DAO implements AbstractDAO<PanelModel> {
     	}
     	return res;
 	}
+	public BillModel findUserIDByName(String name) {
+    	BillModel res = null;
+    	try {
+    		String sql = "SELECT * FROM bill WHERE UserID = (SELECT UserID FROM user WHERE UserName = ?) LIMIT 1";
+    		PreparedStatement ps = conn.prepareStatement(sql);
+    		ps.setString(1, name);
+    		ResultSet rs = ps.executeQuery();
+    		BillModel tmp = new BillModel();
+    		if(rs.next()) {
+    			tmp.setID(rs.getInt(1));
+				if(rs.getString(2) != null) {
+					SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+					java.util.Date utilDate = dateFormat.parse(rs.getString(2));
+					java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
+					tmp.setBillDate(sqlDate);
+				}
+				tmp.setBillTotal(rs.getFloat(3));
+				tmp.setStatus(rs.getString(4));
+				tmp.setCustomer(customerDao.findByID(rs.getInt(5)+""));
+				tmp.setUser(userDao.findByID(rs.getInt(6)+""));
+				tmp.setTable(tableDao.findByID(rs.getInt(7)+""));
+				tmp.setPayment(paymentDao.findByID(rs.getInt(8)+""));
+    		}
+    		if(Integer.toString(tmp.getID()) !=null) {
+    			res = tmp;
+    		}
+    	}catch(Exception ex) {
+    		ex.printStackTrace();
+    	}
+    	return res;
+    }
+	@Override
+	public void insert(BillDetailsModel t) {
+		// TODO Auto-generated method stub
+		   String sql = AbstractImpl.buildSqlInsertBillDetails(t);
+		    System.out.println(sql);
+		    try {
+		        PreparedStatement ps = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+		        ps.executeUpdate();
+		        ResultSet rs = ps.getGeneratedKeys();
+		        if (rs.next()) {
+		            int ID = rs.getInt(1);
+		            t.setID(ID);
+		            int quantity = t.getQuantityProduct(); 
+		            t.setQuantityProduct(quantity);
+		            int BillID = rs.getInt(3);
+		            t.setBillID(BillID);  ;
+		            int productID = t.getProductID(); 
+		            t.setProductID(productID);
+		        }
+		        ps.close();
+		    } catch (SQLException e) {
+		        e.printStackTrace();
+		    }
+		
+	}
+
 	
 
 	@Override
-	public void delete(PanelModel t) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void update(PanelModel t) {
+	public void delete(BillDetailsModel t) {
 		// TODO Auto-generated method stub
 		
 	}
 
 
+
 	@Override
-	public void insert(PanelModel t) {
+	public void update(BillDetailsModel t) {
 		// TODO Auto-generated method stub
-		//   PanelShop panelShop = t.getPanelShop();
-//
-//	        try {
-//	            String sql = "INSERT INTO billdetails (Quantity,ID) VALUES (?,?)";
-//	            PreparedStatement ps = conn.prepareStatement(sql);
-//	            ps.setInt(1, Integer.parseInt(panelShop.getjTextMaSP().getText()));
-//	            
-//	            // Tiếp tục với việc thiết lập các giá trị khác cho PreparedStatement nếu cần
-//	            
-//	            ps.executeUpdate();
-//	            JOptionPane.showMessageDialog(null, "Thêm sản phẩm thành công!");
-//	        } catch (SQLException e) {
-//	            e.printStackTrace();
-//	            JOptionPane.showMessageDialog(null, "Thêm sản phẩm thất bại!");
-//	        }
-//	    }
+		
 	}
+
+
+
+
 }
+	
+
+	
