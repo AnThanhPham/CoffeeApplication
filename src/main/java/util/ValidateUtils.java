@@ -14,6 +14,7 @@ public class ValidateUtils {
 		Matcher matcher = pattern.matcher(email);
 		return matcher.matches();
 	}
+	
 	public static boolean checkPhoneNumber(String Phone) {
 	    String regex = "^((0|\\+84)([3|5|7|8|9]{1})([0-9]{8})|([0-9]{3}-[0-9]{4}-[0-9]{3}))$";
 	    Pattern pattern = Pattern.compile(regex);
