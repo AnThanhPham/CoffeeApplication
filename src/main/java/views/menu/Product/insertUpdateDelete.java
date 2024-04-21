@@ -271,101 +271,12 @@ public class insertUpdateDelete extends JFrame {
 		bottomDialog.setPreferredSize(new Dimension(100,60));
 		insert.setFont(fontSouth);
 	
-		edit.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				insertUpdateDelete check= insertUpdateDelete.this;
-				String nameText= check.getNameField().getText();
-				try {
-					
-					if(ValidateUtils.checkEmptyAndNull(check.getNameField().getText())){
-						JOptionPane.showMessageDialog(check, "Tên sản phẩm không được trống","Thông báo",JOptionPane.INFORMATION_MESSAGE);
-						return ;
-					}
-					if(ValidateUtils.checkEmptyAndNull((String)check.getPriceField().getText())) {
-						JOptionPane.showMessageDialog(check, "Giá sản phẩm không được trống","Thông báo",JOptionPane.INFORMATION_MESSAGE);
-						
-						return; 
-					}
-					if(PanelProduct.getIns().getController().checkPrice((String)check.getPriceField().getText())== false) {
-						JOptionPane.showMessageDialog(check, "Giá phải là số dương");
-						return ;
-					}
-					try {
-						List<String> productList = ProductDAO.listName();
-						for(String x: productList) {
-							if(nameText.equalsIgnoreCase(x)==false|| nameText.equalsIgnoreCase(model.getName()) ) {
-								
-								continue;
-							}else {
-								JOptionPane.showMessageDialog(check, "Tên sản phẩm đã tồn tại");
-								return ;
-							}
-						}
-					} catch (SQLException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-					
-					
-					
-					model.setID(Integer.parseInt(idField.getText()));
-					model.setPrice(Integer.parseInt(priceField.getText()));
-					model.setName(nameField.getText());
-					model.setDescription(desField.getText());
-					model.setImage(imgField.getText());
-					categoryId= ProductDAO.selectCategoryId((String)typeProduct.getSelectedItem());// chuyển tên loại sp thành id loại sp;
-					model.getCategory().setID(categoryId);
-					
-					ProductDAO.update(model);
-					insertUpdateDelete.this.dispose();
-					JOptionPane.showMessageDialog(insertUpdateDelete.this, "Sửa thành công","Thông báo",JOptionPane.INFORMATION_MESSAGE);
-					PanelProduct.getIns().getController().reload(true);
-					
-				} catch (Exception e2) {
-					JOptionPane.showMessageDialog(insertUpdateDelete.this, e2.toString(),"Thông báo",JOptionPane.INFORMATION_MESSAGE);
-
-				}
-				
-			}
-		});
+		
 		edit.setFont(fontSouth);
 		
-		delete.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				try {
-					ProductDAO.delete(model);
-					insertUpdateDelete.this.dispose();
-					JOptionPane.showMessageDialog(insertUpdateDelete.this, "Xóa thành công","Thông báo",JOptionPane.INFORMATION_MESSAGE);
-					PanelProduct.getIns().getController().reload(true);
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					
-					JOptionPane.showMessageDialog(insertUpdateDelete.this, "Xóa thất bại","Thông báo",JOptionPane.INFORMATION_MESSAGE);
-				} 
-				
-			}
-		});
+		
 		delete.setFont(fontSouth);
 		cancel.setFont(fontSouth);
-		cancel.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				int result= JOptionPane.showConfirmDialog(insertUpdateDelete.this, "Bạn có chắc chắn thoát","Thông báo", JOptionPane.YES_NO_OPTION);
-				if (result==JOptionPane.YES_OPTION) {
-					insertUpdateDelete.this.dispose();
-					
-				}
-				
-			}
-		});
-		
 		
 		
 		if(isInsert==true) {

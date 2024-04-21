@@ -196,6 +196,9 @@ public class PanelProductController {
 		
 		// nút submit
 		panelProduct.getSubmit().addActionListener(new ActionListener() {
+
+		
+			
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -385,8 +388,105 @@ public class PanelProductController {
 		});
 		
 		
-	}
+	// nút edit
+	crud.getEdit().addActionListener(new ActionListener() {
 		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			insertUpdateDelete check= crud;
+			String nameText= check.getNameField().getText();
+			try {
+				
+				if(ValidateUtils.checkEmptyAndNull(check.getNameField().getText())){
+					JOptionPane.showMessageDialog(check, "Tên sản phẩm không được trống","Thông báo",JOptionPane.INFORMATION_MESSAGE);
+					return ;
+				}
+				if(ValidateUtils.checkEmptyAndNull((String)check.getPriceField().getText())) {
+					JOptionPane.showMessageDialog(check, "Giá sản phẩm không được trống","Thông báo",JOptionPane.INFORMATION_MESSAGE);
+					
+					return; 
+				}
+				if(PanelProduct.getIns().getController().checkPrice((String)check.getPriceField().getText())== false) {
+					JOptionPane.showMessageDialog(check, "Giá phải là số dương");
+					return ;
+				}
+				try {
+					List<String> productList = ProductDAO.listName();
+					for(String x: productList) {
+						if(nameText.equalsIgnoreCase(x)==false|| nameText.equalsIgnoreCase(crud.getModel().getName()) ) {
+							
+							continue;
+						}else {
+							JOptionPane.showMessageDialog(check, "Tên sản phẩm đã tồn tại");
+							return ;
+						}
+					}
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+				
+				
+				crud.getModel().setID(Integer.parseInt(crud.getIdField().getText()));
+				crud.getModel().setPrice(Integer.parseInt(crud.getPriceField().getText()));
+				crud.getModel().setName(crud.getNameField().getText());
+				crud.getModel().setDescription(crud.getDesField().getText());
+				crud.getModel().setImage(crud.getImgField().getText());
+				int categoryId= ProductDAO.selectCategoryId((String)crud.getTypeProduct().getSelectedItem());// chuyển tên loại sp thành id loại sp;
+				crud.getModel().getCategory().setID(categoryId);
+				
+				ProductDAO.update(crud.getModel());
+				crud.dispose();
+				JOptionPane.showMessageDialog(crud, "Sửa thành công","Thông báo",JOptionPane.INFORMATION_MESSAGE);
+				PanelProduct.getIns().getController().reload(true);
+				
+			} catch (Exception e2) {
+				JOptionPane.showMessageDialog(crud, e2.toString(),"Thông báo",JOptionPane.INFORMATION_MESSAGE);
+
+			}
+			
+		}
+	});
+	
+	// nút delete
+	crud.getDelete().addActionListener(new ActionListener() {
 		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub
+			try {
+				ProductDAO.delete(crud.getModel());
+				crud.dispose();
+				JOptionPane.showMessageDialog(crud, "Xóa thành công","Thông báo",JOptionPane.INFORMATION_MESSAGE);
+				PanelProduct.getIns().getController().reload(true);
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				
+				JOptionPane.showMessageDialog(crud, "Xóa thất bại","Thông báo",JOptionPane.INFORMATION_MESSAGE);
+			} 
+			
+		}
+	});
+	
+	// nút cancel
+	crud.getCancel().addActionListener(new ActionListener() {
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub
+			int result= JOptionPane.showConfirmDialog(crud, "Bạn có chắc chắn thoát","Thông báo", JOptionPane.YES_NO_OPTION);
+			if (result==JOptionPane.YES_OPTION) {
+				crud.dispose();
+				
+			}
+			
+		}
+	});
+	
+	
+	
+	
+	}	
 
 }
