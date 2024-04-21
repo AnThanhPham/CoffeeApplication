@@ -201,16 +201,20 @@ public class PanelBillController {
 				 int rowSelect = panelBill.getTableBill().getSelectedRow();
 				 
 				 JFrame frameCart = new JFrame();
-				 frameCart.setLayout(new FlowLayout());
-			     
-				 JLabel CategoryLabel = new JLabel("                                          Loại sản phẩm ");
+				 frameCart.setLayout(new BorderLayout());
+			     JPanel panelCart = new JPanel();
+			     panelCart.setLayout(new GridLayout(4,2,5,5));
+				 JLabel CategoryLabel = new JLabel("Loại sản phẩm");
+				 CategoryLabel.setHorizontalAlignment(JLabel.CENTER);
+				 
 				 JComboBox<String> CategoryList = new JComboBox<String>();
-				 CategoryList.addItem("Chọn loại sản phẩm ");
+				 CategoryList.addItem("Chọn loại sản phẩm");
 				 for(CategoryModel item: categoryDao.CategoryList()) {
 					 CategoryList.addItem(item.getCategoryName());
 			        }
-				 JLabel white = new JLabel("                              ");
+				 
 				 JLabel productLabel = new JLabel("Tên sản phẩm ");
+				 productLabel.setHorizontalAlignment(JLabel.CENTER);
 				 JComboBox<String> productList = new JComboBox<String>();
 				 productList.addItem("Chọn 1 sản phẩm ");
 				 
@@ -237,19 +241,24 @@ public class PanelBillController {
 					});
 
 				 JLabel QuantityLabel = new JLabel("Số lượng ");
+				 QuantityLabel.setHorizontalAlignment(JLabel.CENTER);
 				 JTextField QuantityProduct = new JTextField(10);
  				 JButton saveData = new JButton("Thêm vào giỏ hàng");
-				 frameCart.add(CategoryLabel);
-				 frameCart.add(CategoryList);
-				 frameCart.add(white);
-				 frameCart.add(productLabel);
-				 frameCart.add(productList);
-				 frameCart.add(QuantityLabel);
-				 frameCart.add(QuantityProduct);
-				 frameCart.add(saveData);
+ 				 JButton deleteProduct = new JButton("Xóa sản phẩm");
+				 panelCart.add(CategoryLabel);
+				 panelCart.add(CategoryList);
+				 panelCart.add(productLabel);
+				 panelCart.add(productList);
+				 panelCart.add(QuantityLabel);
+				 panelCart.add(QuantityProduct);
+				 panelCart.add(new JLabel());
+				 panelCart.add(saveData);
+				 
+				 frameCart.add(panelCart,BorderLayout.NORTH);
+				 frameCart.add(deleteProduct,BorderLayout.SOUTH);
 					
 				 JScrollPane scrollPaneCart = new JScrollPane();
-					frameCart.add(scrollPaneCart);
+					frameCart.add(scrollPaneCart,BorderLayout.CENTER);
 					
 					
 					JTable tableCart = new JTable();
@@ -303,6 +312,20 @@ public class PanelBillController {
 								}
 						}
 					});  
+					
+					deleteProduct.addActionListener(new ActionListener() {
+						
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							int idxCartTable = tableCart.getSelectedRow();
+							if(idxCartTable != -1 ) {
+								 String ProductName = MapUtil.convertObjectToString(tableCart.getValueAt(idxCartTable, 0));
+								 cartList.remove(ProductName);
+								 model.removeRow(idxCartTable);
+							}
+							else JOptionPane.showMessageDialog(panelBill, "Bạn chưa chọn sản phẩm muốn xóa");
+						}
+					});
 					for(Entry<String, String> x : cartList.entrySet()) {
 						// model.addRow(new Object[] { x.getKey(),"+",x.getValue(),"-","delete"});
 						 model.addRow(new Object[] { x.getKey(),x.getValue()});
