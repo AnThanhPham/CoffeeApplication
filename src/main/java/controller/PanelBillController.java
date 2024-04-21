@@ -343,7 +343,7 @@ public class PanelBillController {
 						JOptionPane.showMessageDialog(panelBill, "Khách Hàng đã tồn tại");
 					}
 					else {
-						System.out.println(2222);
+						//System.out.println(2222);
 						JFrame cusFrame= new JFrame();
 						cusFrame.setLayout(new FlowLayout());
 						//JPanel cusPanel = new JPanel();
@@ -406,19 +406,26 @@ public class PanelBillController {
 								if(!ValidateUtils.checkEmptyAndNull(Cus_Email)) {
 									if(ValidateUtils.checkEmail(Cus_Email)) {
 										Custmp.setEmail(Cus_Email);
-										System.out.println(Cus_Email);
+										CheckCusEmailLabel.setText("");
 										
 										if(!ValidateUtils.checkEmptyAndNull(Cus_Name)) {
 											String editname =  EditCustomerName(Cus_Name);
 											Custmp.setName(editname);
+											CheckCusNameLabel.setText("");
 											
 											if(!ValidateUtils.checkEmptyAndNull(Cus_Phone)) {
 												if(isPhoneNumberValid(Customer_Phone)) {
 													Custmp.setPhone(Cus_Phone);
+													CheckCusPhoneLabel.setText("");
 													
 													if(!ValidateUtils.checkEmptyAndNull(Cus_Address)) {
 														String editAddress =  EditCustomerName(Cus_Address);
 														Custmp.setAddress(editAddress);
+														CheckCusAddressLabel.setText("");
+														//System.out.println(editname);
+														//System.out.println(Cus_Phone);
+														//System.out.println(editAddress);
+														//System.out.println(Cus_Email);
 														
 														customerDao.insert(Custmp);
 														if(customerDao.findByID(Custmp.getID()+"").getID() !=0) {
@@ -474,8 +481,7 @@ public class PanelBillController {
 				
 				tmp.setStatus(Status);
 				
-				Integer cusID = billDao.findCusByPhone(Customer_Phone).getID();
-				CustomerModel cusDao = customerDao.findByID(cusID+"");
+				CustomerModel cusDao = billDao.findCusByPhone(Customer_Phone);
 				tmp.setCustomer(cusDao);
 				tmp.setCustomerID(cusDao.getID());
 				
@@ -602,6 +608,7 @@ public class PanelBillController {
 				if(rowSelect != -1) {
 					EnableInput();	
 					panelBill.getCustomer_Phone().setEnabled(false);
+					panelBill.getCheckNumberCustomer().setEnabled(false);
 					cartList.clear();
 					String id = MapUtil.convertObjectToString(panelBill.getTableBill().getValueAt(rowSelect, 0));
 					for(BillDetailsModel x: billDetailsDao.findByBillID(id)) {
@@ -1285,9 +1292,10 @@ public class PanelBillController {
 		String res ="";
 		for(String x: NameList) {
 			String head = x.substring(0,1);
-			head.toUpperCase();
+			
 			String tail = x.substring(1);
-			res+=head+tail+" ";
+			
+			res+= head.toUpperCase() + tail.toLowerCase() +" ";
 		}
 		return res.trim();
 	}
