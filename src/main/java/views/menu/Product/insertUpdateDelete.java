@@ -217,10 +217,6 @@ public class insertUpdateDelete extends JFrame {
 		centerDialog.add(choseImage,gbc);
 		
 		
-		
-		
-		
-		
 		gbc.weightx=0.7;
 		gbc.gridx=1;
 		//gbc.gridy= 5;
