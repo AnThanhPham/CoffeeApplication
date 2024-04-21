@@ -19,6 +19,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -28,6 +29,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
 
 import dao.ProductDAO;
 import model.ProductModel;
@@ -51,6 +53,7 @@ public class insertUpdateDelete extends JFrame {
 	}
 	String name;
 	private JTextField nameField,priceField;
+	TImage imgLabel;
 	public insertUpdateDelete(ProductModel model,boolean isInsert) {
 		
 		//JDialog dialog= new JDialog();
@@ -58,11 +61,12 @@ public class insertUpdateDelete extends JFrame {
 		JLabel centerDialog = new JLabel();
 		JPanel bottomDialog = new JPanel();
 		this.setVisible(true);
-		this.setMinimumSize(new Dimension(400,400));
+		this.setMinimumSize(new Dimension(500,600));
 		this.setLayout(new BorderLayout());	
 		this.add(topDialog, BorderLayout.NORTH);
 		this.add(bottomDialog, BorderLayout.SOUTH);
 		this.add(centerDialog);
+		this.setResizable(false);
 		
 		// set top dialog
 		if(isInsert==true) {
@@ -106,6 +110,9 @@ public class insertUpdateDelete extends JFrame {
 		imgProduct.setFont(centerFont);
 		JTextField imgField= new JTextField(model.getImage());
 		JButton choseImage= new JButton("Chọn");
+		JPanel imgPanel = new JPanel();
+		imgLabel = new TImage(new ImageIcon(model.getImage()));
+		
 		
 		
 		JLabel categoryProduct= new JLabel("Loại");
@@ -130,7 +137,7 @@ public class insertUpdateDelete extends JFrame {
 		centerDialog.add(desProduct,gbc);
 		gbc.gridy= 4;
 		centerDialog.add(imgProduct,gbc);
-		gbc.gridy= 5;
+		gbc.gridy= 6;
 		centerDialog.add(categoryProduct,gbc);
 		
 	// set size cho cot trai center
@@ -152,13 +159,23 @@ public class insertUpdateDelete extends JFrame {
 		gbc.gridy= 3;
 		centerDialog.add(desField,gbc);
 		gbc.gridy= 4;
-		centerDialog.add(imgField,gbc);
+		gbc.insets.top=10;
+		//centerDialog.add(imgField,gbc);
+		imgPanel.setPreferredSize(new Dimension(100,100));
+		imgLabel.setOpaque(true);
+		centerDialog.add(imgPanel,gbc);
+		imgPanel.setLayout(new BorderLayout());
+		imgPanel.add(imgLabel);
+		
 		
 		
 		
 // sửa chọn link ảnh
 		//gbc.weightx=0.0;
-		gbc.gridx= 2;
+		//gbc.gridx= 2;
+		gbc.insets.top=5;
+		gbc.gridx=1;
+		gbc.gridy=5;
 		choseImage.setPreferredSize(new Dimension(20,10));
 		
 		
@@ -202,7 +219,9 @@ public class insertUpdateDelete extends JFrame {
 						System.out.println(file.getAbsolutePath());
 			            imgField.setText("src/main/java/img/product/anh"+ model.getID() +".png");
 //			            imgField.setText(file.getAbsolutePath());
-		
+			            imgLabel=new TImage(new ImageIcon(file.getAbsolutePath()));
+			            imgPanel.removeAll();
+			            imgPanel.add(imgLabel);
 		            } catch (IOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -220,7 +239,8 @@ public class insertUpdateDelete extends JFrame {
 		
 		gbc.weightx=0.7;
 		gbc.gridx=1;
-		gbc.gridy= 5;
+		//gbc.gridy= 5;
+		gbc.gridy= 6;
 		String typeCategoryname[];
 		 JComboBox<String> typeProduct= new JComboBox<>();
 		 typeProduct.setBackground(Color.white);
@@ -462,6 +482,8 @@ public class insertUpdateDelete extends JFrame {
 			bottomDialog.add(cancel);
 		}
 		
+		this.setVisible(false);
+		this.setVisible(true);
 	}
 		
 						

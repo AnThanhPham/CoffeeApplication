@@ -1,6 +1,13 @@
 package controller;
 
+import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -82,6 +89,7 @@ public class PanelProductController {
 			}
 			panelProduct.getCenterCenterPanel().setVisible(false);
 			panelProduct.getCenterCenterPanel().setVisible(true);
+			
 	
 		}
 	
@@ -110,6 +118,123 @@ public class PanelProductController {
 			
 		}
 		
+	}
+	
+// Hàm add event
+	
+	public void addEvent() {
+		// type category
+		panelProduct.getTypeProduct().addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+					try {
+						if(panelProduct.getTypeProduct().getSelectedIndex()==0) {
+							reload(true);
+						}else {
+							reload(false);
+						}
+						
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					
+				}
+				
+		});
+		// Nút insert
+		panelProduct.getInsertProduct().addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new insertUpdateDelete(new ProductModel(),true);
+			}
+		});
+		
+		
+		// searchtext field
+		panelProduct.getSearchTextField().addKeyListener(new KeyListener() {
+			
+			@Override
+			public void keyTyped(KeyEvent e) {
+				
+				try {
+					 System.out.println(panelProduct.getSearchTextField().getText());
+					 reload(false);
+					
+				} catch (SQLException e1) {
+					//JOptionPane.showMessageDialog(dialog,e.toString(),"Thông Báo", JOptionPane.MESSAGE_PROPERTY );
+					System.out.println(e1.toString());
+				}
+				
+			}
+			
+			@Override
+			public void keyReleased(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void keyPressed(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		
+		// nút submit
+		panelProduct.getSubmit().addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					 System.out.println(panelProduct.getSearchTextField().getText());
+					 //controller.reload(true);
+					 reload(false);
+					
+				} catch (SQLException e1) {
+					//JOptionPane.showMessageDialog(dialog,e.toString(),"Thông Báo", JOptionPane.MESSAGE_PROPERTY );
+					System.out.println(e1.toString());
+				}
+				
+			}
+		});
+		
+		//responsive search text field
+		panelProduct.getTopNorthPanel().addComponentListener(new ComponentListener() {
+
+			@Override
+			public void componentShown(ComponentEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+		
+			@Override
+			public void componentResized(ComponentEvent e) {
+				int width = panelProduct.getCenterTop().getWidth();
+				System.out.println("width" + width);
+				// TODO Auto-generated method stub
+				panelProduct.getSearchTextField().setPreferredSize(new Dimension(width / 2, 30));
+				panelProduct.getSearchTextField().setVisible(false);
+				panelProduct.getSearchTextField().setVisible(true);
+
+			}
+
+			@Override
+			public void componentMoved(ComponentEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void componentHidden(ComponentEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+	
 	}
 	
 		
