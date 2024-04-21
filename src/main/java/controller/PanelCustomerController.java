@@ -8,6 +8,7 @@ import java.awt.event.FocusListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Vector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -110,8 +111,8 @@ public class PanelCustomerController{
 	        	
 	        		
 	        		CustomerModel tmp = new CustomerModel();
-	        		tmp.setAddress(address);
-	        		tmp.setName(fullName);
+	        		tmp.setAddress(capitalizeFirstLetter(address));
+	        		tmp.setName(capitalizeFirstLetter(fullName));
 	        		tmp.setPhone(phone);
 	        		tmp.setEmail(email);
 	        		StringBuilder messageError = new StringBuilder("");
@@ -165,41 +166,82 @@ public class PanelCustomerController{
 				}
 			});
 			
+//			panelCustomer.getTextField_Find().addKeyListener(new KeyAdapter() {
+//				public void keyReleased(KeyEvent e) {
+//					JTextField textField = (JTextField) e.getSource();
+//					String text = textField.getText();
+//					renderTableByFullName(text);
+//				}
+//
+//				public void keyTyped(KeyEvent e) {
+//				}
+//
+//				public void keyPressed(KeyEvent e) {
+//				}
+//			});
+//			panelCustomer.getComboBox_MaKH().addActionListener(new ActionListener() {
+//		        @SuppressWarnings("unchecked")
+//				@Override
+//		        public void actionPerformed(ActionEvent e) {
+//					JComboBox<Object> comboBox = (JComboBox<Object>) e.getSource();
+//		            String selectedID = (String) comboBox.getSelectedItem().toString();
+//
+//		            if (!("Ma Khach Hang").equals(selectedID)) {
+//		                ArrayList<CustomerModel> filteredData = new ArrayList<>();
+//		                // Lọc dữ liệu tương ứng với ID được chọn
+//		                for (CustomerModel customer : CustomerDao.CustomerList()) {
+//		                    if (selectedID.equals(Integer.toString(customer.getID()))) {
+//		                        filteredData.add(customer);
+//		                    }
+//		                }
+//		                renderTable(filteredData);
+//		            } else {
+//		                renderTable(CustomerDao.CustomerList());
+//		            }
+//		        }
+//		    });
+					
 			panelCustomer.getTextField_Find().addKeyListener(new KeyAdapter() {
-				public void keyReleased(KeyEvent e) {
-					JTextField textField = (JTextField) e.getSource();
-					String text = textField.getText();
-					renderTableByFullName(text);
-				}
+			    public void keyReleased(KeyEvent e) {
+			        JTextField textField = (JTextField) e.getSource();
+			        String text = textField.getText();
+			        String selectedID = (String) panelCustomer.getComboBox_MaKH().getSelectedItem().toString();
+			        if (!("Ma Khach Hang").equals(selectedID)) {
+			            renderTableByFullNameAndID(text, selectedID);
+			        } else {
+			            renderTableByFullName(text);
+			        }
+			    }
 
-				public void keyTyped(KeyEvent e) {
-				}
+			    public void keyTyped(KeyEvent e) {
+			    }
 
-				public void keyPressed(KeyEvent e) {
-				}
+			    public void keyPressed(KeyEvent e) {
+			    }
 			});
-			panelCustomer.getComboBox_MaKH().addActionListener(new ActionListener() {
-		        @SuppressWarnings("unchecked")
-				@Override
-		        public void actionPerformed(ActionEvent e) {
-					JComboBox<Object> comboBox = (JComboBox<Object>) e.getSource();
-		            String selectedID = (String) comboBox.getSelectedItem().toString();
 
-		            if (!("Ma Khach Hang").equals(selectedID)) {
-		                ArrayList<CustomerModel> filteredData = new ArrayList<>();
-		                // Lọc dữ liệu tương ứng với ID được chọn
-		                for (CustomerModel customer : CustomerDao.CustomerList()) {
-		                    if (selectedID.equals(Integer.toString(customer.getID()))) {
-		                        filteredData.add(customer);
-		                    }
-		                }
-		                renderTable(filteredData);
-		            } else {
-		                renderTable(CustomerDao.CustomerList());
-		            }
-		        }
-		    });
-			
+			panelCustomer.getComboBox_MaKH().addActionListener(new ActionListener() {
+			    @SuppressWarnings("unchecked")
+			    @Override
+			    public void actionPerformed(ActionEvent e) {
+			        JComboBox<Object> comboBox = (JComboBox<Object>) e.getSource();
+			        String selectedID = (String) comboBox.getSelectedItem().toString();
+
+			        if (!("Ma Khach Hang").equals(selectedID)) {
+			            ArrayList<CustomerModel> filteredData = new ArrayList<>();
+			            // Lọc dữ liệu tương ứng với ID được chọn
+			            for (CustomerModel customer : CustomerDao.CustomerList()) {
+			                if (selectedID.equals(Integer.toString(customer.getID()))) {
+			                    filteredData.add(customer);
+			                }
+			            }
+			            renderTable(filteredData);
+			        } else {
+			            renderTable(CustomerDao.CustomerList());
+			        }
+			    }
+			});
+
 			panelCustomer.getTextField_Find().addFocusListener(new FocusListener() {
 				
 				@Override
@@ -248,6 +290,11 @@ public class PanelCustomerController{
 		
 		if(!ValidateUtils.checkEmail(cus.getEmail())) {
 			res.append("Email không hợp lệ\n");		
+			return false;
+		}
+		
+		if(!ValidateUtils.checkPhoneNumber(cus.getPhone())) {
+			res.append("Số điện thoại không hợp lệ\n");
 			return false;
 		}
 		
@@ -314,7 +361,28 @@ public class PanelCustomerController{
 		}
 		renderTable(rowData);
 	}
-	
+	public String capitalizeFirstLetter(String str) {
+	    String NameList[] = str.split(" ");
+	    String res="";
+	   
+	    for (String x : NameList) {
+	        String tmp = x.substring(0,1);
+	        String tam = x.substring(1);
+	        res += tmp.toUpperCase() + tam + " ";
+	    }
+	    return res.trim(); 
+	}
+
+	public void renderTableByFullNameAndID(String text, String selectedID) {
+	    ArrayList<CustomerModel> filteredData = new ArrayList<>();
+	    for (CustomerModel customer : CustomerDao.CustomerList()) {
+	        if (selectedID.equals(Integer.toString(customer.getID())) && customer.getName().toLowerCase().contains(text.toLowerCase())) {
+	            filteredData.add(customer);
+	        }
+	    }
+	    renderTable(filteredData);
+	}
+
 
 }
 	
