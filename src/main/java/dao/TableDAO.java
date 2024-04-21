@@ -1,12 +1,22 @@
 package dao;
 
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
+import model.CategoryModel;
+import model.ProductModel;
+import model.TableModel;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 import model.PaymentModel;
 import model.TableModel;
 
-public class TableDAO extends DAO implements AbstractDAO<TableModel>{
+public class TableDAO extends DAO implements AbstractDAO<TableModel> {
 	public TableDAO() {
 		super();
 	}
@@ -33,21 +43,65 @@ public class TableDAO extends DAO implements AbstractDAO<TableModel>{
     	return res;
     }
 	
+	public static void selectTable(TableModel t) throws SQLException {
+		Statement stm= conn.createStatement();
+		String sql= "select * from tablee where id = "+ t.getID();
+		stm.execute(sql);
+
+	}
+	public static List<TableModel> selectAll() {
+		new DAO();
+		List<TableModel> listResult= new ArrayList<TableModel>();
+		try {
+			Statement stm= conn.createStatement();
+			String sqlCommand= "select * from tablee";
+			ResultSet rs= stm.executeQuery(sqlCommand);
+
+			while(rs.next()) {
+				int id=rs.getInt(1);
+				String name=rs.getString(2);
+				String status= rs.getString(3);
+				int quantityCustomer= rs.getInt(4);	
+				listResult.add(new TableModel(id,name,status,quantityCustomer));
+			}
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+
+		return listResult;	
+	}
+	
 	@Override
 	public void insert(TableModel t) {
 		// TODO Auto-generated method stub
 		
 	}
-
 	@Override
 	public void delete(TableModel t) {
 		// TODO Auto-generated method stub
 		
 	}
-
 	@Override
 	public void update(TableModel t) {
-		// TODO Auto-generated method stub
+		Statement stm1;
+		
+		try {
+			stm1 = conn.createStatement();
+			String sql="update tablee " +
+				 	"set id= "+ t.getID()+ 
+				 	",TableNumber = N'"+ t.getTableNumber()+"'" +
+				 	",Status= N'"+ t.getStatus()+ "', " +
+				 	"QuantityCustomer =" + t.getQuantityCustomer() +" "+
+				 	" where id= "+ t.getID()   ;
+		 System.out.println("sql"+ sql);
+		stm1.execute(sql);   
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 

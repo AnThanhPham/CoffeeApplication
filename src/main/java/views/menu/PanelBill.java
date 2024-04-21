@@ -40,6 +40,7 @@ public class PanelBill extends JPanel {
 	private JButton PageFirst;
 	private JButton Fitter;
 	private JButton RefreshFitter;
+	private JButton CheckNumberCustomer;
 	
 	private Font FLabel;
 	private Font FLabelText;
@@ -53,10 +54,10 @@ public class PanelBill extends JPanel {
 	
 	private JTextField Bill_Date;
 	private JTextField Bill_ID;
-	private JTextField Customer_ID;
-	private JTextField User_ID;
-	private JTextField Table_ID;
-	private JTextField Payment_ID;
+	private JTextField Customer_Phone;
+	private JComboBox<String> User_Name;
+	private JComboBox<String> Table_Number;
+	private JComboBox<String> Payment_Name;
 	private JTextField FindBillID;
 	
 	private JTable TableBill;
@@ -82,6 +83,9 @@ public class PanelBill extends JPanel {
 	}
 
 	public void CreateHeader() {
+		CheckNumberCustomer = new JButton("Kiểm tra sđt");
+		CheckNumberCustomer.setBounds(445,140,145,30);
+		add(CheckNumberCustomer);
 		
 		TodayDate = new JLabel();
 		TodayDate.setBounds(60,10,237,30);
@@ -94,29 +98,29 @@ public class PanelBill extends JPanel {
 		add(jlabel);
 		
 		Bill_ID = new JTextField();
-		Bill_ID.setBounds(180,50,120,30);
+		Bill_ID.setBounds(170,50,140,30);
 		Bill_ID.setFont(FLabelText);
 		add(Bill_ID);
 		
 		jlabel = new JLabel("Sđt Khách Hàng");
-		jlabel.setBounds(330,95,120,30);
+		jlabel.setBounds(325,95,120,30);
 		jlabel.setFont(FLabel);
 		add(jlabel);
 		
-		Customer_ID = new JTextField();
-		Customer_ID.setBounds(450,95,120,30);
-		Customer_ID.setFont(FLabelText);
-		add(Customer_ID);
+		Customer_Phone = new JTextField();
+		Customer_Phone.setBounds(445,95,145,30);
+		Customer_Phone.setFont(FLabelText);
+		add(Customer_Phone);
 		
-		jlabel = new JLabel("Mã Nhân Viên");
-		jlabel.setBounds(330,50,100,30);
+		jlabel = new JLabel("Tên Nhân Viên");
+		jlabel.setBounds(325,50,120,30);
 		jlabel.setFont(FLabel);
 		add(jlabel);
 		
-		User_ID = new JTextField();
-		User_ID.setBounds(450,50,120,30);
-		User_ID.setFont(FLabelText);
-		add(User_ID);
+		User_Name = new JComboBox<String>();
+		User_Name.setBounds(445,50,145,30);
+		User_Name.setFont(FLabelText);
+		add(User_Name);
 		
 		
 		jlabel = new JLabel("Bàn số");
@@ -124,42 +128,40 @@ public class PanelBill extends JPanel {
 		jlabel.setFont(FLabel);
 		add(jlabel);
 		
-		Table_ID = new JTextField();
-		Table_ID.setBounds(180,185,119,30);
-		Table_ID.setFont(FLabelText);
-		add(Table_ID);
+		Table_Number = new JComboBox<String>();
+		Table_Number.setBounds(170,185,140,30);
+		Table_Number.setFont(FLabelText);
+		add(Table_Number);
 		
 		jlabel = new JLabel("Thanh Toán");
-		jlabel.setBounds(60,139,90,30);
+		jlabel.setBounds(60,140,100,30);
 		jlabel.setFont(FLabel);
 		add(jlabel);
 		
-		Payment_ID = new JTextField();
-		Payment_ID.setBounds(180,140,120,30);
-		Payment_ID.setFont(FLabelText);
-		add(Payment_ID);
+		Payment_Name = new JComboBox<String>();
+		Payment_Name.setBounds(170,140,140,30);
+		Payment_Name.setFont(FLabelText);
+		add(Payment_Name);
 		
 		jlabel = new JLabel("Ngày Hóa Đơn"); // thời gian tạo hóa đơn + hiển thị
-		jlabel.setBounds(60,95,120,30);
+		jlabel.setBounds(60,95,110,30);
 		jlabel.setFont(FLabel);
 		add(jlabel);
 		
 		Bill_Date = new JTextField();
-		Bill_Date.setBounds(180,95,120,30);
+		Bill_Date.setBounds(170,95,140,30);
 		Bill_Date.setBackground(Color.WHITE);
 		Bill_Date.setOpaque(true);
 		Bill_Date.setFont(FLabelText);
 		add(Bill_Date);
 		
 		jlabel = new JLabel("Trạng Thái"); // thời gian tạo hóa đơn + hiển thị
-		jlabel.setBounds(330,140,90,30);
+		jlabel.setBounds(320,185,95,30);
 		jlabel.setFont(FLabel);
 		add(jlabel);
 		
 		Status_item = new JComboBox<String>();
-		Status_item.setBounds(450,140,120,30);
-		Status_item.addItem("Done");
-		Status_item.addItem("Waiting");
+		Status_item.setBounds(445,185,145,30);
 		add(Status_item);
 
 		
@@ -390,38 +392,6 @@ public class PanelBill extends JPanel {
 		Bill_ID = bill_ID;
 	}
 
-	public JTextField getCustomer_ID() {
-		return Customer_ID;
-	}
-
-	public void setCustomer_ID(JTextField customer_ID) {
-		Customer_ID = customer_ID;
-	}
-
-	public JTextField getUser_ID() {
-		return User_ID;
-	}
-
-	public void setUser_ID(JTextField user_ID) {
-		User_ID = user_ID;
-	}
-
-	public JTextField getTable_ID() {
-		return Table_ID;
-	}
-
-	public void setTable_ID(JTextField table_ID) {
-		Table_ID = table_ID;
-	}
-
-	public JTextField getPayment_ID() {
-		return Payment_ID;
-	}
-
-	public void setPayment_ID(JTextField payment_ID) {
-		Payment_ID = payment_ID;
-	}
-
 	public JTextField getFindBillID() {
 		return FindBillID;
 	}
@@ -590,5 +560,46 @@ public class PanelBill extends JPanel {
 	public void setPageFirst(JButton pageFirst) {
 		PageFirst = pageFirst;
 	}
+
+	public JTextField getCustomer_Phone() {
+		return Customer_Phone;
+	}
+
+	public void setCustomer_Phone(JTextField customer_Phone) {
+		Customer_Phone = customer_Phone;
+	}
+
+	public JComboBox<String> getUser_Name() {
+		return User_Name;
+	}
+
+	public void setUser_Name(JComboBox<String> user_Name) {
+		User_Name = user_Name;
+	}
+
+	public JComboBox<String> getTable_Number() {
+		return  Table_Number;
+	}
+
+	public void setTable_Number(JComboBox<String> Table_Number) {
+		Table_Number = Table_Number;
+	}
+
+	public JComboBox<String> getPayment_Name() {
+		return Payment_Name;
+	}
+
+	public void setPayment_Name(JComboBox<String> payment_Name) {
+		Payment_Name = payment_Name;
+	}
+
+	public JButton getCheckNumberCustomer() {
+		return CheckNumberCustomer;
+	}
+
+	public void setCheckNumberCustomer(JButton checkNumberCustomer) {
+		CheckNumberCustomer = checkNumberCustomer;
+	}
+	
 	
 }
