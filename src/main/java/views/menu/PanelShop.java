@@ -16,7 +16,7 @@ import com.mysql.cj.x.protobuf.MysqlxDatatypes.Array;
 import controller.PanelShopController;
 import dao.PanelDAO;
 import dao.UserDAO;
-
+import model.PaymentModel;
 import model.ProductModel;
 import model.UserModel;
 import util.MapUtil;
@@ -46,7 +46,6 @@ public class PanelShop extends JPanel {
 	private JLabel jLabelNgayLapHD;
 	private JTextField jTextFieldNgayLapHD;
 	private JTextField jTextMaSP;
-	private JButton jButtonMaKH;
 	private JPanel jPanelHead;
 	private JButton jButtonOK;
 	private JButton jButton;
@@ -57,6 +56,7 @@ public class PanelShop extends JPanel {
 	private JButton jButtonXoa;
 	private JLabel jLabelBan;
 	private JTextField jTextGia;
+	private JComboBox<String> comBox;
 	private JTextField textBan;
 	private JTextField jText;
 	private JTextField jTextTenSP;
@@ -75,6 +75,7 @@ public class PanelShop extends JPanel {
 	private PanelDAO panelDAO;
 	private ProductModel productModel = new ProductModel();
 	private UserDAO userDAO = new UserDAO();
+	private JComboBox<String>Table_Number;
 	private List<ProductModel> li = panelDAO.getInstance().findProductAll();
 	private DefaultTableModel tableModel = new DefaultTableModel() {
 		public boolean isCellEditable(int row, int column) {
@@ -102,48 +103,37 @@ public class PanelShop extends JPanel {
 
 		jPanelHead = new JPanel(null);
 		jPanelHead.setBackground(null);
-		jPanelHead.setBounds(new Rectangle(148, 43, 1428, 150));
-
-		// Tao ma hd
-		jLabelMaHD = new JLabel("Mã HD");
-		jLabelMaHD.setFont(font_0);
-		jLabelMaHD.setBounds(0, 0, 55, 30);
+		jPanelHead.setBounds(new Rectangle(59, 43, 1428, 150));
 		jTextFieldMaHD = new JTextField();
-		jTextFieldMaHD.setBounds(55, 0, 120, 30);
+		jTextFieldMaHD.setBounds(65, 0, 75, 30);
 		jTextFieldMaHD.setHorizontalAlignment(JTextField.CENTER);
 		jTextFieldMaHD.setPreferredSize(new Dimension(80, 30));
 		jTextFieldMaHD.setEnabled(false);
-		jPanelHead.add(jLabelMaHD);
 		jPanelHead.add(jTextFieldMaHD);
 
 		// Tao ma kh
 		jLabelMaKH = new JLabel("Mã KH");
 		jLabelMaKH.setFont(font_0);
-		jLabelMaKH.setBounds(195, 0, 60, 30);
+		jLabelMaKH.setBounds(165, 0, 60, 30);
 		jTextFieldMaKH = new JTextField();
-		jTextFieldMaKH.setBounds(255, 0, 100, 30);
+		jTextFieldMaKH.setBounds(225, 0, 100, 30);
 		jTextFieldMaKH.setHorizontalAlignment(JTextField.CENTER);
 		jTextFieldMaKH.setEnabled(false);
 
 		jPanelHead.add(jLabelMaKH);
 		jPanelHead.add(jTextFieldMaKH);
-		jButtonMaKH = new JButton("+");
-		jButtonMaKH.setBounds(350, 0, 30, 30);
-		jButtonMaKH.setFont(font_1);
-		jButtonMaKH.setBackground(new Color(131, 149, 167));
-		jPanelHead.add(jButtonMaKH);
 
 //         //Tao ma nv
 		tenNV = new JLabel("Tên NV");
 		tenNV.setFont(font_0);
-		tenNV.setBounds(415, 0, 50, 30);
+		tenNV.setBounds(347, -3, 50, 30);
 		jPanelHead.add(tenNV);
 		TenNV = new JComboBox<String>();
 		TenNV.addItem("Tên NV");
 		for (UserModel x : list) {
 			TenNV.addItem(x.getUserName());
 		}
-		TenNV.setBounds(475, 0, 100, 30);
+		TenNV.setBounds(416, -1, 100, 30);
 		jPanelHead.add(TenNV);
 //
 		// Tao ngay lap hoa don
@@ -152,22 +142,24 @@ public class PanelShop extends JPanel {
 		jLabelNgayLapHD.setBounds(0, 50, 140, 30);
 		jTextFieldNgayLapHD = new JTextField();
 //		jTextFieldNgayLapHD.setText(date+"");
-		jTextFieldNgayLapHD.setBounds(140, 50, 240, 30);
+		jTextFieldNgayLapHD.setBounds(140, 50, 185, 30);
 		jPanelHead.add(jLabelNgayLapHD);
 		jPanelHead.add(jTextFieldNgayLapHD);
 
 		jLabelBan = new JLabel("Bàn Số");
 		jLabelBan.setFont(font_0);
-		jLabelBan.setBounds(415, 50, 60, 30);
+		jLabelBan.setBounds(347, 50, 60, 30);
 		jPanelHead.add(jLabelBan);
-		textBan = new JTextField();
-		textBan.setBounds(475, 50, 100, 30);
-		jPanelHead.add(textBan);
+		
+		Table_Number = new JComboBox<String>();
+		Table_Number.setBounds(416,50,100,30);
+		Table_Number.setFont(font_0);
+		jPanelHead.add(Table_Number);
 //         //Button tao xac nhan 
 		jButtonAdd = new JButton("Thêm Hóa Đơn");
 		jButtonAdd.setFont(font_0);
 		jButtonAdd.setHorizontalAlignment(JButton.CENTER);
-		jButtonAdd.setBounds(603, 50, 150, 30);
+		jButtonAdd.setBounds(600, 50, 150, 30);
 		jButtonAdd.setBackground(Color.gray);
 		jPanelHead.add(jButtonAdd);
 
@@ -179,7 +171,7 @@ public class PanelShop extends JPanel {
 		jButtonOK.setFont(font_0);
 
 		jButtonOK.setBackground(Color.gray);
-		jButtonOK.setBounds(780, 50, 150, 30);
+		jButtonOK.setBounds(770, 50, 150, 30);
 		jPanelHead.add(jButtonOK);
 
 		// tao duong ke
@@ -191,14 +183,29 @@ public class PanelShop extends JPanel {
 		this.add(jPanelHead);
 
 		textTien = new JTextField();
-		textTien.setBounds(683, 5, 247, 30);
+		textTien.setBounds(620, 0, 100, 30);
 		textTien.setHorizontalAlignment(JTextField.CENTER);
 		jPanelHead.add(textTien);
 
 		JLabel lblNewLabel = new JLabel("Tổng Tiền");
 		lblNewLabel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-		lblNewLabel.setBounds(603, 0, 77, 30);
+		lblNewLabel.setBounds(540, 0, 77, 30);
 		jPanelHead.add(lblNewLabel);
+		
+				// Tao ma hd
+				jLabelMaHD = new JLabel("Mã HD");
+				jLabelMaHD.setBounds(0, 0, 55, 30);
+				jPanelHead.add(jLabelMaHD);
+				jLabelMaHD.setFont(font_0);
+				
+				 comBox = new JComboBox();
+				comBox.setBounds(850, 0, 70, 30);
+				jPanelHead.add(comBox);
+				
+				JLabel lblNewLabel_1 = new JLabel("Thanh Toán");
+				lblNewLabel_1.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+				lblNewLabel_1.setBounds(740, 0, 90, 30);
+				jPanelHead.add(lblNewLabel_1);
 	}
 
 	public void CenterPage() {
@@ -256,7 +263,7 @@ public class PanelShop extends JPanel {
 
 		// add table vào Scroll
 		JScrollPane jScroll = new JScrollPane(jtable);
-		jScroll.setBounds(new Rectangle(120, 0, 935, 450));
+		jScroll.setBounds(new Rectangle(31, 10, 935, 450));
 		jScroll.setBackground(null);
 
 		chiTietView.add(jScroll);
@@ -266,21 +273,25 @@ public class PanelShop extends JPanel {
 		jButtonThem.setFont(font_0);
 		jButtonThem.setVisible(true);
 		jButtonThem.setBackground(Color.gray);
-		jButtonThem.setBounds(new Rectangle(354, 500, 150, 30));
+		jButtonThem.setBounds(new Rectangle(250, 500, 150, 30));
 		chiTietView.add(jButtonThem);
 
 		jButtonSua = new JButton("Sửa Sản Phẩm");
 		jButtonSua.setFont(font_0);
 		jButtonSua.setHorizontalAlignment(JButton.CENTER);
 		jButtonSua.setBackground(Color.gray);
-		jButtonSua.setBounds(new Rectangle(536, 500, 150, 30));
+		jButtonSua.setBounds(new Rectangle(460, 500, 150, 30));
 		chiTietView.add(jButtonSua);
 
 		jButtonXoa = new JButton("Xoá Sản Phẩm");
+		jButtonXoa.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 		jButtonXoa.setFont(font_0);
 		jButtonXoa.setHorizontalAlignment(jButtonXoa.CENTER);
 		jButtonXoa.setBackground(Color.gray);
-		jButtonXoa.setBounds(new Rectangle(716, 500, 150, 30));
+		jButtonXoa.setBounds(new Rectangle(670, 500, 150, 30));
 		chiTietView.add(jButtonXoa);
 
 	}
@@ -456,13 +467,13 @@ public class PanelShop extends JPanel {
 		this.jTextFieldNgayLapHD = jTextFieldNgayLapHD;
 	}
 
-	public JButton getjButtonMaKH() {
-		return jButtonMaKH;
-	}
-
-	public void setjButtonMaKH(JButton jButtonMaKH) {
-		this.jButtonMaKH = jButtonMaKH;
-	}
+//	public JButton getjButtonMaKH() {
+//		return jButtonMaKH;
+//	}
+//
+//	public void setjButtonMaKH(JButton jButtonMaKH) {
+//		this.jButtonMaKH = jButtonMaKH;
+//	}
 
 	public JPanel getjPanelHead() {
 		return jPanelHead;
@@ -510,6 +521,15 @@ public class PanelShop extends JPanel {
 
 	public void setjButtonXoa(JButton jButtonXoa) {
 		this.jButtonXoa = jButtonXoa;
+	}
+	
+
+	public JComboBox<String> getTable_Number() {
+		return Table_Number;
+	}
+
+	public void setTable_Number(JComboBox<String> table_Number) {
+		Table_Number = table_Number;
 	}
 
 	public JLabel getjLabelBan() {
@@ -584,6 +604,14 @@ public class PanelShop extends JPanel {
 		this.jTextTenSP = jTextTenSP;
 	}
 
+	public JComboBox<String> getComBox() {
+		return comBox;
+	}
+
+	public void setComBox(JComboBox<String> comBox) {
+		this.comBox = comBox;
+	}
+
 	public JTable getjTable_1() {
 		return jTable_1;
 	}
@@ -607,5 +635,4 @@ public class PanelShop extends JPanel {
 	public void setTextTien(JTextField textTien) {
 		this.textTien = textTien;
 	}
-
 }

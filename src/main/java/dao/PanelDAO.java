@@ -17,7 +17,7 @@ import model.ProductModel;
 import model.UserModel;
 import views.menu.PanelShop;
 
-public class PanelDAO extends DAO implements AbstractDAO<BillDetailsModel> {
+public class PanelDAO extends DAO implements AbstractDAO<BillModel> {
 	private CustomerDao customerDao = new CustomerDao();
 	private PaymentDAO paymentDao = new PaymentDAO();
 	private TableDAO tableDao = new TableDAO();
@@ -44,7 +44,7 @@ public class PanelDAO extends DAO implements AbstractDAO<BillDetailsModel> {
 				ProductModel product = new ProductModel();
 				
 				product.setID(rs.getInt(1));
-				product.setPrice(rs.getFloat(2));
+				product.setPrice(rs.getInt(2));
 				product.setName(rs.getString(3));
 				product.setDescription(rs.getString(4));
 				product.setImage(rs.getString(5));
@@ -154,36 +154,57 @@ public class PanelDAO extends DAO implements AbstractDAO<BillDetailsModel> {
     	}
     	return res;
     }
-	@Override
-	public void insert(BillDetailsModel t) {
+//	@Override
+	//public void insert(BillDetailsModel t) {
 		// TODO Auto-generated method stub
-		   String sql = AbstractImpl.buildSqlInsertBillDetails(t);
-		    System.out.println(sql);
-		    try {
-		        PreparedStatement ps = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
-		        ps.executeUpdate();
-		        ResultSet rs = ps.getGeneratedKeys();
-		        if (rs.next()) {
-		            int ID = rs.getInt(1);
-		            t.setID(ID);
-		            int quantity = t.getQuantityProduct(); 
-		            t.setQuantityProduct(quantity);
-		            int BillID = rs.getInt(3);
-		            t.setBillID(BillID);  ;
-		            int productID = t.getProductID(); 
-		            t.setProductID(productID);
-		        }
-		        ps.close();
-		    } catch (SQLException e) {
-		        e.printStackTrace();
-		    }
-		
-	}
+//		   String sql = AbstractImpl.buildSqlInsertBillDetails(t);
+//		    System.out.println(sql);
+//		    try {
+//		        PreparedStatement ps = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+//		        ps.executeUpdate();
+//		        ResultSet rs = ps.getGeneratedKeys();
+//		        if (rs.next()) {
+//		            int ID = rs.getInt(1);
+//		            t.setID(ID);
+//		            int quantity = t.getQuantityProduct(); 
+//		            t.setQuantityProduct(quantity);
+//		            int BillID = rs.getInt(3);
+//		            t.setBillID(BillID);  ;
+//		            int productID = t.getProductID(); 
+//		            t.setProductID(productID);
+//		        }
+//		        ps.close();
+//		    } catch (SQLException e) {
+//		        e.printStackTrace();
+//		    }
+
+//	}
 
 	
 
+
 	@Override
-	public void delete(BillDetailsModel t) {
+	public void insert(BillModel t) {
+		// TODO Auto-generated method stub
+		String sql = AbstractImpl.buildSqlInsertBill(t);
+		System.out.println(sql);
+		try {
+			PreparedStatement ps = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+			ps.executeUpdate();
+			ResultSet rs = ps.getGeneratedKeys();
+			rs.first();
+			int BillID = rs.getInt(1);
+			t.setID(BillID);
+			ps.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+
+
+	@Override
+	public void delete(BillModel t) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -191,7 +212,7 @@ public class PanelDAO extends DAO implements AbstractDAO<BillDetailsModel> {
 
 
 	@Override
-	public void update(BillDetailsModel t) {
+	public void update(BillModel t) {
 		// TODO Auto-generated method stub
 		
 	}

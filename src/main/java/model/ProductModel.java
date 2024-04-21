@@ -2,14 +2,14 @@ package model;
 
 public class ProductModel {
 	private int ID;
-	private float Price;
+	private int Price;
 	private String Name;
 	private String Description;
 	private String Image;
 	private CategoryModel Category;
 	
 	
-	public ProductModel(int iD, float price, String name, String description, String image, CategoryModel category) {
+	public ProductModel(int iD, int price, String name, String description, String image, CategoryModel category) {
 		ID = iD;
 		Price = price;
 		Name = name;
@@ -18,7 +18,14 @@ public class ProductModel {
 		Category = category;
 	}
 
-	public ProductModel() {}
+	public ProductModel() {
+		ID= 0;
+		Price= 0;
+		Name = "";
+		Description = "";
+		Image = "";
+		Category = new CategoryModel(0,"","");
+	}
 
 	public int getID() {
 		return ID;
@@ -28,11 +35,11 @@ public class ProductModel {
 		ID = iD;
 	}
 
-	public float getPrice() {
+	public int getPrice() {
 		return Price;
 	}
 
-	public void setPrice(float price) {
+	public void setPrice(int price) {
 		Price = price;
 	}
 

@@ -13,6 +13,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Vector;
 
@@ -42,6 +43,7 @@ import model.BillDetailsModel;
 import model.BillModel;
 import model.CustomerModel;
 import model.PaymentModel;
+import model.ProductModel;
 import model.TableModel;
 import model.UserModel;
 //import model.PanelModel;
@@ -58,21 +60,19 @@ public class PanelShopController {
 	private PanelShop panelShop;
 	private BillDAO billDao = new BillDAO();
 	private BillDetailsDAO billDetailsDao = new BillDetailsDAO();
-	private CustomerDao customerDao = new CustomerDao();
-	private CategoryDAO categoryDao = new CategoryDAO();
-	private TableDAO tableDao = new TableDAO();
-	private PaymentDAO paymentDao = new PaymentDAO();
 	private UserDAO userDao = new UserDAO();
-	UserModel userModel = new UserModel();
-	// private ArrayList<PanelModel> list = panelDAO.getInstance().selectALL();
+	private CustomerDao customerDao = new CustomerDao();
+	private PaymentDAO paymentDao = new PaymentDAO();
+	private TableDAO tableDao = new TableDAO();
+	private CategoryDAO categoryDao = new CategoryDAO();
 	private DefaultTableModel tableModel = new DefaultTableModel();
 	private Vector<String> data;
-	BillDAO billDAO = new BillDAO();
-	BillModel billModel = new BillModel();
 	private ArrayList<BillModel> list_1 = panelDAO.getInstance().findAll();
+	private LinkedHashMap<String, String> List = new LinkedHashMap<String, String>(); 
 	private float sumMoney;
+	PanelBill panelBill;
 	TableModel taModel = new TableModel();
-//	private PanelModel panelModel;
+
 	BillDetailsModel billDetailsModel = new BillDetailsModel();
 
 	public PanelShopController(PanelShop panelShop) {
@@ -93,6 +93,13 @@ public class PanelShopController {
 		if (panelShop.getjTextFieldMaHD().getText() == "") {
 			JOptionPane.showMessageDialog(panelShop, "Vui lòng thêm hóa đơn");
 		}
+		for (TableModel x : billDao.findTableByStatus("Available")) {
+			panelShop.getTable_Number().addItem(x.getTableNumber());
+		}
+		
+		for(PaymentModel x : billDao.findAllPayment()) {
+			panelShop.getComBox().addItem(x.getPaymentName());
+		}
 
 		// Thêm hóa đơn
 		panelShop.getjButtonAdd().addActionListener(new ActionListener() {
@@ -105,12 +112,7 @@ public class PanelShopController {
 				((DefaultTableModel) panelShop.getJtable().getModel()).setRowCount(0);
 				// lấy mã id lớn nhất
 
-//				int maHD = 0;
-//				for (BillModel x : list_1) {
-//					maHD = x.getID();
-//					System.out.println(maHD + "   ");
-//				}
-//				panelShop.getjTextFieldMaHD().setText(maHD + "");
+			
 				resetInput();
 				EnableInput();
 			}
@@ -183,6 +185,7 @@ public class PanelShopController {
 						data.add(giaSP);
 						float sum = Integer.parseInt(soLuong) * Float.parseFloat(giaSP);
 						data.add(sum + "");
+						List.put(maSP, soLuong);
 						sumMoney += sum;
 						panelShop.getModel().addRow(data);
 						panelShop.getTextTien().setText(sumMoney + "");
@@ -243,50 +246,69 @@ public class PanelShopController {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-//				if (panelShop.getjTextFieldMaHD().getText().isEmpty()) {
-//					JOptionPane.showMessageDialog(panelShop, "Vui lòng thêm hóa đơn trước khi xác nhận");
-//					return;
-//				}
-//				if (panelShop.getJtable().getModel().getRowCount() == 0) {
-//					JOptionPane.showMessageDialog(panelShop, "Không có sản phẩm để xác nhận");
-//			
 				StringBuilder messageError = new StringBuilder("");
-				float SumPrice = 0;
-				String Bill_ID = panelShop.getjTextFieldMaHD().getText();
+				String Bill_ID = panelShop.getjTextFieldMaKH().getText();
+				String User_Name = panelShop.getTenNV().getSelectedItem().toString();
+				String Table_Number = panelShop.getTable_Number().getSelectedItem().toString();
+				String Cus_ID = panelShop.getjTextFieldMaKH().getText();
+				String Payment_Name = panelShop.getComBox().getSelectedItem().toString();
+				
+				BillModel tmp = new BillModel();
+				
+				CustomerModel cusDao = customerDao.findByID(Cus_ID);
+				tmp.setCustomer(cusDao);
+				tmp.setCustomerID(cusDao.getID());
 			
-		//		String User_ID = (String)panelShop.getTenNV().getSelectedItem();
-				String Table_ID = panelShop.getTextBan().getText();
+				
+				TableModel tablee = billDao.findTableByNumber(Table_Number);
+				tmp.setTable(tablee);
+				tmp.setTableID(tablee.getID());
 
-                BillModel tmp = new BillModel();
+				UserModel user = billDao.findUserByUserName(User_Name);
+				tmp.setUser(user);
+				tmp.setUserID(user.getID());
+				
+				tmp.setBillTotal(Float.parseFloat(panelShop.getTextTien().getText()));
+				PaymentModel payment = billDao.findPaymentByName(Payment_Name);
+				tmp.setPayment(payment);
+				tmp.setPaymentID(payment.getID());
+				
+				billDao.insert(tmp);
+				
+				ArrayList<BillDetailsModel > BillDetaList = new ArrayList<BillDetailsModel>();
+				List.forEach((key,value)->{
+					BillDetailsModel tmpBillDetails = new BillDetailsModel();
+					tmpBillDetails.setQuantityProduct(Integer.parseInt(value));
+					tmpBillDetails.setProduct(billDao.findProductByName(key));
+					tmpBillDetails.setProductID(billDao.findProductByName(key).getID());
+					BillDetaList.add(tmpBillDetails);
+				});
 				
 
-				taModel = tableDao.findByID(Table_ID);
-				tmp.setTable(taModel);
-				tmp.setTableID(taModel.getID());
-				
-//				 userModel = userDao.findByID(User_ID);
-//				tmp.setUser( userModel);
-//				tmp.setUserID( userModel.getID());
-				
-//			
-					billDetailsModel.setQuantityProduct(Integer.parseInt(panelShop.getjText().getText()));
-					
-					billDetailsModel.setProductID(Integer.parseInt(panelShop.getjTextMaSP().getText()));
-					billDetailsModel.setBillID(Integer.parseInt(panelShop.getjTextFieldMaHD().getText()));
-					panelDAO.insert(billDetailsModel);
-
-	         
-
-			
+				if(ValidateUtils.checkEmptyAndNull(Bill_ID)) {
+        			// them moi
+					int nextID = billDao.findAll().get(billDao.findAll().size()-1).getID()+1;
+					//System.out.println(nextID);
+            		if(validateForm(tmp, messageError)) {
+            			tmp.setID(nextID);
+            			if(panelShop.getJtable().getModel().getRowCount() ==0 )
+    					    JOptionPane.showMessageDialog(panelShop, "Hóa đơn chưa có sản phẩm ");
+    					else
+    					{
+            			billDao.insert(tmp);
+            			JOptionPane.showMessageDialog(panelShop, "Thêm hóa đơn thành công");
+    					}
+            		}
+				}
 			}
-		});
+			
+		}
+		);
 	}
-
-//	
 	public void resetInput() {
 		panelShop.getjTextFieldMaKH().setText("");
-		panelShop.getTextBan().setText("");
-		panelShop.getTenNV().setSelectedItem("Tên NV");
+		panelShop.getTable_Number().setSelectedItem("Chọn Bàn");
+		panelShop.getTenNV().setSelectedItem("Chọn NV");
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 		LocalDateTime current = LocalDateTime.now();
 		String formatted = current.format(formatter);
@@ -296,8 +318,9 @@ public class PanelShopController {
 
 	public void EnableInput() {
 		panelShop.getjTextFieldMaKH().setEnabled(true);
-		panelShop.getTextBan().setEnabled(true);
+		panelShop.getTable_Number().setEnabled(true);
 		panelShop.getjTextFieldNgayLapHD().setEnabled(true);
+		panelShop.getComBox().setEnabled(true);
 		panelShop.getTenNV().setEnabled(true);
 		// panelShop.getTextTien().setEnabled(true);
 //			panelShop.getjTextFieldMaHD().setEnabled(true);
@@ -306,11 +329,24 @@ public class PanelShopController {
 
 	public void DisableInput() {
 		panelShop.getjTextFieldMaKH().setEnabled(false);
-		panelShop.getTextBan().setEnabled(false);
+
 		panelShop.getjTextFieldNgayLapHD().setEnabled(false);
+		panelShop.getTable_Number().setEnabled(false);
 		panelShop.getTenNV().setEnabled(false);
 		panelShop.getjTextFieldMaHD().setEnabled(false);
 		panelShop.getTextTien().setEnabled(false);
+		panelShop.getComBox().setEnabled(false);
 	}
-
+	public boolean validateForm(BillModel bill,StringBuilder res) {			
+		if(!billDao.checkUser(bill.getUser().getID()+"")) {
+			res.append("Người dùng không tồn tại \n");
+			return false;
+		}
+		if(!billDao.checkTable(bill.getTable().getID()+"")) {
+			res.append("Bàn không tồn tại \n");
+			return false;
+		}
+		return true;
+		
+	}
 }
