@@ -69,6 +69,7 @@ public class PanelBillController {
 	private CategoryDAO categoryDao = new CategoryDAO();
 	private ArrayList<ArrayList<BillModel>> AllPageInformation = new ArrayList<>();
 	private UserDAO userDao = new UserDAO();
+	private TableDAO tableDao = new TableDAO();
 	private int PageSize =5 ;
 	private int PageNumber;
 	private int ButtonPageNumber = 3;
@@ -537,7 +538,9 @@ public class PanelBillController {
     					else
     					{
             			billDao.insert(tmp);
-            			
+            			TableModel tableTmp = billDao.findTableByNumber(Table_Number);
+            			tableTmp.setStatus("Full");
+            			tableDao.update(tableTmp);
             			for(int i=0;i<BillDetaList.size();i++) {
             				if(validateFormBillDetails(BillDetaList.get(i), messageError)) {
             					int nextDetaID = billDetailsDao.findBillDetailsAll().get(billDetailsDao.findBillDetailsAll().size()-1).getID()+1;
