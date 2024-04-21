@@ -37,6 +37,7 @@ import dao.CategoryDAO;
 import dao.CustomerDao;
 import dao.PanelDAO;
 import dao.PaymentDAO;
+import dao.ProductDAO;
 import dao.TableDAO;
 import dao.UserDAO;
 import model.BillDetailsModel;
@@ -65,9 +66,10 @@ public class PanelShopController {
 	private PaymentDAO paymentDao = new PaymentDAO();
 	private TableDAO tableDao = new TableDAO();
 	private CategoryDAO categoryDao = new CategoryDAO();
+	private ProductDAO productDAO = new ProductDAO();
 	private DefaultTableModel tableModel = new DefaultTableModel();
 	private Vector<String> data;
-	private ArrayList<BillModel> list_1 = panelDAO.getInstance().findAll();
+	private ArrayList<ProductModel> list_1 = panelDAO.getInstance().findProductAll();
 	private LinkedHashMap<String, String> List = new LinkedHashMap<String, String>(); 
 	private float sumMoney;
 	PanelBill panelBill;
@@ -111,8 +113,9 @@ public class PanelShopController {
 				// reset toàn bộ bảng
 				((DefaultTableModel) panelShop.getJtable().getModel()).setRowCount(0);
 				// lấy mã id lớn nhất
-
-			
+				int nextID = billDao.findAll().get(billDao.findAll().size()-1).getID()+1;
+				panelShop.getjTextFieldMaHD().setText(nextID +"");
+				
 				resetInput();
 				EnableInput();
 			}
@@ -129,7 +132,7 @@ public class PanelShopController {
 					JOptionPane.showMessageDialog(panelShop, "Vui lòng thêm hóa đơn trước khi thêm sản phẩm.");
 					return;
 				}
-
+				
 				panelShop.myTable();
 				// Trả về thông tin sản phẩm
 				panelShop.getjTable_1().getSelectionModel().addListSelectionListener(new ListSelectionListener() {
@@ -300,6 +303,22 @@ public class PanelShopController {
     					}
             		}
 				}
+				BillDetailsModel billDetailsModel = new BillDetailsModel();
+				for(int i = 0; i<= panelShop.getJtable().getModel().getColumnCount();i++) {
+					billDetailsModel.setBill(tmp);
+
+					String quantity = panelShop.getJtable().getValueAt(i, 2).toString();
+					billDetailsModel.setQuantityProduct(Integer.parseInt(quantity));
+					billDetailsModel.setBillID(tmp.getID());
+					
+					String id_Product = panelShop.getJtable().getValueAt(i, 0).toString();
+					billDetailsModel.setProductID(Integer.parseInt(id_Product));
+								
+					billDetailsDao.insert(billDetailsModel);
+				}
+				
+			
+				
 			}
 			
 		}
