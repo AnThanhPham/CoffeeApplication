@@ -65,6 +65,7 @@ public class PanelEmployeeController {
 		}
 		for(UserModel x : rowData) {
 			Vector<String> row = new Vector<>();
+			row.add(Integer.toString(x.getID()));
 			row.add(x.getFullName());
 			row.add(x.getEmail());
 			row.add(x.getUserName());
