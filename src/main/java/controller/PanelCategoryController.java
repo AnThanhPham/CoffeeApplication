@@ -97,7 +97,7 @@ public class PanelCategoryController {
 	        		String description = panelcategory.getTextArea_Des().getText();
 	        		
 	        		CategoryModel tmp = new CategoryModel();
-	        		tmp.setCategoryName(categoryName);  
+	        		tmp.setCategoryName(capitalizeFirstLetter(categoryName));  
 	        		tmp.setDescription(description);
 	        		
 	        		StringBuilder messageError = new StringBuilder("");
@@ -150,41 +150,47 @@ public class PanelCategoryController {
 					}
 				}
 			});
-			panelcategory.getInput_Find().addKeyListener(new KeyAdapter() {
-				public void keyReleased(KeyEvent e) {
-					JTextField textField = (JTextField) e.getSource();
-					String text = textField.getText();
-					renderTableByFullName(text);
-				}
-
-				public void keyTyped(KeyEvent e) {
-				}
-
-				public void keyPressed(KeyEvent e) {
-				}
-			});
 			
-			panelcategory.getComboBox_Ma().addActionListener(new ActionListener() {
-		        @SuppressWarnings("unchecked")
-				@Override
-		        public void actionPerformed(ActionEvent e) {
-					JComboBox<Object> comboBox = (JComboBox<Object>) e.getSource();
-		            String selectedID = (String) comboBox.getSelectedItem().toString();
+			panelcategory.getInput_Find().addKeyListener(new KeyAdapter() {
+			    public void keyReleased(KeyEvent e) {
+			        JTextField textField = (JTextField) e.getSource();
+			        String text = textField.getText();
+			        String selectedID = (String) panelcategory.getComboBox_Ma().getSelectedItem().toString();
+			        if (!("Mã loại").equals(selectedID)) {
+			            renderTableByFullNameAndID(text, selectedID);
+			        } else {
+			            renderTableByFullName(text);
+			        }
+			    }
 
-		            if (!("Mã loại").equals(selectedID)) {
-		                ArrayList<CategoryModel> filteredData = new ArrayList<>();
-		                // Lọc dữ liệu tương ứng với ID được chọn
-		                for (CategoryModel category : categoryDAO.CategoryList()) {
-		                    if (selectedID.equals(Integer.toString(category.getID()))) {
-		                        filteredData.add(category);
-		                    }
-		                }
-		                renderTable(filteredData);
-		            } else {
-		                renderTable(categoryDAO.CategoryList());
-		            }
-		        }
-		    });
+			    public void keyTyped(KeyEvent e) {
+			    }
+
+			    public void keyPressed(KeyEvent e) {
+			    }
+			});
+
+			panelcategory.getComboBox_Ma().addActionListener(new ActionListener() {
+			    @SuppressWarnings("unchecked")
+			    @Override
+			    public void actionPerformed(ActionEvent e) {
+			        JComboBox<Object> comboBox = (JComboBox<Object>) e.getSource();
+			        String selectedID = (String) comboBox.getSelectedItem().toString();
+
+			        if (!("Mã loại").equals(selectedID)) {
+			            ArrayList<CategoryModel> filteredData = new ArrayList<>();
+			            // Lọc dữ liệu tương ứng với ID được chọn
+			            for (CategoryModel category : categoryDAO.CategoryList()) {
+			                if (selectedID.equals(Integer.toString(category.getID()))) {
+			                    filteredData.add(category);
+			                }
+			            }
+			            renderTable(filteredData);
+			        } else {
+			            renderTable(categoryDAO.CategoryList());
+			        }
+			    }
+			});
 			panelcategory.getBtn_Search().addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					String text = panelcategory.getInput_Find().getText();
@@ -262,5 +268,25 @@ public class PanelCategoryController {
 			rowData =categoryDAO.findByFullname(text);					
 		}
 		renderTable(rowData);
+	}
+	public void renderTableByFullNameAndID(String text, String selectedID) {
+	    ArrayList<CategoryModel> filteredData = new ArrayList<>();
+	    for (CategoryModel category : categoryDAO.CategoryList()) {
+	        if (selectedID.equals(Integer.toString(category.getID())) && category.getCategoryName().toLowerCase().contains(text.toLowerCase())) {
+	            filteredData.add(category);
+	        }
+	    }
+	    renderTable(filteredData);
+	}
+	public String capitalizeFirstLetter(String str) {
+	    String NameList[] = str.split(" ");
+	    String res="";
+	   
+	    for (String x : NameList) {
+	        String tmp = x.substring(0,1);
+	        String tam = x.substring(1);
+	        res += tmp.toUpperCase() + tam + " ";
+	    }
+	    return res.trim(); 
 	}
 }
