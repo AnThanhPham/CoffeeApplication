@@ -16,7 +16,7 @@ import java.sql.ResultSet;
 import model.PaymentModel;
 import model.TableModel;
 
-public class TableDAO extends DAO {
+public class TableDAO extends DAO implements AbstractDAO<TableModel> {
 	public TableDAO() {
 		super();
 	}
@@ -73,21 +73,36 @@ public class TableDAO extends DAO {
 
 		return listResult;	
 	}
-	public static void update(TableModel t) throws SQLException {
-
+	
+	@Override
+	public void insert(TableModel t) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void delete(TableModel t) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void update(TableModel t) {
 		Statement stm1;
 		
+		try {
 			stm1 = conn.createStatement();
-			 String sql="update tablee " +
-					 	"set id= "+ t.getID()+ 
-					 	",TableNumber = N'"+ t.getTableNumber()+"'" +
-					 	",Status= N'"+ t.getStatus()+ "', " +
-					 	"QuantityCustomer =" + t.getQuantityCustomer() +" "+
-					 	" where id= "+ t.getID()   ;
-			 System.out.println("sql"+ sql);
-			stm1.execute(sql);             
-
-
+			String sql="update tablee " +
+				 	"set id= "+ t.getID()+ 
+				 	",TableNumber = N'"+ t.getTableNumber()+"'" +
+				 	",Status= N'"+ t.getStatus()+ "', " +
+				 	"QuantityCustomer =" + t.getQuantityCustomer() +" "+
+				 	" where id= "+ t.getID()   ;
+		 System.out.println("sql"+ sql);
+		stm1.execute(sql);   
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 
 }

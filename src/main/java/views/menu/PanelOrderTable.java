@@ -31,6 +31,7 @@ import model.ProductModel;
 import model.TableModel;
 
 public class PanelOrderTable extends JPanel {
+	public TableDAO tableDao= new TableDAO();
 	JLabel title= new JLabel("Quản Lý Bàn");
 	Font fontTitle= new Font("Consolas", Font.BOLD,22);
 	TableModel model= new TableModel();
@@ -51,8 +52,8 @@ public class PanelOrderTable extends JPanel {
 		
 		
 		centerPanel.setLayout(new GridLayout(4, 4, 30, 30));
-		ItemTable[] ItemTable = new ItemTable[17];
-		for (int i = 0; i < 16; i++) {
+		ItemTable[] ItemTable = new ItemTable[listTable.size()+1];
+		for (int i = 0; i < listTable.size(); i++) {
 			ItemTable[i]= new ItemTable( listTable.get(i));
 			centerPanel.add(ItemTable[i]);
 		}
@@ -130,8 +131,9 @@ public class PanelOrderTable extends JPanel {
 						}
 					}
 					 try {
-						TableDAO.update(model);
-					} catch (SQLException e1) {
+						 TableDAO daoUpdate= new TableDAO();
+						 daoUpdate.update(model);
+					} catch (Exception e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}

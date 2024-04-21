@@ -137,6 +137,35 @@ private static  CategoryDAO categoryDao = new CategoryDAO();
 		 System.out.println("sql"+ sql);
 		 stm1.execute(sql);  
 	}
+/*	public static void updatePathImgAll() {
+		try {
+			java.sql.Statement stm= conn.createStatement();
+			String sqlCommand= "select * from Product where not image like '%img";
+			ResultSet rs= stm.executeQuery(sqlCommand);
+			
+			while(rs.next()) {
+				
+				int id=rs.getInt(1);
+				int price= (int) rs.getDouble(2);
+				String name= rs.getString(3);
+				String des= rs.getString(4);
+				String image= rs.getString(5);
+				int categoryID= rs.getInt(6);
+				int categoryId= rs.getInt( "category.ID");
+				String categoryName= rs.getString("categoryName");
+				String categoryDes= rs.getString("category.description");
+				CategoryModel category= new CategoryModel(categoryId, categoryName, des);
+				ProductModel in4= new ProductModel(id, price, name, des, image, category);
+				listResult.add(in4);
+				
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}  
+	} */
+	
 	
 	public static List<ProductModel>  search(String t, String searchCategory) throws SQLException {
 		List<ProductModel> listResult= new ArrayList<ProductModel>();

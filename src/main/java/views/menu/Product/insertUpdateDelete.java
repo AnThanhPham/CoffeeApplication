@@ -376,7 +376,8 @@ public class insertUpdateDelete extends JFrame {
 					try {
 						List<String> productList = ProductDAO.listName();
 						for(String x: productList) {
-							if(nameText.equalsIgnoreCase(x)==false) {
+							if(nameText.equalsIgnoreCase(x)==false|| nameText.equalsIgnoreCase(model.getName()) ) {
+								
 								continue;
 							}else {
 								JOptionPane.showMessageDialog(check, "Tên sản phẩm đã tồn tại");
