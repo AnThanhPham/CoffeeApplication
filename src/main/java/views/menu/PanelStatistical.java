@@ -1,5 +1,6 @@
 package views.menu;
 
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import org.jfree.chart.ChartFactory;
@@ -15,6 +16,7 @@ public class PanelStatistical extends JPanel {
 	private JComboBox<String> Year;
 	private JFreeChart chart;
 	private PanelSatisticalController controller;
+	private JButton Reresh;
 	
     public PanelStatistical() {
     	graphColumn();
@@ -50,6 +52,9 @@ public class PanelStatistical extends JPanel {
          
          Year = new JComboBox<String>();
          add(Year);
+         
+         Reresh = new JButton("làm mới");
+         add(Reresh);
     }
 
 	public JComboBox<String> getYear() {
@@ -74,5 +79,13 @@ public class PanelStatistical extends JPanel {
 
 	public void setController(PanelSatisticalController controller) {
 		this.controller = controller;
+	}
+
+	public JButton getReresh() {
+		return Reresh;
+	}
+
+	public void setReresh(JButton reresh) {
+		Reresh = reresh;
 	}
 }

@@ -61,6 +61,28 @@ public class PanelSatisticalController {
 			}
 		});
 		 
+		 statistical.getReresh().addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int idx = (int) statistical.getYear().getSelectedIndex();
+				 if(idx !=0) {
+					TreeMap<Integer,Double> map =  billDao.FitterDataByYear((String) statistical.getYear().getSelectedItem());
+					for(int i=1;i<=12;i++) {
+						if(map.containsKey(i))
+							continue;
+						else map.put(i, 0.0);
+					}
+					for (Map.Entry<Integer, Double> x : map.entrySet()) {
+						//System.out.println(entry.getKey()+" "+entry.getValue());
+						 dataset.setValue(x.getValue(), "Tháng "+String.valueOf(x.getKey()), "");
+					}
+					//System.out.println(map.size());
+					statistical.getChart().getCategoryPlot().setDataset(dataset);
+				 }
+				 else JOptionPane.showMessageDialog(statistical, "Bạn chưa chọn năm để xem biểu đồ doanh thu");
+			}
+		});
 		
 	}
 }
