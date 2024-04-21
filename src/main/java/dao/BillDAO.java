@@ -249,7 +249,7 @@ public class BillDAO extends DAO implements AbstractDAO<BillModel>{
 				ProductModel product = new ProductModel();
 				
 				product.setID(rs.getInt(1));
-				product.setPrice(rs.getFloat(2));
+				product.setPrice((int)rs.getFloat(2));
 				product.setName(rs.getString(3));
 				product.setDescription(rs.getString(4));
 				product.setImage(rs.getString(5));
@@ -324,7 +324,7 @@ public class BillDAO extends DAO implements AbstractDAO<BillModel>{
 				ProductModel product = new ProductModel();
 				
 				product.setID(rs.getInt(1));
-				product.setPrice(rs.getFloat(2));
+				product.setPrice((int)rs.getFloat(2));
 				product.setName(rs.getString(3));
 				product.setDescription(rs.getString(4));
 				product.setImage(rs.getString(5));
@@ -403,7 +403,7 @@ public class BillDAO extends DAO implements AbstractDAO<BillModel>{
 	    		ProductModel tmp = new ProductModel();
 	    		if(rs.next()) {
 	    			tmp.setID(rs.getInt(1));
-	    			tmp.setPrice(rs.getFloat(2));
+	    			tmp.setPrice((int)rs.getFloat(2));
 	    			tmp.setName(rs.getString(3));
 	    			tmp.setDescription(rs.getString(4));
 	    			tmp.setImage(rs.getString(5));
