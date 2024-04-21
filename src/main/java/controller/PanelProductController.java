@@ -295,8 +295,7 @@ public class PanelProductController {
 						System.out.println(file.getAbsolutePath());
 			            crud.getImgField().setText("src/main/java/img/product/anh"+ crud.getModel().getID() +".png");
 //			            imgField.setText(file.getAbsolutePath());
-			            crud.setImgLabel(new TImage(new ImageIcon(file.getAbsolutePath())));
-			            
+			            crud.getImgLabel().setSrcIcon(new ImageIcon(file.getAbsolutePath()));
 		            } catch (IOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
