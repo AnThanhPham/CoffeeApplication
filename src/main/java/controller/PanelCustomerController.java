@@ -24,7 +24,10 @@ import javax.swing.table.DefaultTableModel;
 import com.google.protobuf.StringValue;
 import com.google.protobuf.Value;
 
+import dao.BillDAO;
+import dao.BillDetailsDAO;
 import dao.CustomerDao;
+import model.BillDetailsModel;
 import model.CustomerModel;
 import model.CustomerModel;
 import util.MapUtil;
@@ -34,6 +37,8 @@ import views.menu.PanelCustomer;
 public class PanelCustomerController{
 	private PanelCustomer panelCustomer;
 	private CustomerDao customerdao= new CustomerDao();
+	private BillDAO billDAO = new BillDAO();
+	private BillDetailsDAO billdetailsDAO =new BillDetailsDAO();
 	
 	public PanelCustomerController(PanelCustomer panelCustomer) {
 		this.panelCustomer = panelCustomer;
@@ -146,26 +151,6 @@ public class PanelCustomerController{
 					}
 				}
 			});
-			
-			
-			panelCustomer.getBtnDelete().addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					int[] rowSelects = panelCustomer.getTable().getSelectedRows();
-					if(rowSelects.length >0) {
-						int result = JOptionPane.showConfirmDialog(panelCustomer, "Bạn có chắc chắn muốn xóa?");
-						if(result == JOptionPane.OK_OPTION) {
-							for(int x : rowSelects) {
-								String id = MapUtil.convertObjectToString(panelCustomer.getTable().getValueAt(x, 0));
-								CustomerModel customer =customerdao.findByID(id);
-								customerdao.delete(customer);
-							}
-							renderTable(CustomerDao.CustomerList());
-							resetInput();
-						}
-					}
-				}
-			});
-			
 					
 			panelCustomer.getTextField_Find().addKeyListener(new KeyAdapter() {
 			    public void keyReleased(KeyEvent e) {
