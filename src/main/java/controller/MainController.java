@@ -9,6 +9,7 @@ import model.UserModel;
 import views.ChangePasswordView;
 import views.Login;
 import views.Main;
+import views.menu.PanelBill;
 
 public class MainController {
 	private Main main;
@@ -44,6 +45,7 @@ public class MainController {
 		main.getBtnBill().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				main.getCardLayout().show(main.getPanelCard(), "panelBill");
+				PanelBillController panelBillController = new PanelBillController(new PanelBill());
 			}
 		});
 		
