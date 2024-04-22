@@ -25,12 +25,17 @@ import javax.swing.plaf.basic.BasicButtonUI;
 
 import org.apache.pivot.wtk.Insets;
 import org.jfree.chart.ui.Size2D;
+
+import controller.PanelTableController;
+
 import java.util.*;
 import dao.TableDAO;
 import model.ProductModel;
 import model.TableModel;
+import views.menu.OrderTable.ItemTable;
 
 public class PanelOrderTable extends JPanel {
+	PanelTableController controller= new PanelTableController(this);
 	public TableDAO tableDao= new TableDAO();
 	JLabel title= new JLabel("Quản Lý Bàn");
 	Font fontTitle= new Font("Consolas", Font.BOLD,22);
@@ -56,6 +61,8 @@ public class PanelOrderTable extends JPanel {
 		for (int i = 0; i < listTable.size(); i++) {
 			ItemTable[i]= new ItemTable( listTable.get(i));
 			centerPanel.add(ItemTable[i]);
+			// add event
+			controller.addEventItemTable(ItemTable[i]);
 		}
 		this.add(centerPanel,BorderLayout.CENTER);
 		this.setVisible(false);
@@ -66,6 +73,7 @@ public class PanelOrderTable extends JPanel {
 		this.setBorder(new EmptyBorder(40,10,20,10));
 	
 	
+		
 		
 	}
 	
@@ -82,76 +90,6 @@ public class PanelOrderTable extends JPanel {
 
 }
 
- class tableButton extends JButton {
-	 protected void paintComponent(Graphics g) {
-			// TODO Auto-generated method stub
-			super.paintComponent(g);
-			g.setColor(Color.white);
-			g.fillOval(0, 0, g.getClipBounds().width, g.getClipBounds().height);
-			super.paintComponent(g);
-
-		}
-}
- class ItemTable extends JButton {
-	 
-	 
-	 	TableModel tm;
-	 	
-		JLabel tableName;
-
-		ItemTable( TableModel model){
-			tm= model;
-			
-			tableName = new JLabel();
-			
-			
-			tableName.setText("Bàn "+ model.getID());
-			tableName.setForeground(Color.white);
-			tableName.setFont(new Font(Font.SANS_SERIF,Font.PLAIN,22));
-			tableName.setHorizontalAlignment(JButton.CENTER);
-			tableName.setVerticalAlignment(JButton.CENTER);
-			this.setLayout(new BorderLayout());
-			
-			
-			
-			
-			this.add(tableName);
-			this.addActionListener(new ActionListener() {
-				
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					int result= JOptionPane.showConfirmDialog(null, "Bạn có muốn chuyển trạng thái không","Thông báo", JOptionPane.YES_NO_OPTION);
-					if (result==JOptionPane.YES_OPTION) {
-						if(model.getStatus().equals("Full")) {
-							model.setStatus("Available");
-							ItemTable.this.setBackground(Color.LIGHT_GRAY);
-							System.out.println(model.getStatus());
-						}else {
-							model.setStatus("Full");
-							ItemTable.this.setBackground(new Color(0x438BF7));
-						}
-					}
-					 try {
-						 TableDAO daoUpdate= new TableDAO();
-						 daoUpdate.update(model);
-					} catch (Exception e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-					
-				}
-			});
-			
-			if( model.getStatus().equals("Full")) {
-				this.setBackground(new Color(0x438BF7));
-				
-				
-			}else {
-				this.setBackground(Color.lightGray);
-			}
-			
-		
-		}
-	}
+ 
 
 
