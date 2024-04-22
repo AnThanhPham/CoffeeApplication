@@ -97,25 +97,6 @@ public class PanelShopController {
 		DisableInput();
 		DefaultTableModel modelTable = new DefaultTableModel();
 
-//		String column[] = { "Mã Sản Phẩm", "Tên Sản Phẩm", "Số Lượng", "Đơn Giá", "Tổng Tiền" };
-//		for (String x : column) {
-//			modelTable.addColumn(x);
-//		}
-		if (panelShop.getjTextFieldMaHD().getText() == "") {
-			JOptionPane.showMessageDialog(panelShop, "Vui lòng thêm hóa đơn");
-		}
-		panelShop.getTable_Number().addItem("Chọn bàn");
-		for (TableModel x : billDao.findTableByStatus("Available")) {
-			panelShop.getTable_Number().addItem(x.getTableNumber());
-		}
-
-		for (PaymentModel x : billDao.findAllPayment()) {
-			panelShop.getComBox().addItem(x.getPaymentName());
-		}
-		panelShop.getTenNV().addItem("Tên NV");
-		for (UserModel x : billDao.findUserByRoleID("2")) {
-			panelShop.getTenNV().addItem(x.getUserName());
-		}
 
 		// Thêm hóa đơn
 
@@ -129,7 +110,7 @@ public class PanelShopController {
 				
 				// reset toàn bộ bảng
 				((DefaultTableModel) panelShop.getJtable().getModel()).setRowCount(0);
-				// lấy mã id lớn nhất
+				//update lại database
 				UpdateComboboxHeader();
 				resetInput();
 				EnableInput();
@@ -289,11 +270,9 @@ public class PanelShopController {
 				}
 				
 				
-				String TenNV = "Tên NV";
-				String Ban = "Chọn bàn";
-		//		|| TenNV.equals(panelShop.getTenNV().getItemAt(0))|| Ban.equals(panelShop.getComBox().getItemAt(0)|| TenNV.equals(panelShop.getTenNV().getItemAt(0)
-				if (ValidateUtils.checkEmptyAndNull(panelShop.getjTextFieldMaKH().getText()) ) {
-					JOptionPane.showMessageDialog(panelShop, "Vui lòng điền đủ thông tin");
+				
+				if (ValidateUtils.checkEmptyAndNull(panelShop.getjTextFieldMaKH().getText()) || panelShop.getTenNV().getSelectedIndex()==0 ||panelShop.getComBox().getSelectedIndex()==0) {
+					JOptionPane.showMessageDialog(panelShop, "Vui lòng điền và chọn đủ thông tin");
 					return;
 				}
 				StringBuilder messageError = new StringBuilder("");
@@ -363,6 +342,9 @@ public class PanelShopController {
 					billDetailsDao.insert(billDetailsModel);
 				}
 				JOptionPane.showMessageDialog(panelShop, "Xác nhận thành công");
+				TableModel tableTmp = billDao.findTableByNumber(Table_Number);
+				tableTmp.setStatus("Full");
+				tableDao.update(tableTmp);
 			}
 
 		});
@@ -472,7 +454,7 @@ public class PanelShopController {
 																JOptionPane.showMessageDialog(panelBill,
 																		"Lưu thông tin khách hàng thành công");
 
-																panelBill.getCustomer_Phone()
+																panelShop.getjTextFieldMaKH()
 																		.setText(Custmp.getPhone());
 																System.out.println(Custmp.getPhone());
 
@@ -584,16 +566,18 @@ public class PanelShopController {
 		return matcher.matches();
 	}
 	public void UpdateComboboxHeader() {
-
+//xóa các item đang có
+		panelShop.getTenNV().removeAllItems();
 		panelShop.getTenNV().addItem("Tên NV");
 		for (UserModel x : billDao.findUserByRoleID("2")) {
 			panelShop.getTenNV().addItem(x.getUserName());
 		}
-
+		panelShop.getTable_Number().addItem("Chọn bàn");
+		panelShop.getComBox().removeAllItems();
 		for (PaymentModel x : billDao.findAllPayment()) {
 			panelShop.getComBox().addItem(x.getPaymentName());
 		}
-
+		panelShop.getTable_Number().removeAllItems();
 		for (TableModel x : billDao.findTableByStatus("Available")) {
 			panelShop.getTable_Number().addItem(x.getTableNumber());
 		}

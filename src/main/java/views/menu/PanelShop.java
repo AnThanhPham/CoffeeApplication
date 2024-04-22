@@ -152,6 +152,7 @@ public class PanelShop extends JPanel {
 		Table_Number = new JComboBox<String>();
 		Table_Number.setBounds(465, 50, 100, 30);
 		Table_Number.setFont(font_0);
+		Table_Number.addItem("Chọn bàn");
 		jPanelHead.add(Table_Number);
 //         //Button tao xac nhan 
 		jButtonAdd = new JButton("Thêm Hóa Đơn");
