@@ -77,7 +77,7 @@ public class PanelCategory extends JPanel {
 		btn_Add = new JButton("Thêm");
 		btn_Add.setIcon(new ImageIcon(PanelEmployee.class.getResource("/icon/Add@0.3x.png")));
 		btn_Add.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
-		btn_Add.setBounds(151, 416, 91, 46);
+		btn_Add.setBounds(131, 416, 125, 46);
 		btn_Add.setBackground(Color.WHITE);
 		btn_Add.setFont(new Font("Times New Roman", Font.PLAIN, 25));
 		add(btn_Add);
@@ -96,7 +96,7 @@ public class PanelCategory extends JPanel {
 		btnDelete = new JButton("Xóa");
 		btnDelete.setIcon(new ImageIcon(PanelEmployee.class.getResource("/icon/Trash@0.3x.png")));
 		btnDelete.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
-		btnDelete.setBounds(397, 415, 107, 46);
+		btnDelete.setBounds(383, 416, 107, 46);
 		btnDelete.setBackground(Color.WHITE);
 		btnDelete.setFont(new Font("Times New Roman", Font.PLAIN, 25));
 		add(btnDelete);

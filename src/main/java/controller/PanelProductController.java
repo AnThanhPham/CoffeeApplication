@@ -329,7 +329,7 @@ public class PanelProductController {
 						return; 
 					}
 					if(PanelProduct.getIns().getController().checkPrice((String)check.getPriceField().getText())== false) {
-						JOptionPane.showMessageDialog(check, "Giá phải là số dương");
+						JOptionPane.showMessageDialog(check, "Giá phải là số");
 						return ;
 					}
 					
@@ -408,7 +408,7 @@ public class PanelProductController {
 					return; 
 				}
 				if(PanelProduct.getIns().getController().checkPrice((String)check.getPriceField().getText())== false) {
-					JOptionPane.showMessageDialog(check, "Giá phải là số dương");
+					JOptionPane.showMessageDialog(check, "Giá phải là số ");
 					return ;
 				}
 				try {

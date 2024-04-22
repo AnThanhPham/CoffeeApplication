@@ -61,6 +61,7 @@ import model.UserModel;
 import util.MapUtil;
 import util.ValidateUtils;
 import views.menu.PanelBill;
+import views.menu.OrderTable.ItemTable;
 
 public class PanelBillController {
 	private PanelBill panelBill;
@@ -78,7 +79,6 @@ public class PanelBillController {
 
 	public PanelBillController(PanelBill panelBill) {
 		this.panelBill = panelBill;
-		UpdateComboboxHeader();
 		updatePrice();
 		ArrayList<BillModel> rowDataList = billDao.findAll();
 		Pagination(rowDataList);
@@ -91,16 +91,18 @@ public class PanelBillController {
 	}
 
 	public void UpdateComboboxHeader() {
-
+		panelBill.getUser_Name().removeAllItems();
 		panelBill.getUser_Name().addItem("Chọn nhân viên");
 		for (UserModel x : billDao.findUserByRoleID("2")) {
 			panelBill.getUser_Name().addItem(x.getUserName());
 		}
-
+		
+		panelBill.getPayment_Name().removeAllItems();
 		for (PaymentModel x : billDao.findAllPayment()) {
 			panelBill.getPayment_Name().addItem(x.getPaymentName());
 		}
-
+		
+		panelBill.getStatus_item().removeAllItems();
 		panelBill.getStatus_item().addItem("Chọn Trạng Thái");
 		LinkedHashSet<String> status = new LinkedHashSet<String>();
 		for (BillModel x : billDao.findAll()) {
@@ -109,7 +111,8 @@ public class PanelBillController {
 		for (String x : status) {
 			panelBill.getStatus_item().addItem(x);
 		}
-
+		
+		panelBill.getTable_Number().removeAllItems();
 		for (TableModel x : billDao.findTableByStatus("Available")) {
 			panelBill.getTable_Number().addItem(x.getTableNumber());
 		}
@@ -118,15 +121,17 @@ public class PanelBillController {
 
 	public void UpdateComboboxHeader2() {
 
+		panelBill.getUser_Name().removeAllItems();
 		panelBill.getUser_Name().addItem("Chọn nhân viên");
 		for (UserModel x : billDao.findUserByRoleID("2")) {
 			panelBill.getUser_Name().addItem(x.getUserName());
 		}
-
+        
+		panelBill.getPayment_Name().removeAllItems();
 		for (PaymentModel x : billDao.findAllPayment()) {
 			panelBill.getPayment_Name().addItem(x.getPaymentName());
 		}
-
+		panelBill.getStatus_item().removeAllItems();
 		panelBill.getStatus_item().addItem("Chọn Trạng Thái");
 		LinkedHashSet<String> status = new LinkedHashSet<String>();
 		for (BillModel x : billDao.findAll()) {
@@ -207,12 +212,6 @@ public class PanelBillController {
 					panelBill.getCustomer_Phone().setText(bill.getCustomer().getPhone());
 					panelBill.getUser_Name().setSelectedItem(bill.getUser().getUserName());
 					panelBill.getPayment_Name().setSelectedItem(bill.getPayment().getPaymentName());
-
-					panelBill.getTable_Number().removeAllItems();
-					for (TableModel x : billDao.findTableAll()) {
-						panelBill.getTable_Number().addItem(x.getTableNumber());
-						// System.out.println(x.getTableNumber());
-					}
 
 					panelBill.getTable_Number().setSelectedItem(bill.getTable().getTableNumber());
 
@@ -1256,6 +1255,9 @@ public class PanelBillController {
 				sortdata(billDao.findAll());
 				Pagination(billDao.findAll());
 				renderTable(AllPageInformation.get(0));
+				
+				Pagination(billDao.findAll());
+				renderTable(AllPageInformation.get(0));
 			}
 		});
 	}
@@ -1378,7 +1380,6 @@ public class PanelBillController {
 
 		// Khởi tạo đối tượng Matcher
 		Matcher matcher = Pattern.compile(regex).matcher(phoneNumber);
-
 		// Trả về kết quả kiểm tra
 		return matcher.matches();
 	}

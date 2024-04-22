@@ -221,7 +221,7 @@ public class PanelBill extends JPanel {
 	        Graphics g2 = (Graphics) g;
 
 	        // Vẽ đường thẳng ngăn cách giữa 2 phần
-	        g2.drawLine(60, 290, 1180, 290);
+	        g2.drawLine(60, 270, 950, 270);
 	    }
 	 
 	public void CreateBody() {
@@ -258,11 +258,11 @@ public class PanelBill extends JPanel {
 		add(FYear);
 		
 		Fitter = new JButton("Lọc");
-		Fitter.setBounds(885,300,75,30);
+		Fitter.setBounds(888,320,75,30);
 		add(Fitter);
 		
 		RefreshFitter = new JButton("Làm mới");
-		RefreshFitter.setBounds(885,335,75,30);
+		RefreshFitter.setBounds(888,283,75,30);
 		add(RefreshFitter);
 		// lọc mã
 		jlabel = new JLabel("Tìm Mã Hóa Đơn");
