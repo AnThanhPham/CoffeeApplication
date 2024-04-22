@@ -64,7 +64,6 @@ public class PanelCustomer extends JPanel {
 	private PanelCustomerController panelCustomerController;
 	private JButton btn_Add;
 	private JButton btnFix;
-	private JButton btnDelete;
 	private JButton btn_Save;
 	private JTextField textField_Find;
 	public PanelCustomer() {
@@ -145,23 +144,13 @@ public class PanelCustomer extends JPanel {
 		btnFix.setBackground(Color.WHITE);
 		btnFix.setFont(new Font("Times New Roman", Font.PLAIN, 25));
 		add(btnFix);
-
-		
-		btnDelete = new JButton("Delete");
-		btnDelete.setIcon(new ImageIcon(PanelEmployee.class.getResource("/icon/Trash@0.3x.png")));
-		btnDelete.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
-		btnDelete.setBounds(873, 208, 129, 48);
-		btnDelete.setBackground(Color.WHITE);
-		btnDelete.setFont(new Font("Times New Roman", Font.PLAIN, 25));
-		add(btnDelete);
-
-		
+	
 		btn_Save = new JButton("Save");
 		btn_Save.setIcon(new ImageIcon(PanelEmployee.class.getResource("/icon/Save@0.2x.png")));
 		btn_Save.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
 		btn_Save.setFont(new Font("Times New Roman", Font.PLAIN, 25));
 		btn_Save.setBackground(Color.WHITE);
-		btn_Save.setBounds(680, 208, 129, 48);
+		btn_Save.setBounds(873, 209, 129, 48);
 		add(btn_Save);
 
 		
@@ -326,14 +315,6 @@ public class PanelCustomer extends JPanel {
 
 	public void setBtn_Add(JButton btn_Add) {
 		this.btn_Add = btn_Add;
-	}
-
-	public JButton getBtnDelete() {
-		return btnDelete;
-	}
-
-	public void setBtnDelete(JButton btnDelete) {
-		this.btnDelete = btnDelete;
 	}
 
 	public JButton getBtn_Save() {
