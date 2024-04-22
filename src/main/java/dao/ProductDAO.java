@@ -47,6 +47,42 @@ private static  CategoryDAO categoryDao = new CategoryDAO();
     	return res;
     }
 	
+	public ProductModel findByIDCategory(String id) {
+    	ProductModel res = null;
+    	try {
+    		String sql = "select * from product where CategoryID = ? limit 1";
+    		PreparedStatement ps = conn.prepareStatement(sql);
+    		ps.setString(1, id);
+    		ResultSet rs = ps.executeQuery();
+    		ProductModel tmp = new ProductModel();
+    		if(rs.next()) {
+    			tmp.setID(rs.getInt(1));
+    			tmp.setPrice((int)rs.getFloat(2));
+    			tmp.setName(rs.getString(3));
+    			tmp.setDescription(rs.getString(4));
+    			tmp.setImage(rs.getString(5));
+    			tmp.setCategory(categoryDao.findByID(rs.getInt(6)+""));
+    		}
+    		if(Integer.toString(tmp.getID())!=null) {
+    			res = tmp;
+    		}
+    	}catch(Exception ex) {
+    		ex.printStackTrace();
+    	}
+    	return res;
+    }
+	public void deletefromCategory(ProductModel t) {
+		try {		
+			String deleteProductSql = "delete from product where CategoryID = ?";
+	        PreparedStatement deleteProductPs = conn.prepareStatement(deleteProductSql);
+	        deleteProductPs.setInt(1, t.getID());
+	        deleteProductPs.executeUpdate();
+    		
+    	}catch(Exception ex) {
+    		ex.printStackTrace();
+    	}
+	}
+	
 	// Hàm lấy ra list tên sản phẩm
 	public static List<String>  listName() throws SQLException {
 		List<String> listResult= new ArrayList<String>();
@@ -65,8 +101,6 @@ private static  CategoryDAO categoryDao = new CategoryDAO();
 	    }
 		return listResult;
 	}
-	
-	
 	
 	
 	public static String selectCategoryName(int id) throws SQLException {
@@ -124,9 +158,9 @@ private static  CategoryDAO categoryDao = new CategoryDAO();
 			java.sql.Statement stm1= conn.createStatement();
 			String sqlCommand= " delete from product where id = "+ t.getID();
 			stm1.execute(sqlCommand);
-
 	}
-	
+
+
 	public static void update(ProductModel t) throws SQLException, IOException {
 
 		java.sql.Statement stm1= conn.createStatement();
