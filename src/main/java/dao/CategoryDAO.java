@@ -53,14 +53,28 @@ public class CategoryDAO extends DAO implements AbstractDAO<CategoryModel>{
 	@Override
 	public void delete(CategoryModel t) {
 		try {
+			
+			String deleteBillDetailSql = "delete from billdetails where ProductID in (select id from product where CategoryID = ?)";
+	        PreparedStatement deleteBillDetailPs = conn.prepareStatement(deleteBillDetailSql);
+	        deleteBillDetailPs.setInt(1, t.getID());
+	        deleteBillDetailPs.executeUpdate();
+	        
+			String deleteProductSql = "delete from product where CategoryID = ?";
+	        PreparedStatement deleteProductPs = conn.prepareStatement(deleteProductSql);
+	        deleteProductPs.setInt(1, t.getID());
+	        deleteProductPs.executeUpdate();
+					
     		String sql = "delete from category where id = ?";
     		PreparedStatement ps = conn.prepareStatement(sql);
     		ps.setInt(1, t.getID());
     		ps.executeUpdate();
+    		
     	}catch(Exception ex) {
     		ex.printStackTrace();
     	}
 	}
+
+
 
 	@Override
 	public void update(CategoryModel t) {

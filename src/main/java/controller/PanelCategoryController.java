@@ -285,7 +285,7 @@ public class PanelCategoryController {
 	    for (String x : NameList) {
 	        String tmp = x.substring(0,1);
 	        String tam = x.substring(1);
-	        res += tmp.toUpperCase() + tam + " ";
+	        res += tmp.toUpperCase() + tam.toLowerCase() + " ";
 	    }
 	    return res.trim(); 
 	}
