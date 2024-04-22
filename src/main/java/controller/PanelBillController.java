@@ -126,7 +126,8 @@ public class PanelBillController {
 		for (UserModel x : billDao.findUserByRoleID("2")) {
 			panelBill.getUser_Name().addItem(x.getUserName());
 		}
-
+        
+		panelBill.getPayment_Name().removeAllItems();
 		for (PaymentModel x : billDao.findAllPayment()) {
 			panelBill.getPayment_Name().addItem(x.getPaymentName());
 		}
@@ -1252,6 +1253,9 @@ public class PanelBillController {
 				panelBill.getFindBillID().setText("");
 				panelBill.getSort().setSelectedIndex(0);
 				sortdata(billDao.findAll());
+				Pagination(billDao.findAll());
+				renderTable(AllPageInformation.get(0));
+				
 				Pagination(billDao.findAll());
 				renderTable(AllPageInformation.get(0));
 			}
