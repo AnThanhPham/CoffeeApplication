@@ -49,7 +49,7 @@ public class PanelCustomerController{
 	}
 	public void renderListID() {
 		Object[] listID= customerdao.CustomerList().stream().map(itemCustomer->itemCustomer.getID()).toArray();
-		listID = Stream.concat(Stream.of("Ma Khach Hang"), Stream.of(listID)).toArray();
+		listID = Stream.concat(Stream.of("Mã khách hàng"), Stream.of(listID)).toArray();
 		panelCustomer.getComboBox_MaKH().setModel(new DefaultComboBoxModel<>(listID));
 		ArrayList<CustomerModel> rowData = CustomerDao.CustomerList();		
 	}
@@ -57,7 +57,7 @@ public class PanelCustomerController{
 	private void renderTable(ArrayList<CustomerModel> rowData) {
 		// TODO Auto-generated method stub
 		DefaultTableModel model = new DefaultTableModel(); 
-		String[] colName = {"CusomerID", "FullName", "PhoneNumber", "Address", "Email"};
+		String[] colName = {"Mã khách hàng", "Họ và Tên", "Số điện thoại", "Địa chỉ", "Email"};
 		for(String x : colName) {
 			model.addColumn(x);
 		}	
@@ -151,13 +151,13 @@ public class PanelCustomerController{
 					}
 				}
 			});
-					
+
 			panelCustomer.getTextField_Find().addKeyListener(new KeyAdapter() {
 			    public void keyReleased(KeyEvent e) {
 			        JTextField textField = (JTextField) e.getSource();
 			        String text = textField.getText();
 			        String selectedID = (String) panelCustomer.getComboBox_MaKH().getSelectedItem().toString();
-			        if (!("Ma Khach Hang").equals(selectedID)) {
+			        if (!("Mã khách hàng").equals(selectedID)) {
 			            renderTableByFullNameAndID(text, selectedID);
 			        } else {
 			            renderTableByFullName(text);
@@ -178,7 +178,7 @@ public class PanelCustomerController{
 			        JComboBox<Object> comboBox = (JComboBox<Object>) e.getSource();
 			        String selectedID = (String) comboBox.getSelectedItem().toString();
 
-			        if (!("Ma Khach Hang").equals(selectedID)) {
+			        if (!("Mã khách hàng").equals(selectedID)) {
 			            ArrayList<CustomerModel> filteredData = new ArrayList<>();
 			            // Lọc dữ liệu tương ứng với ID được chọn
 			            for (CustomerModel customer : CustomerDao.CustomerList()) {
@@ -191,6 +191,19 @@ public class PanelCustomerController{
 			            renderTable(CustomerDao.CustomerList());
 			        }
 			    }
+			});
+			panelCustomer.getBtn_Reload().addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					renderTable(CustomerDao.CustomerList());
+			      
+					DefaultComboBoxModel<Object> model = new DefaultComboBoxModel<>();
+			        model.addElement("Mã khách hàng"); 
+			        for (CustomerModel customer : CustomerDao.CustomerList()) {
+			            model.addElement(Integer.toString(customer.getID())); 
+			        }
+			        panelCustomer.getComboBox_MaKH().setModel(model); 
+			        panelCustomer.getComboBox_MaKH().setSelectedIndex(0);
+				  }
 			});
 
 			panelCustomer.getTextField_Find().addFocusListener(new FocusListener() {
@@ -214,6 +227,8 @@ public class PanelCustomerController{
 			});
 			panelCustomer.getTextField_Find().setText("Tìm kiếm tên khách hàng");
 			panelCustomer.getTextField_Find().setForeground(Color.GRAY);
+			
+			
 		}	
 
 	public boolean validateForm(CustomerModel cus,StringBuilder res) {			
