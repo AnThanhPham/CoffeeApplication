@@ -82,7 +82,7 @@ public class PanelShop extends JPanel {
 			return false;
 		}
 	};
-	private PanelShopController panelShopController;
+	private PanelShopController panelShopController  ;
 	Font font_0 = new Font("Segoe UI", Font.PLAIN, 14);
 	Font font_1 = new Font("Arials", Font.PLAIN, 9);
 
@@ -112,7 +112,7 @@ public class PanelShop extends JPanel {
 		jPanelHead.add(jTextFieldMaHD);
 
 		// Tao ma kh
-		jLabelMaKH = new JLabel("Mã KH");
+		jLabelMaKH = new JLabel("Tên KH");
 		jLabelMaKH.setFont(font_0);
 		jLabelMaKH.setBounds(165, 0, 60, 30);
 		jTextFieldMaKH = new JTextField();
@@ -157,9 +157,13 @@ public class PanelShop extends JPanel {
 		jPanelHead.add(Table_Number);
 //         //Button tao xac nhan 
 		jButtonAdd = new JButton("Thêm Hóa Đơn");
+		jButtonAdd.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 		jButtonAdd.setFont(font_0);
 		jButtonAdd.setHorizontalAlignment(JButton.CENTER);
-		jButtonAdd.setBounds(600, 50, 150, 30);
+		jButtonAdd.setBounds(540, 50, 170, 30);
 		jButtonAdd.setBackground(Color.gray);
 		jPanelHead.add(jButtonAdd);
 
@@ -171,7 +175,7 @@ public class PanelShop extends JPanel {
 		jButtonOK.setFont(font_0);
 
 		jButtonOK.setBackground(Color.gray);
-		jButtonOK.setBounds(770, 50, 150, 30);
+		jButtonOK.setBounds(760, 50, 170, 30);
 		jPanelHead.add(jButtonOK);
 
 		// tao duong ke
@@ -199,7 +203,7 @@ public class PanelShop extends JPanel {
 				jLabelMaHD.setFont(font_0);
 				
 				 comBox = new JComboBox();
-				comBox.setBounds(850, 0, 70, 30);
+				comBox.setBounds(830, 0, 100, 30);
 				jPanelHead.add(comBox);
 				
 				JLabel lblNewLabel_1 = new JLabel("Thanh Toán");
@@ -282,12 +286,9 @@ public class PanelShop extends JPanel {
 		jButtonSua.setBackground(Color.gray);
 		jButtonSua.setBounds(new Rectangle(460, 500, 150, 30));
 		chiTietView.add(jButtonSua);
-
+	
 		jButtonXoa = new JButton("Xoá Sản Phẩm");
-		jButtonXoa.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
+		
 		jButtonXoa.setFont(font_0);
 		jButtonXoa.setHorizontalAlignment(jButtonXoa.CENTER);
 		jButtonXoa.setBackground(Color.gray);

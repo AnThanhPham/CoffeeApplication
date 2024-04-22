@@ -85,6 +85,7 @@ public class PanelShopController {
 	}
 
 	public void addEventHeader() {
+		
 		DisableInput();
 		DefaultTableModel modelTable = new DefaultTableModel();
 
@@ -104,6 +105,9 @@ public class PanelShopController {
 		}
 
 		// Thêm hóa đơn
+		//List<BillModel> model= billDao.findAll();
+		
+		BillModel model= new BillModel();
 		panelShop.getjButtonAdd().addActionListener(new ActionListener() {
 
 			@Override
@@ -113,8 +117,11 @@ public class PanelShopController {
 				// reset toàn bộ bảng
 				((DefaultTableModel) panelShop.getJtable().getModel()).setRowCount(0);
 				// lấy mã id lớn nhất
-				int nextID = billDao.findAll().get(billDao.findAll().size()-1).getID()+1;
+			int nextID = billDao.findAll().get(billDao.findAll().size()-1).getID()+1;
+				
 				panelShop.getjTextFieldMaHD().setText(nextID +"");
+				
+				//model.setID((int)panelShop.getjTextFieldMaHD());
 				
 				resetInput();
 				EnableInput();
@@ -143,8 +150,7 @@ public class PanelShopController {
 							String id = MapUtil.convertObjectToString(panelShop.getjTable_1().getValueAt(selectIdx, 0));
 							String name = MapUtil
 									.convertObjectToString(panelShop.getjTable_1().getValueAt(selectIdx, 1));
-							String price = MapUtil
-									.convertObjectToString(panelShop.getjTable_1().getValueAt(selectIdx, 2));
+							String price = MapUtil.convertObjectToString(panelShop.getjTable_1().getValueAt(selectIdx, 2));
 
 							panelShop.getjTextMaSP().setText(id);
 							panelShop.getjTextTenSP().setText(name);
@@ -174,6 +180,8 @@ public class PanelShopController {
 								double gia = Double.parseDouble(giaSP);
 								int quantity = Integer.parseInt(soLuong);
 								JOptionPane.showMessageDialog(panelShop, "Thêm sản phẩm thành công");
+								JOptionPane.showMessageDialog(panelShop, "Vui lòng ấn xác nhận");
+								
 							} catch (NumberFormatException e2) {
 								JOptionPane.showMessageDialog(panelShop, "Số lượng phải là số");
 							}
@@ -232,6 +240,14 @@ public class PanelShopController {
 
 				int idx = panelShop.getJtable().getSelectedRow();
 				if (panelShop.getJtable().getSelectedRowCount() == 1) {
+			//		int SoLuong = (int)panelShop.getJtable().getModel().getValueAt(idx, 2);
+					panelShop.getJtable().editCellAt(idx, 2);
+					BillDetailsModel billDetailsModel = new BillDetailsModel();
+					for(int i = 0; i<= panelShop.getJtable().getModel().getColumnCount();i++) {
+						String quantity = panelShop.getJtable().getValueAt(i, 2).toString();
+						billDetailsModel.setQuantityProduct(Integer.parseInt(quantity));
+						billDetailsDao.update(billDetailsModel);
+					}
 
 				} else {
 					if (panelShop.getJtable().getRowCount() == 0) {
@@ -241,6 +257,7 @@ public class PanelShopController {
 					}
 
 				}
+				
 
 			}
 		});
