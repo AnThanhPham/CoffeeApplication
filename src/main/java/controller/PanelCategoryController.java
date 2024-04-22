@@ -25,10 +25,12 @@ import model.CustomerModel;
 import util.MapUtil;
 import util.ValidateUtils;
 import views.menu.PanelCategory;
+import views.menu.PanelProduct;
 
 
 public class PanelCategoryController {
 	private PanelCategory panelcategory;
+	
 	private CategoryDAO categoryDAO = new CategoryDAO();
 	
 	public PanelCategoryController(PanelCategory panelcategory) {
