@@ -217,9 +217,9 @@ public class PanelShopController {
 				if (panelShop.getJtable().getSelectedRowCount() == 1) {
 					String tong = panelShop.getTextTien().getText();
 					String price = MapUtil.convertObjectToString(panelShop.getJtable().getValueAt(idx, 4));
-					tblModel.removeRow(panelShop.getJtable().getSelectedRow());// xóa trước thì không có idx
+					tblModel.removeRow(idx);// xóa trước thì không có idx
 					float sum = Float.parseFloat(tong) - Float.parseFloat(price);
-					panelShop.getTextTien().setText(sum + "");
+					panelShop.getTextTien().setText(String.valueOf(sum));
 					JOptionPane.showMessageDialog(panelShop, "Xóa thành công");
 				} else {
 					if (panelShop.getJtable().getRowCount() == 0) {
