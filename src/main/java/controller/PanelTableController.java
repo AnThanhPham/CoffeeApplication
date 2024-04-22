@@ -7,17 +7,34 @@ import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
 
 import dao.TableDAO;
+import model.TableModel;
 import views.menu.PanelOrderTable;
 import views.menu.OrderTable.ItemTable;
 import views.menu.Product.ItemProduct;
 
 public class PanelTableController {
+	
+	
 	PanelOrderTable panelOrderTable;
 	public PanelTableController(PanelOrderTable panelOrderTable) {
 		this.panelOrderTable=panelOrderTable;
 		
 	
 	}
+	// Ham reload
+	public void reload() {
+		java.util.List<TableModel> listTable= TableDAO.selectAll();
+		ItemTable[] ItemTable = new ItemTable[listTable.size()+1];
+		panelOrderTable.getCenterPanel().removeAll();
+		for (int i = 0; i < listTable.size(); i++) {
+			ItemTable[i]= new ItemTable( listTable.get(i));
+			panelOrderTable.getCenterPanel().add(ItemTable[i]);
+			// add event
+			this.addEventItemTable(ItemTable[i]);
+		}
+	}
+	
+	
 	public void addEventItemTable(ItemTable itemTable) {
 		// hàm status bàn
 		

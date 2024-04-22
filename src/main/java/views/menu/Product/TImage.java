@@ -49,7 +49,6 @@ public class TImage extends JLabel  implements  ComponentListener{
         cloneIcon.getImage().flush();
         cloneIcon.setImage(srcIcon.getImage().getScaledInstance(Math.min(wight1,width2),Math.min(height1,height2), Image.SCALE_DEFAULT));
         this.setIcon(cloneIcon);
-        System.out.println("test");
     }
     @Override
     public void componentResized(ComponentEvent e) {
