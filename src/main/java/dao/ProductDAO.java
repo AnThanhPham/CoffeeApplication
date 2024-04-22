@@ -1,5 +1,9 @@
 package dao;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -96,7 +100,7 @@ private static  CategoryDAO categoryDao = new CategoryDAO();
 
 	}
 	
-	public static void insert(ProductModel t) throws SQLException {
+	public static void insert(ProductModel t) throws SQLException, IOException {
 		// TODO Auto-generated method stub
 
 			new DAO();
@@ -110,7 +114,7 @@ private static  CategoryDAO categoryDao = new CategoryDAO();
 						t.getCategory().getID()+")";
 			System.out.println(sql);
 			stm.execute(sql);
-
+			updatePathImgAll();
 	}
 	
 	
@@ -123,7 +127,7 @@ private static  CategoryDAO categoryDao = new CategoryDAO();
 
 	}
 	
-	public static void update(ProductModel t) throws SQLException {
+	public static void update(ProductModel t) throws SQLException, IOException {
 
 		java.sql.Statement stm1= conn.createStatement();
 		 String sql="update product" +
@@ -136,35 +140,32 @@ private static  CategoryDAO categoryDao = new CategoryDAO();
 				 	" where id= "+ t.getID()   ;
 		 System.out.println("sql"+ sql);
 		 stm1.execute(sql);  
+		 updatePathImgAll();
 	}
-/*	public static void updatePathImgAll() {
-		try {
-			java.sql.Statement stm= conn.createStatement();
-			String sqlCommand= "select * from Product where not image like '%img";
-			ResultSet rs= stm.executeQuery(sqlCommand);
+	public static void updatePathImgAll() throws IOException, SQLException {
+		java.sql.Statement stm= conn.createStatement();
+		String sqlCommand= "select * from Product where  image not like concat('%anh',id,'.png')";
+		ResultSet rs= stm.executeQuery(sqlCommand);
+		ArrayList<ProductModel> wait = new ArrayList<ProductModel>();
+		while(rs.next()) {
+			int id=rs.getInt(1);
+			String oldimage= rs.getString(5);
+			ProductModel model = new ProductModel();
+			model.setID(id);
+			model.setImage(oldimage);
+			wait.add(model);
+		}
+		for(ProductModel model : wait ) {
+			int id = model.getID();
+			String oldimage = model.getImage();
+			String _newimage = "src/main/java/img/product/anh"+id+".png";
+			Files.copy(new File(oldimage).toPath(),new File(_newimage).toPath(),StandardCopyOption.REPLACE_EXISTING);
+			String sql="update product SET image= '" + _newimage +"' where id= "+ id  ;
+			stm.execute(sql);
 			
-			while(rs.next()) {
-				
-				int id=rs.getInt(1);
-				int price= (int) rs.getDouble(2);
-				String name= rs.getString(3);
-				String des= rs.getString(4);
-				String image= rs.getString(5);
-				int categoryID= rs.getInt(6);
-				int categoryId= rs.getInt( "category.ID");
-				String categoryName= rs.getString("categoryName");
-				String categoryDes= rs.getString("category.description");
-				CategoryModel category= new CategoryModel(categoryId, categoryName, des);
-				ProductModel in4= new ProductModel(id, price, name, des, image, category);
-				listResult.add(in4);
-				
-			}
+		}
 			
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}  
-	} */
+	} 
 	
 	
 	public static List<ProductModel>  search(String t, String searchCategory) throws SQLException {
