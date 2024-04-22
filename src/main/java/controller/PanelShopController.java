@@ -243,11 +243,11 @@ public class PanelShopController {
 			//		int SoLuong = (int)panelShop.getJtable().getModel().getValueAt(idx, 2);
 					panelShop.getJtable().editCellAt(idx, 2);
 					BillDetailsModel billDetailsModel = new BillDetailsModel();
-					for(int i = 0; i<= panelShop.getJtable().getModel().getColumnCount();i++) {
-						String quantity = panelShop.getJtable().getValueAt(i, 2).toString();
-						billDetailsModel.setQuantityProduct(Integer.parseInt(quantity));
-						billDetailsDao.update(billDetailsModel);
-					}
+//					for(int i = 0; i<= panelShop.getJtable().getModel().getColumnCount();i++) {
+//						String quantity = panelShop.getJtable().getValueAt(i, 2).toString();
+//						billDetailsModel.setQuantityProduct(Integer.parseInt(quantity));
+//						billDetailsDao.update(billDetailsModel);
+//					}
 
 				} else {
 					if (panelShop.getJtable().getRowCount() == 0) {
@@ -320,17 +320,17 @@ public class PanelShopController {
     					}
             		}
 				}
+				System.out.println(panelShop.getJtable().getModel().getRowCount());
+				//add vào billdetails
 				BillDetailsModel billDetailsModel = new BillDetailsModel();
-				for(int i = 0; i<= panelShop.getJtable().getModel().getColumnCount();i++) {
+				for(int i = 0; i< panelShop.getJtable().getModel().getRowCount();i++) {
 					billDetailsModel.setBill(tmp);
 
 					String quantity = panelShop.getJtable().getValueAt(i, 2).toString();
 					billDetailsModel.setQuantityProduct(Integer.parseInt(quantity));
 					billDetailsModel.setBillID(tmp.getID());
-					
 					String id_Product = panelShop.getJtable().getValueAt(i, 0).toString();
 					billDetailsModel.setProductID(Integer.parseInt(id_Product));
-								
 					billDetailsDao.insert(billDetailsModel);
 				}
 				

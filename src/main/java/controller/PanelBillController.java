@@ -69,6 +69,7 @@ public class PanelBillController {
 	private CategoryDAO categoryDao = new CategoryDAO();
 	private ArrayList<ArrayList<BillModel>> AllPageInformation = new ArrayList<>();
 	private UserDAO userDao = new UserDAO();
+	private TableDAO tableDao = new TableDAO();
 	private int PageSize =5 ;
 	private int PageNumber;
 	private int ButtonPageNumber = 3;
@@ -200,16 +201,20 @@ public class PanelBillController {
 				 int rowSelect = panelBill.getTableBill().getSelectedRow();
 				 
 				 JFrame frameCart = new JFrame();
-				 frameCart.setLayout(new FlowLayout());
-			     
-				 JLabel CategoryLabel = new JLabel("                                          Loại sản phẩm ");
+				 frameCart.setLayout(new BorderLayout());
+			     JPanel panelCart = new JPanel();
+			     panelCart.setLayout(new GridLayout(4,2,5,5));
+				 JLabel CategoryLabel = new JLabel("Loại sản phẩm");
+				 CategoryLabel.setHorizontalAlignment(JLabel.CENTER);
+				 
 				 JComboBox<String> CategoryList = new JComboBox<String>();
-				 CategoryList.addItem("Chọn loại sản phẩm ");
+				 CategoryList.addItem("Chọn loại sản phẩm");
 				 for(CategoryModel item: categoryDao.CategoryList()) {
 					 CategoryList.addItem(item.getCategoryName());
 			        }
-				 JLabel white = new JLabel("                              ");
+				 
 				 JLabel productLabel = new JLabel("Tên sản phẩm ");
+				 productLabel.setHorizontalAlignment(JLabel.CENTER);
 				 JComboBox<String> productList = new JComboBox<String>();
 				 productList.addItem("Chọn 1 sản phẩm ");
 				 
@@ -236,19 +241,24 @@ public class PanelBillController {
 					});
 
 				 JLabel QuantityLabel = new JLabel("Số lượng ");
+				 QuantityLabel.setHorizontalAlignment(JLabel.CENTER);
 				 JTextField QuantityProduct = new JTextField(10);
  				 JButton saveData = new JButton("Thêm vào giỏ hàng");
-				 frameCart.add(CategoryLabel);
-				 frameCart.add(CategoryList);
-				 frameCart.add(white);
-				 frameCart.add(productLabel);
-				 frameCart.add(productList);
-				 frameCart.add(QuantityLabel);
-				 frameCart.add(QuantityProduct);
-				 frameCart.add(saveData);
+ 				 JButton deleteProduct = new JButton("Xóa sản phẩm");
+				 panelCart.add(CategoryLabel);
+				 panelCart.add(CategoryList);
+				 panelCart.add(productLabel);
+				 panelCart.add(productList);
+				 panelCart.add(QuantityLabel);
+				 panelCart.add(QuantityProduct);
+				 panelCart.add(new JLabel());
+				 panelCart.add(saveData);
+				 
+				 frameCart.add(panelCart,BorderLayout.NORTH);
+				 frameCart.add(deleteProduct,BorderLayout.SOUTH);
 					
 				 JScrollPane scrollPaneCart = new JScrollPane();
-					frameCart.add(scrollPaneCart);
+					frameCart.add(scrollPaneCart,BorderLayout.CENTER);
 					
 					
 					JTable tableCart = new JTable();
@@ -302,6 +312,20 @@ public class PanelBillController {
 								}
 						}
 					});  
+					
+					deleteProduct.addActionListener(new ActionListener() {
+						
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							int idxCartTable = tableCart.getSelectedRow();
+							if(idxCartTable != -1 ) {
+								 String ProductName = MapUtil.convertObjectToString(tableCart.getValueAt(idxCartTable, 0));
+								 cartList.remove(ProductName);
+								 model.removeRow(idxCartTable);
+							}
+							else JOptionPane.showMessageDialog(panelBill, "Bạn chưa chọn sản phẩm muốn xóa");
+						}
+					});
 					for(Entry<String, String> x : cartList.entrySet()) {
 						// model.addRow(new Object[] { x.getKey(),"+",x.getValue(),"-","delete"});
 						 model.addRow(new Object[] { x.getKey(),x.getValue()});
@@ -414,41 +438,46 @@ public class PanelBillController {
 											CheckCusNameLabel.setText("");
 											
 											if(!ValidateUtils.checkEmptyAndNull(Cus_Phone)) {
-												if(isPhoneNumberValid(Customer_Phone)) {
-													Custmp.setPhone(Cus_Phone);
-													CheckCusPhoneLabel.setText("");
-													
-													if(!ValidateUtils.checkEmptyAndNull(Cus_Address)) {
-														String editAddress =  EditCustomerName(Cus_Address);
-														Custmp.setAddress(editAddress);
-														CheckCusAddressLabel.setText("");
-														//System.out.println(editname);
-														//System.out.println(Cus_Phone);
-														//System.out.println(editAddress);
-														//System.out.println(Cus_Email);
+												
+												if(billDao.findCusByPhone(Cus_Phone).getID() ==0) {
+													if(isPhoneNumberValid(Customer_Phone) ) {
+														Custmp.setPhone(Cus_Phone);
 														
-														customerDao.insert(Custmp);
-														if(customerDao.findByID(Custmp.getID()+"").getID() !=0) {
-															JOptionPane.showMessageDialog(panelBill, "Lưu thông tin khách hàng thành công");
-															
-															CheckCusPhoneLabel.setText("");
+														CheckCusPhoneLabel.setText("");
+														
+														if(!ValidateUtils.checkEmptyAndNull(Cus_Address)) {
+															String editAddress =  EditCustomerName(Cus_Address);
+															Custmp.setAddress(editAddress);
 															CheckCusAddressLabel.setText("");
-															CheckCusEmailLabel.setText("");
-															CheckCusNameLabel.setText("");
-														}
-														else JOptionPane.showMessageDialog(panelBill, "Không thể lưu thông tin khách hàng");
-													}else CheckCusAddressLabel.setText("              Địa chỉ không được để trống                                                            ");
-													
-												}
-													
-												else  CheckCusPhoneLabel.setText("           Sđt không hợp lệ                                                            ");
+															//System.out.println(editname);
+															//System.out.println(Cus_Phone);
+															//System.out.println(editAddress);
+															//System.out.println(Cus_Email);
+															
+															customerDao.insert(Custmp);
+															
+															if(customerDao.findByID(Custmp.getID()+"").getID() !=0) {
+																JOptionPane.showMessageDialog(panelBill, "Lưu thông tin khách hàng thành công");
+                                                                 
+																panelBill.getCustomer_Phone().setText(Custmp.getPhone());							
+																	System.out.println(Custmp.getPhone());
+																	
+																CheckCusPhoneLabel.setText("");
+																CheckCusAddressLabel.setText("");
+																CheckCusEmailLabel.setText("");
+																CheckCusNameLabel.setText("");
+															}
+															else JOptionPane.showMessageDialog(panelBill, "Không thể lưu thông tin khách hàng");
+														}else CheckCusAddressLabel.setText("              Địa chỉ không được để trống                                                            ");
+														
+													}else CheckCusPhoneLabel.setText("           Sđt không hợp lệ                                                            ");
+												}else  CheckCusPhoneLabel.setText("           Sđt đã tồn tại                                                           ");
 											}else CheckCusPhoneLabel.setText("            Sđt không được để trống                                                            ");
 										} else CheckCusNameLabel.setText("            Tên không được để trống                                                            ");						
 									}
 									else CheckCusEmailLabel.setText("            Email không hợp lệ                                                            ");
 								}
 								else CheckCusEmailLabel.setText("                Email không được để trống                                                            ");
-								
 								
 								
 							}
@@ -537,6 +566,9 @@ public class PanelBillController {
     					else
     					{
             			billDao.insert(tmp);
+            			TableModel tableTmp = billDao.findTableByNumber(Table_Number);
+            			tableTmp.setStatus("Full");
+            			tableDao.update(tableTmp);
             			for(int i=0;i<BillDetaList.size();i++) {
             				if(validateFormBillDetails(BillDetaList.get(i), messageError)) {
             					int nextDetaID = billDetailsDao.findBillDetailsAll().get(billDetailsDao.findBillDetailsAll().size()-1).getID()+1;
@@ -555,6 +587,8 @@ public class PanelBillController {
             			}
     					tmp.setBillTotal(SumPrice);
             			billDao.changePrice(SumPrice,nextID);
+            			Pagination(billDao.findAll());
+        				renderTable(AllPageInformation.get(0));
     					}		
             		}else {
             			JOptionPane.showMessageDialog(panelBill, messageError.toString());
@@ -596,9 +630,8 @@ public class PanelBillController {
         		}
 				
 				
-				//DisableInput();
-				Pagination(billDao.findAll());
-				renderTable(AllPageInformation.get(0));
+				
+			
 			}
 		});
 		
@@ -951,15 +984,22 @@ public class PanelBillController {
 			    		setColorPage2();
 			    		renderTable(AllPageInformation.get(--CurrentPage));
 			    	}
+			    	
 			    	JOptionPane.showMessageDialog(panelBill, "Không có dữ liệu");
 			    }
 			    
 			    if(p3==PageNumber) {
 			    	panelBill.getPage1().setText(p1+"");
 			    	panelBill.getPage2().setText(p2+"");
-			    	renderTable(AllPageInformation.get(p3-1));
 			    	panelBill.getPage3().setText(p3+"");
-			    	setColorPage3();
+			    	if(CurrentPage ==p1) {
+			    		renderTable(AllPageInformation.get(CurrentPage));
+				    	setColorPage2();
+			    	}
+			    	if(CurrentPage ==p2) {
+			    		renderTable(AllPageInformation.get(CurrentPage));
+				    	setColorPage3();
+			    	}
 			    }
 			    else {
 			    	if(CurrentPage==p3 && CurrentPage != PageNumber) {
