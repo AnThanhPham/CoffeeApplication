@@ -59,7 +59,9 @@ import model.TableModel;
 import model.UserModel;
 import util.MapUtil;
 import util.ValidateUtils;
+import views.Main;
 import views.menu.PanelBill;
+import views.menu.OrderTable.ItemTable;
 
 public class PanelBillController {
 	private PanelBill panelBill;
@@ -74,6 +76,7 @@ public class PanelBillController {
 	private int PageNumber;
 	private int ButtonPageNumber = 3;
 	private LinkedHashMap<String, String> cartList = new LinkedHashMap<String, String>(); 
+	private ItemTable[] itemTable = new ItemTable[billDao.findTableAll().size()+1];
 	
 	public PanelBillController(PanelBill panelBill) {
 		this.panelBill = panelBill;
@@ -568,6 +571,7 @@ public class PanelBillController {
             			billDao.insert(tmp);
             			TableModel tableTmp = billDao.findTableByNumber(Table_Number);
             			tableTmp.setStatus("Full");
+            			// tableTmp.setStatus("Available");  
             			tableDao.update(tableTmp);
             			for(int i=0;i<BillDetaList.size();i++) {
             				if(validateFormBillDetails(BillDetaList.get(i), messageError)) {
@@ -1351,5 +1355,8 @@ public class PanelBillController {
 		  // Trả về kết quả kiểm tra
 		  return matcher.matches();
 		}
+    public void addbutton() {
+    	Main.
+    }
 }
 
