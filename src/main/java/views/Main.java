@@ -1,10 +1,12 @@
 package views;
 
+import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.Toolkit;
 
 import javax.swing.ImageIcon;
@@ -64,6 +66,16 @@ public class Main extends JFrame {
 		this.setSize(new Dimension(1366,900));
 		setLocationRelativeTo(null);
 
+		this.setLayout(new BorderLayout());
+		getContentPane().setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize());
+		this.setExtendedState(MAXIMIZED_BOTH);
+		pnlMenu = new JPanel();
+//		pnlMenu.setPreferredSize(new Dimension(286,286));;		
+//		pnlMenu.setBounds(0, 0, 286, 826);
+		pnlMenu.setBackground(new java.awt.Color(239, 238, 244));
+		pnlMenu.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 5, 0, 0, new java.awt.Color(239, 238, 244)));
+		getContentPane().add(pnlMenu,BorderLayout.WEST);
+		pnlMenu.setLayout(new GridLayout(0,1,0,30));
 		getContentPane().setLayout(null);
 		getContentPane().setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize());
 
