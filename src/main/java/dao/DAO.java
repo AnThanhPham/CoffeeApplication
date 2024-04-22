@@ -8,12 +8,7 @@ public class DAO {
 	private static final String db_name = "coffeeapplication";
 	private static final String userName = "root";
 
-
-	private static final String password = "A123456@";
-
-
-
-
+	private static final String password = "sktt1popo";
 	DAO() {
 		if(conn == null) {
 			try {
