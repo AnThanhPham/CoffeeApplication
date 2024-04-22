@@ -59,7 +59,6 @@ import model.TableModel;
 import model.UserModel;
 import util.MapUtil;
 import util.ValidateUtils;
-import views.Main;
 import views.menu.PanelBill;
 import views.menu.OrderTable.ItemTable;
 
@@ -1355,8 +1354,6 @@ public class PanelBillController {
 		  // Trả về kết quả kiểm tra
 		  return matcher.matches();
 		}
-    public void addbutton() {
-    	Main.
-    }
+
 }
 
