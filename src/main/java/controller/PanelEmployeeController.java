@@ -388,6 +388,7 @@ public class PanelEmployeeController {
 	public void showImage(File file) {
 		try {
 			ImageIcon imageIcon = new ImageIcon(file.getAbsolutePath()); // load the image to a imageIcon
+			System.out.println(file.getAbsolutePath());
 			Image image = imageIcon.getImage(); // transform it 
 			Image newimg = image.getScaledInstance(160, 200, Image.SCALE_DEFAULT); // scale it the smooth way  
 			imageIcon = new ImageIcon(newimg);  // transform it back
