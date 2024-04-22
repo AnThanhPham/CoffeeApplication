@@ -440,7 +440,7 @@ public class PanelBillController {
 											if(!ValidateUtils.checkEmptyAndNull(Cus_Phone)) {
 												
 												if(billDao.findCusByPhone(Cus_Phone).getID() ==0) {
-													if(isPhoneNumberValid(Customer_Phone) ) {
+													if(isPhoneNumberValid(Cus_Phone) ) {
 														Custmp.setPhone(Cus_Phone);
 														
 														CheckCusPhoneLabel.setText("");
@@ -623,15 +623,16 @@ public class PanelBillController {
     					else {
     						billDao.update(tmp);
         				    billDao.changePrice(SumPrice,Integer.parseInt(Bill_ID));
+        				    Pagination(billDao.findAll());
+        					renderTable(AllPageInformation.get(0));
     					}
         			}else {
         				JOptionPane.showMessageDialog(panelBill, messageError.toString());
         			}
         		}
 				
-				
-				
-			
+				Pagination(billDao.findAll());
+				renderTable(AllPageInformation.get(0));
 			}
 		});
 		
