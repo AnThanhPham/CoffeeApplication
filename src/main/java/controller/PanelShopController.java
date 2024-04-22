@@ -246,6 +246,7 @@ public class PanelShopController {
 					if(checkQuantity(value)) {
 						panelShop.getJtable().setValueAt(value, idx, 2);
 						JOptionPane.showMessageDialog(panelShop, "Sửa thành công");
+						panelShop.getJtable().clearSelection();
 					}else {
 						JOptionPane.showMessageDialog(panelShop, "Số lượng không hợp lệ vui lòng nhập lại");
 						
@@ -255,11 +256,11 @@ public class PanelShopController {
 						float quantity = Float.parseFloat(panelShop.getJtable().getValueAt(i, 2).toString());
 						float price = Float.parseFloat(panelShop.getJtable().getValueAt(i, 3).toString());
 						float sum_row = quantity * price;
-						panelShop.getJtable().setValueAt(sum_row, idx, 4);
+						panelShop.getJtable().setValueAt(sum_row, i, 4);
 						sum += sum_row;
 					}
 					
-					panelShop.getTextTien().setText(sum + "");
+					  panelShop.getTextTien().setText(String.valueOf(sum));
 				
 
 				} else {
