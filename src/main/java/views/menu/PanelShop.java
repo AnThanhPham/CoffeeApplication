@@ -59,6 +59,9 @@ public class PanelShop extends JPanel {
 	private JComboBox<String> comBox;
 	private JTextField textBan;
 	private JTextField jText;
+	private JButton btn_check;
+
+
 	private JTextField jTextTenSP;
 	private JButton jButtonAdd;
 	private DefaultTableModel model = new DefaultTableModel() {
@@ -206,10 +209,10 @@ public class PanelShop extends JPanel {
 		lblNewLabel_1.setBounds(760, 0, 90, 30);
 		jPanelHead.add(lblNewLabel_1);
 		
-		JButton btnNewButton = new JButton("Kiểm Tra");
-		btnNewButton.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-		btnNewButton.setBounds(305, 0, 90, 30);
-		jPanelHead.add(btnNewButton);
+		 btn_check = new JButton("Kiểm Tra");
+		btn_check.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		btn_check.setBounds(305, 0, 90, 30);
+		jPanelHead.add(btn_check);
 	}
 
 	public void CenterPage() {
@@ -635,5 +638,12 @@ public class PanelShop extends JPanel {
 
 	public void setTextTien(JTextField textTien) {
 		this.textTien = textTien;
+	}
+	public JButton getBtn_check() {
+		return btn_check;
+	}
+
+	public void setBtn_check(JButton btn_check) {
+		this.btn_check = btn_check;
 	}
 }

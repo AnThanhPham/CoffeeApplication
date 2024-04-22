@@ -66,6 +66,7 @@ public class PanelCustomer extends JPanel {
 	private JButton btnFix;
 	private JButton btn_Save;
 	private JTextField textField_Find;
+	private JButton btn_Reload;
 	public PanelCustomer() {
 		setBorder(new EtchedBorder(EtchedBorder.RAISED, null, null));
 		setBackground(Color.WHITE);
@@ -77,19 +78,19 @@ public class PanelCustomer extends JPanel {
 		add(textField_Ma);
 		textField_Ma.setColumns(10);
 		
-		label_KH = new Label("CustomerID:");
+		label_KH = new Label("Mã khách hàng");
 		label_KH.setForeground(new Color(0, 128, 0));
 		label_KH.setBounds(46, 24, 144, 46);
 		label_KH.setFont(new Font("SansSerif", Font.PLAIN, 16));
 		add(label_KH);
 		
-		label_Name = new Label("FullName:");
+		label_Name = new Label("Họ và Tên:");
 		label_Name.setForeground(new Color(0, 128, 0));
 		label_Name.setBounds(46, 93, 101, 31);
 		label_Name.setFont(new Font("SansSerif", Font.PLAIN, 16));
 		add(label_Name);
 		
-		label_Address = new Label("Address:");
+		label_Address = new Label("Địa chỉ:");
 		label_Address.setForeground(new Color(0, 128, 0));
 		label_Address.setBounds(46, 154, 72, 31);
 		label_Address.setFont(new Font("SansSerif", Font.PLAIN, 16));
@@ -105,7 +106,7 @@ public class PanelCustomer extends JPanel {
 		textfield_Address.setColumns(10);
 		add(textfield_Address);
 		
-		label_PN = new Label("PhoneNumber:");
+		label_PN = new Label("Số điện thoại:");
 		label_PN.setForeground(new Color(0, 128, 0));
 		label_PN.setBounds(456, 24, 144, 46);
 		label_PN.setFont(new Font("SansSerif", Font.PLAIN, 16));
@@ -127,7 +128,7 @@ public class PanelCustomer extends JPanel {
 		textfield_Email.setColumns(10);
 		add(textfield_Email);
 		
-		btn_Add = new JButton("Add");
+		btn_Add = new JButton("Thêm");
 		btn_Add.setIcon(new ImageIcon(PanelEmployee.class.getResource("/icon/Add@0.3x.png")));
 		btn_Add.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
 		btn_Add.setBounds(873, 16, 129, 48);
@@ -135,9 +136,7 @@ public class PanelCustomer extends JPanel {
 		btn_Add.setFont(new Font("Times New Roman", Font.PLAIN, 25));
 		add(btn_Add);
 		
-	
-		
-		btnFix = new JButton("Modify");
+		btnFix = new JButton("Sửa");
 		btnFix.setBounds(873, 118, 129, 48);
 		btnFix.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
 		btnFix.setIcon(new ImageIcon(PanelEmployee.class.getResource("/icon/Edit@0.3x.png")));
@@ -145,14 +144,22 @@ public class PanelCustomer extends JPanel {
 		btnFix.setFont(new Font("Times New Roman", Font.PLAIN, 25));
 		add(btnFix);
 	
-		btn_Save = new JButton("Save");
+		btn_Save = new JButton("Lưu");
 		btn_Save.setIcon(new ImageIcon(PanelEmployee.class.getResource("/icon/Save@0.2x.png")));
 		btn_Save.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
 		btn_Save.setFont(new Font("Times New Roman", Font.PLAIN, 25));
 		btn_Save.setBackground(Color.WHITE);
-		btn_Save.setBounds(873, 209, 129, 48);
+		btn_Save.setBounds(680, 208, 129, 48);
 		add(btn_Save);
-
+		
+		btn_Reload = new JButton("Làm mới");
+		btn_Reload.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
+		btn_Reload.setFont(new Font("Times New Roman", Font.PLAIN, 25));
+		btn_Reload.setBackground(Color.WHITE);
+		btn_Reload.setBounds(873, 208, 129, 48);
+		add(btn_Reload);
+		
+		
 		
 		JSpinner spinner = new JSpinner();
 		spinner.setBounds(160, 276, 107, -3);
@@ -188,6 +195,14 @@ public class PanelCustomer extends JPanel {
 		textField_Find.setColumns(10);
 		
 		panelCustomerController =new PanelCustomerController(this);
+	}
+
+	public JButton getBtn_Reload() {
+		return btn_Reload;
+	}
+
+	public void setBtn_Reload(JButton btn_Reload) {
+		this.btn_Reload = btn_Reload;
 	}
 
 	public JTextField getTextField_Find() {

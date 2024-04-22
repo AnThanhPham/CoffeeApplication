@@ -95,6 +95,7 @@ public class PanelProduct extends JPanel {
 		this.add(centerPanel, BorderLayout.CENTER);
 		this.add(eastPanel, BorderLayout.EAST);
 		this.add(westPanel, BorderLayout.WEST);
+		//southCenterPanel.setBackground(new Color(0x63422a));
 
 		// Set centerPanel
 		centerPanel.setLayout(new BorderLayout());

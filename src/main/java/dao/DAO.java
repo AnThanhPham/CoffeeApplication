@@ -7,8 +7,12 @@ public class DAO {
 	protected static Connection conn;
 	private static final String db_name = "coffeeapplication";
 	private static final String userName = "root";
+<<<<<<< HEAD
 
 	private static final String password = "A123456@";
+=======
+	private static final String password = "AnThanhPham098@";
+>>>>>>> 0283fca01da60bfbff4de578dd1027aca386b430
 
 
 	DAO() {
