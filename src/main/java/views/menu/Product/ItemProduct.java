@@ -9,6 +9,7 @@ import java.awt.event.MouseListener;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.text.PlainDocument;
 
 import model.ProductModel;
 
@@ -30,8 +31,14 @@ public class ItemProduct extends JPanel {
 //		centerItem.setIcon(image);
 		centerItem.setOpaque(true);
 		centerItem.setBackground(Color.lightGray);
-		
+//		if(model.getName().length()>=10 ) {
+//			String trimmedName = model.getName().substring(0, 17) + "...";
+//			southItem.setText("<html>"+"<html><div style=' overflow: hidden; text-overflow: ellipsis;'>" +
+//					"Tên: "+ trimmedName+ "<br>"+"Giá: "+ model.getPrice()+"</html>");
+//
+//		}else
 		southItem.setText("<html>"+"Tên: "+model.getName()+ "<br>"+"Giá: "+ model.getPrice()+"</html>");
+		
 		southItem.setForeground(Color.darkGray);
 		southItem.setFont(new Font("Times New roman",Font.PLAIN,20));
 		

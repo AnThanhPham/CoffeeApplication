@@ -17,8 +17,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 
 import controller.MainController;
@@ -76,15 +74,6 @@ public class Main extends JFrame {
 		pnlMenu.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 5, 0, 0, new java.awt.Color(239, 238, 244)));
 		getContentPane().add(pnlMenu,BorderLayout.WEST);
 		pnlMenu.setLayout(new GridLayout(0,1,0,30));
-		getContentPane().setLayout(null);
-		getContentPane().setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize());
-
-		pnlMenu = new JPanel();
-		pnlMenu.setBounds(0, 0, 286, 826);
-		pnlMenu.setBackground(new java.awt.Color(239, 238, 244));
-		pnlMenu.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 5, 0, 0, new java.awt.Color(239, 238, 244)));
-		getContentPane().add(pnlMenu);
-		pnlMenu.setLayout(null);
 
 		btnShop = new JButton("New button");
 		btnShop.setFont(new Font("Tahoma", Font.BOLD, 14));
