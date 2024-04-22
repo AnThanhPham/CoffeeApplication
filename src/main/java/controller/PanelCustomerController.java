@@ -166,40 +166,6 @@ public class PanelCustomerController{
 				}
 			});
 			
-//			panelCustomer.getTextField_Find().addKeyListener(new KeyAdapter() {
-//				public void keyReleased(KeyEvent e) {
-//					JTextField textField = (JTextField) e.getSource();
-//					String text = textField.getText();
-//					renderTableByFullName(text);
-//				}
-//
-//				public void keyTyped(KeyEvent e) {
-//				}
-//
-//				public void keyPressed(KeyEvent e) {
-//				}
-//			});
-//			panelCustomer.getComboBox_MaKH().addActionListener(new ActionListener() {
-//		        @SuppressWarnings("unchecked")
-//				@Override
-//		        public void actionPerformed(ActionEvent e) {
-//					JComboBox<Object> comboBox = (JComboBox<Object>) e.getSource();
-//		            String selectedID = (String) comboBox.getSelectedItem().toString();
-//
-//		            if (!("Ma Khach Hang").equals(selectedID)) {
-//		                ArrayList<CustomerModel> filteredData = new ArrayList<>();
-//		                // Lọc dữ liệu tương ứng với ID được chọn
-//		                for (CustomerModel customer : CustomerDao.CustomerList()) {
-//		                    if (selectedID.equals(Integer.toString(customer.getID()))) {
-//		                        filteredData.add(customer);
-//		                    }
-//		                }
-//		                renderTable(filteredData);
-//		            } else {
-//		                renderTable(CustomerDao.CustomerList());
-//		            }
-//		        }
-//		    });
 					
 			panelCustomer.getTextField_Find().addKeyListener(new KeyAdapter() {
 			    public void keyReleased(KeyEvent e) {
@@ -314,7 +280,10 @@ public class PanelCustomerController{
 			res.append("Phone không được để trống\n");
 			return false;
 		}
-		
+		if(!ValidateUtils.checkPhoneNumber(Customer.getPhone())) {
+			res.append("Số điện thoại không hợp lệ\n");
+			return false;
+		}
 		if(ValidateUtils.checkEmptyAndNull(Customer.getAddress())) {
 			res.append("Địa chỉ không được để trống\n");
 			return false;
@@ -368,7 +337,7 @@ public class PanelCustomerController{
 	    for (String x : NameList) {
 	        String tmp = x.substring(0,1);
 	        String tam = x.substring(1);
-	        res += tmp.toUpperCase() + tam + " ";
+	        res += tmp.toUpperCase() + tam.toLowerCase() + " ";
 	    }
 	    return res.trim(); 
 	}

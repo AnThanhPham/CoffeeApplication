@@ -18,18 +18,30 @@ import javax.swing.JTextField;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
+
+import dao.BillDetailsDAO;
 import dao.CategoryDAO;
 import dao.CustomerDao;
+import dao.ProductDAO;
+import model.BillDetailsModel;
 import model.CategoryModel;
 import model.CustomerModel;
+import model.ProductModel;
 import util.MapUtil;
 import util.ValidateUtils;
 import views.menu.PanelCategory;
+import views.menu.PanelProduct;
 
 
 public class PanelCategoryController {
-	private PanelCategory panelcategory;
+	private PanelCategory panelcategory;	
 	private CategoryDAO categoryDAO = new CategoryDAO();
+	
+	private PanelProduct panelproduct;
+	private ProductDAO productDAO = new ProductDAO();
+	
+	private BillDetailsModel billdetailsmodel;
+	private BillDetailsDAO billdetailsDAO =new BillDetailsDAO();
 	
 	public PanelCategoryController(PanelCategory panelcategory) {
 		this.panelcategory = panelcategory;
@@ -141,6 +153,13 @@ public class PanelCategoryController {
 						if(result == JOptionPane.OK_OPTION) {
 							for(int x : rowSelects) {
 								String id = MapUtil.convertObjectToString(panelcategory.getTable_Category().getValueAt(x, 0));
+								
+								BillDetailsModel detail= billdetailsDAO.findByProductID(id);
+								billdetailsDAO.deletefromProduct(detail);
+								
+								ProductModel product = productDAO.findByIDCategory(id);
+								productDAO.deletefromCategory(product);
+								
 								CategoryModel category =categoryDAO.findByID(id);
 								categoryDAO.delete(category);
 							}
@@ -285,7 +304,7 @@ public class PanelCategoryController {
 	    for (String x : NameList) {
 	        String tmp = x.substring(0,1);
 	        String tam = x.substring(1);
-	        res += tmp.toUpperCase() + tam + " ";
+	        res += tmp.toUpperCase() + tam.toLowerCase() + " ";
 	    }
 	    return res.trim(); 
 	}
