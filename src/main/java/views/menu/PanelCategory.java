@@ -52,13 +52,13 @@ public class PanelCategory extends JPanel {
 		label_ID.setFont(new Font("SansSerif", Font.PLAIN, 16));
 		add(label_ID);
 		
-		label_Catagory = new Label("Category:");
+		label_Catagory = new Label("Loại:");
 		label_Catagory.setForeground(new Color(0, 128, 0));
 		label_Catagory.setBounds(45, 111, 91, 46);
 		label_Catagory.setFont(new Font("SansSerif", Font.PLAIN, 16));
 		add(label_Catagory);
 		
-		label_des = new Label("Description:");
+		label_des = new Label("Mô tả:");
 		label_des.setForeground(new Color(0, 128, 0));
 		label_des.setFont(new Font("SansSerif", Font.PLAIN, 16));
 		label_des.setBounds(45, 200, 91, 46);
@@ -74,7 +74,7 @@ public class PanelCategory extends JPanel {
 		add(input_ID);
 		input_ID.setColumns(10);
 		
-		btn_Add = new JButton("Add");
+		btn_Add = new JButton("Thêm");
 		btn_Add.setIcon(new ImageIcon(PanelEmployee.class.getResource("/icon/Add@0.3x.png")));
 		btn_Add.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
 		btn_Add.setBounds(151, 416, 91, 46);
@@ -84,7 +84,7 @@ public class PanelCategory extends JPanel {
 		
 	
 		
-		btnFix = new JButton("Modify");
+		btnFix = new JButton("Sửa");
 		btnFix.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
 		btnFix.setIcon(new ImageIcon(PanelEmployee.class.getResource("/icon/Edit@0.3x.png")));
 		btnFix.setBounds(266, 416, 107, 46);
@@ -93,7 +93,7 @@ public class PanelCategory extends JPanel {
 		add(btnFix);
 
 		
-		btnDelete = new JButton("Delete");
+		btnDelete = new JButton("Xóa");
 		btnDelete.setIcon(new ImageIcon(PanelEmployee.class.getResource("/icon/Trash@0.3x.png")));
 		btnDelete.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
 		btnDelete.setBounds(397, 415, 107, 46);
@@ -102,7 +102,7 @@ public class PanelCategory extends JPanel {
 		add(btnDelete);
 
 		
-		btn_Save = new JButton("Save");
+		btn_Save = new JButton("Lưu");
 		btn_Save.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			}
