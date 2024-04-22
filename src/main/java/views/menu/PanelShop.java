@@ -112,7 +112,7 @@ public class PanelShop extends JPanel {
 		jPanelHead.add(jTextFieldMaHD);
 
 		// Tao ma kh
-		jLabelMaKH = new JLabel("Tên KH");
+		jLabelMaKH = new JLabel("Ma KH");
 		jLabelMaKH.setFont(font_0);
 		jLabelMaKH.setBounds(165, 0, 60, 30);
 		jTextFieldMaKH = new JTextField();

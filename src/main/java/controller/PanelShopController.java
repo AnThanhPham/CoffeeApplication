@@ -121,6 +121,7 @@ public class PanelShopController {
 				panelShop.getjTextFieldMaHD().setText(nextID + "");
 				resetInput();
 				EnableInput();
+				JOptionPane.showMessageDialog(panelShop, "Vui lòng thêm sản phẩm ");
 			}
 
 		});
@@ -177,7 +178,7 @@ public class PanelShopController {
 								double gia = Double.parseDouble(giaSP);
 								int quantity = Integer.parseInt(soLuong);
 								JOptionPane.showMessageDialog(panelShop, "Thêm sản phẩm thành công");
-								JOptionPane.showMessageDialog(panelShop, "Vui lòng ấn xác nhận");
+								JOptionPane.showMessageDialog(panelShop, "Nhấn xác nhận nếu bạn không chọn thêm sản phẩm");
 
 							} catch (NumberFormatException e2) {
 								JOptionPane.showMessageDialog(panelShop, "Số lượng phải là số");
@@ -248,7 +249,9 @@ public class PanelShopController {
 						panelShop.getJtable().setValueAt(sum_row, idx, 4);
 						sum += sum_row;
 					}
+					
 					panelShop.getTextTien().setText(sum + "");
+					JOptionPane.showMessageDialog(panelShop, "Sửa thành công");
 
 				} else {
 					if (panelShop.getJtable().getRowCount() == 0) {
@@ -265,8 +268,8 @@ public class PanelShopController {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
-				if(panelShop.getJtable().getModel().getRowCount()==0) {
+
+				if (panelShop.getJtable().getModel().getRowCount() == 0) {
 					JOptionPane.showMessageDialog(panelShop, "Vui lòng thêm sản phẩm trước khi xác nhận");
 					return;
 				}
@@ -306,21 +309,8 @@ public class PanelShopController {
 					tmpBillDetails.setProductID(billDao.findProductByName(key).getID());
 					BillDetaList.add(tmpBillDetails);
 				});
+				billDao.insert(tmp);
 
-				if (ValidateUtils.checkEmptyAndNull(Bill_ID)) {
-					// them moi
-					int nextID = billDao.findAll().get(billDao.findAll().size() - 1).getID() + 1;
-					// System.out.println(nextID);
-					if (validateForm(tmp, messageError)) {
-						tmp.setID(nextID);
-						if (panelShop.getJtable().getModel().getRowCount() == 0)
-							JOptionPane.showMessageDialog(panelShop, "Hóa đơn chưa có sản phẩm ");
-						else {
-							billDao.insert(tmp);
-							JOptionPane.showMessageDialog(panelShop, "Thêm hóa đơn thành công");
-						}
-					}
-				}
 				System.out.println(panelShop.getJtable().getModel().getRowCount());
 				// add vào billdetails
 				BillDetailsModel billDetailsModel = new BillDetailsModel();
@@ -348,6 +338,7 @@ public class PanelShopController {
 		LocalDateTime current = LocalDateTime.now();
 		String formatted = current.format(formatter);
 		panelShop.getjTextFieldNgayLapHD().setText(formatted);
+		panelShop.getComBox().setSelectedItem("Cash");
 		panelShop.getTextTien().setText("");
 	}
 
@@ -357,8 +348,6 @@ public class PanelShopController {
 		panelShop.getjTextFieldNgayLapHD().setEnabled(true);
 		panelShop.getComBox().setEnabled(true);
 		panelShop.getTenNV().setEnabled(true);
-		// panelShop.getTextTien().setEnabled(true);
-//			panelShop.getjTextFieldMaHD().setEnabled(true);
 
 	}
 
@@ -373,16 +362,5 @@ public class PanelShopController {
 		panelShop.getComBox().setEnabled(false);
 	}
 
-	public boolean validateForm(BillModel bill, StringBuilder res) {
-		if (!billDao.checkUser(bill.getUser().getID() + "")) {
-			res.append("Người dùng không tồn tại \n");
-			return false;
-		}
-		if (!billDao.checkTable(bill.getTable().getID() + "")) {
-			res.append("Bàn không tồn tại \n");
-			return false;
-		}
-		return true;
 
-	}
 }
