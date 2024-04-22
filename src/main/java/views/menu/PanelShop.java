@@ -103,18 +103,18 @@ public class PanelShop extends JPanel {
 		jPanelHead.setBackground(null);
 		jPanelHead.setBounds(new Rectangle(59, 43, 1428, 150));
 		jTextFieldMaHD = new JTextField();
-		jTextFieldMaHD.setBounds(65, 0, 75, 30);
+		jTextFieldMaHD.setBounds(55, 0, 70, 30);
 		jTextFieldMaHD.setHorizontalAlignment(JTextField.CENTER);
 		jTextFieldMaHD.setPreferredSize(new Dimension(80, 30));
 		jTextFieldMaHD.setEnabled(false);
 		jPanelHead.add(jTextFieldMaHD);
 
 		// Tao ma kh
-		jLabelMaKH = new JLabel("Ma KH");
+		jLabelMaKH = new JLabel("SĐT KH");
 		jLabelMaKH.setFont(font_0);
-		jLabelMaKH.setBounds(165, 0, 60, 30);
+		jLabelMaKH.setBounds(143, 0, 60, 30);
 		jTextFieldMaKH = new JTextField();
-		jTextFieldMaKH.setBounds(225, 0, 100, 30);
+		jTextFieldMaKH.setBounds(202, 0, 100, 30);
 		jTextFieldMaKH.setHorizontalAlignment(JTextField.CENTER);
 		jTextFieldMaKH.setEnabled(false);
 
@@ -124,11 +124,11 @@ public class PanelShop extends JPanel {
 //         //Tao ma nv
 		tenNV = new JLabel("Tên NV");
 		tenNV.setFont(font_0);
-		tenNV.setBounds(347, 0, 50, 30);
+		tenNV.setBounds(405, 0, 50, 30);
 		jPanelHead.add(tenNV);
 		TenNV = new JComboBox<String>();
 
-		TenNV.setBounds(416, 0, 100, 30);
+		TenNV.setBounds(465, -1, 100, 30);
 		jPanelHead.add(TenNV);
 //
 		// Tao ngay lap hoa don
@@ -137,17 +137,17 @@ public class PanelShop extends JPanel {
 		jLabelNgayLapHD.setBounds(0, 50, 140, 30);
 		jTextFieldNgayLapHD = new JTextField();
 //		jTextFieldNgayLapHD.setText(date+"");
-		jTextFieldNgayLapHD.setBounds(140, 50, 185, 30);
+		jTextFieldNgayLapHD.setBounds(140, 53, 255, 30);
 		jPanelHead.add(jLabelNgayLapHD);
 		jPanelHead.add(jTextFieldNgayLapHD);
 
 		jLabelBan = new JLabel("Bàn Số");
 		jLabelBan.setFont(font_0);
-		jLabelBan.setBounds(347, 50, 60, 30);
+		jLabelBan.setBounds(405, 50, 60, 30);
 		jPanelHead.add(jLabelBan);
 
 		Table_Number = new JComboBox<String>();
-		Table_Number.setBounds(416, 50, 100, 30);
+		Table_Number.setBounds(465, 50, 100, 30);
 		Table_Number.setFont(font_0);
 		jPanelHead.add(Table_Number);
 //         //Button tao xac nhan 
@@ -158,7 +158,7 @@ public class PanelShop extends JPanel {
 		});
 		jButtonAdd.setFont(font_0);
 		jButtonAdd.setHorizontalAlignment(JButton.CENTER);
-		jButtonAdd.setBounds(540, 50, 170, 30);
+		jButtonAdd.setBounds(579, 50, 170, 30);
 		jButtonAdd.setBackground(Color.gray);
 		jPanelHead.add(jButtonAdd);
 
@@ -170,25 +170,25 @@ public class PanelShop extends JPanel {
 		jButtonOK.setFont(font_0);
 
 		jButtonOK.setBackground(Color.gray);
-		jButtonOK.setBounds(760, 50, 170, 30);
+		jButtonOK.setBounds(771, 50, 170, 30);
 		jPanelHead.add(jButtonOK);
 
 		// tao duong ke
 		JSeparator jsep = new JSeparator(SwingConstants.HORIZONTAL);
-		jsep.setBounds(0, 120, 930, 3);
+		jsep.setBounds(0, 121, 947, 2);
 		jPanelHead.add(jsep);
 
 		// Add phan head vao this
 		this.add(jPanelHead);
 
 		textTien = new JTextField();
-		textTien.setBounds(620, 0, 100, 30);
+		textTien.setBounds(649, 0, 100, 30);
 		textTien.setHorizontalAlignment(JTextField.CENTER);
 		jPanelHead.add(textTien);
 
 		JLabel lblNewLabel = new JLabel("Tổng Tiền");
 		lblNewLabel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-		lblNewLabel.setBounds(540, 0, 77, 30);
+		lblNewLabel.setBounds(577, 0, 77, 30);
 		jPanelHead.add(lblNewLabel);
 
 		// Tao ma hd
@@ -198,13 +198,18 @@ public class PanelShop extends JPanel {
 		jLabelMaHD.setFont(font_0);
 
 		comBox = new JComboBox();
-		comBox.setBounds(830, 0, 100, 30);
+		comBox.setBounds(838, 2, 100, 30);
 		jPanelHead.add(comBox);
 
 		JLabel lblNewLabel_1 = new JLabel("Thanh Toán");
 		lblNewLabel_1.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-		lblNewLabel_1.setBounds(740, 0, 90, 30);
+		lblNewLabel_1.setBounds(760, 0, 90, 30);
 		jPanelHead.add(lblNewLabel_1);
+		
+		JButton btnNewButton = new JButton("Kiểm Tra");
+		btnNewButton.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		btnNewButton.setBounds(305, 0, 90, 30);
+		jPanelHead.add(btnNewButton);
 	}
 
 	public void CenterPage() {
@@ -253,16 +258,17 @@ public class PanelShop extends JPanel {
 		jtable.setFocusable(false);
 		jtable.setIntercellSpacing(new Dimension(0, 0));
 		jtable.getTableHeader().setFont(font_0);
+		
 		jtable.getTableHeader().setOpaque(false);
 		jtable.getTableHeader().setBackground(new Color(139, 122, 101));
-		jtable.getTableHeader().setForeground(Color.WHITE);
+		jtable.getTableHeader().setForeground(Color.BLACK);
 		jtable.setRowHeight(30);
 		jtable.setShowVerticalLines(true);
-		jtable.setSelectionBackground(Color.DARK_GRAY);
+	//	jtable.setSelectionBackground(Color.DARK_GRAY);
 
 		// add table vào Scroll
 		JScrollPane jScroll = new JScrollPane(jtable);
-		jScroll.setBounds(new Rectangle(31, 10, 935, 450));
+		jScroll.setBounds(new Rectangle(31, 10, 947, 450));
 		jScroll.setBackground(null);
 
 		chiTietView.add(jScroll);
@@ -335,10 +341,10 @@ public class PanelShop extends JPanel {
 		jTable_1.getTableHeader().setFont(new Font("Segoe UI", Font.PLAIN, 14));
 		jTable_1.getTableHeader().setOpaque(false);
 		jTable_1.getTableHeader().setBackground(new Color(139, 122, 101));
-		jTable_1.getTableHeader().setForeground(Color.WHITE);
+		jTable_1.getTableHeader().setForeground(Color.BLACK);
 		jTable_1.setRowHeight(50);
 		jTable_1.setShowVerticalLines(true);
-		jTable_1.setSelectionBackground(new Color(0xE6FFEC));
+	//	jTable_1.setSelectionBackground(new Color(0xE6FFEC));
 
 		JScrollPane scrollPane = new JScrollPane(jTable_1);
 		scrollPane.setBounds(new Rectangle(370, 90, 400, 450));

@@ -91,11 +91,10 @@ public class PanelShopController {
 		DisableInput();
 		DefaultTableModel modelTable = new DefaultTableModel();
 
-		String column[] = { "Mã Sản Phẩm", "Tên Sản Phẩm", "Số Lượng", "Đơn Giá", "Tổng Tiền" };
-		for (String x : column) {
-			modelTable.addColumn(x);
-		}
-
+//		String column[] = { "Mã Sản Phẩm", "Tên Sản Phẩm", "Số Lượng", "Đơn Giá", "Tổng Tiền" };
+//		for (String x : column) {
+//			modelTable.addColumn(x);
+//		}
 		if (panelShop.getjTextFieldMaHD().getText() == "") {
 			JOptionPane.showMessageDialog(panelShop, "Vui lòng thêm hóa đơn");
 		}
@@ -181,10 +180,10 @@ public class PanelShopController {
 						String soLuong = panelShop.getjText().getText();
 
 						if (checkQuantity(soLuong)) {
-								JOptionPane.showMessageDialog(panelShop, "Thêm sản phẩm thành công");
-						} else if(ValidateUtils.checkEmptyAndNull(soLuong)){
+							JOptionPane.showMessageDialog(panelShop, "Thêm sản phẩm thành công");
+						} else if (ValidateUtils.checkEmptyAndNull(soLuong)) {
 							JOptionPane.showMessageDialog(panelShop, "Vui lòng điền đủ thông tin ");
-						}else {
+						} else {
 							JOptionPane.showMessageDialog(panelShop, "Số lượng sản phẩm không hợp lệ");
 						}
 						// add từng dòng về bảng chính
@@ -206,7 +205,7 @@ public class PanelShopController {
 		});
 
 		// Xóa sản phẩm
-		
+
 		panelShop.getjButtonXoa().addActionListener(new ActionListener() {
 
 			@Override
@@ -243,15 +242,15 @@ public class PanelShopController {
 				if (panelShop.getJtable().getSelectedRowCount() == 1) {
 					String value = (String) JOptionPane.showInputDialog(panelShop, "Nhập số lượng muốn thay đổi",
 							"Thông báo", JOptionPane.PLAIN_MESSAGE);
-					if(checkQuantity(value)) {
+					if (checkQuantity(value)) {
 						panelShop.getJtable().setValueAt(value, idx, 2);
 						JOptionPane.showMessageDialog(panelShop, "Sửa thành công");
 						panelShop.getJtable().clearSelection();
-					}else {
+					} else {
 						JOptionPane.showMessageDialog(panelShop, "Số lượng không hợp lệ vui lòng nhập lại");
-						
+
 					}
-					
+
 					for (int i = 0; i < panelShop.getJtable().getModel().getRowCount(); i++) {
 						float quantity = Float.parseFloat(panelShop.getJtable().getValueAt(i, 2).toString());
 						float price = Float.parseFloat(panelShop.getJtable().getValueAt(i, 3).toString());
@@ -259,9 +258,8 @@ public class PanelShopController {
 						panelShop.getJtable().setValueAt(sum_row, i, 4);
 						sum += sum_row;
 					}
-					
-					  panelShop.getTextTien().setText(String.valueOf(sum));
-				
+
+					panelShop.getTextTien().setText(String.valueOf(sum));
 
 				} else {
 					if (panelShop.getJtable().getRowCount() == 0) {
@@ -283,7 +281,9 @@ public class PanelShopController {
 					JOptionPane.showMessageDialog(panelShop, "Vui lòng thêm sản phẩm trước khi xác nhận");
 					return;
 				}
-				if(ValidateUtils.checkEmptyAndNull(panelShop.getjTextFieldMaKH().getText()  )) {
+				System.out.println(panelShop.getTenNV().getItemAt(0));
+				
+				if (ValidateUtils.checkEmptyAndNull(panelShop.getjTextFieldMaKH().getText())|| panelShop.getTenNV().getItemAt(0).equals("Tên NV")|| panelShop.getComBox().getItemAt(0).equals("Chọn bàn")) {
 					JOptionPane.showMessageDialog(panelShop, "Vui lòng điền đủ thông tin");
 					return;
 				}
@@ -294,7 +294,6 @@ public class PanelShopController {
 				String Cus_ID = panelShop.getjTextFieldMaKH().getText();
 				String Payment_Name = panelShop.getComBox().getSelectedItem().toString();
 				String dateWork = panelShop.getjTextFieldNgayLapHD().getText();
-				
 
 				BillModel tmp = new BillModel();
 
@@ -315,20 +314,20 @@ public class PanelShopController {
 				tmp.setPayment(payment);
 				tmp.setPaymentID(payment.getID());
 				try {
-        			if(!ValidateUtils.checkEmptyAndNull(dateWork)) {
-        				SimpleDateFormat DateInput = new SimpleDateFormat("dd-MM-yyyy");
-        	            SimpleDateFormat DateOutput = new SimpleDateFormat("yyyy-MM-dd");
-        	            java.util.Date date = DateInput.parse(dateWork);
-        	        
-        	            String outputParse = DateOutput.format(date);
-        	            tmp.setBillDate(java.sql.Date.valueOf(outputParse));
-        	        
-        			}
-        			else tmp.setBillDate(null);
+					if (!ValidateUtils.checkEmptyAndNull(dateWork)) {
+						SimpleDateFormat DateInput = new SimpleDateFormat("dd-MM-yyyy");
+						SimpleDateFormat DateOutput = new SimpleDateFormat("yyyy-MM-dd");
+						java.util.Date date = DateInput.parse(dateWork);
+
+						String outputParse = DateOutput.format(date);
+						tmp.setBillDate(java.sql.Date.valueOf(outputParse));
+
+					} else
+						tmp.setBillDate(null);
 				} catch (Exception e1) {
 					e1.printStackTrace();
-				}   
-				
+				}
+
 				billDao.insert(tmp);
 //add vào billdetails
 				ArrayList<BillDetailsModel> BillDetaList = new ArrayList<BillDetailsModel>();
@@ -339,14 +338,11 @@ public class PanelShopController {
 					tmpBillDetails.setProductID(billDao.findProductByName(key).getID());
 					BillDetaList.add(tmpBillDetails);
 				});
-		
 
-//				System.out.println(panelShop.getJtable().getModel().getRowCount());
 				// add vào billdetails
-				
-				
+
 				for (int i = 0; i < panelShop.getJtable().getModel().getRowCount(); i++) {
-					BillDetailsModel billDetailsModel = new BillDetailsModel();//tạo đối tượng mới
+					BillDetailsModel billDetailsModel = new BillDetailsModel();// tạo đối tượng mới
 					billDetailsModel.setID(billDetailsModel.getID());
 
 					String quantity = panelShop.getJtable().getValueAt(i, 2).toString();
@@ -364,7 +360,7 @@ public class PanelShopController {
 
 	public void resetInput() {
 		panelShop.getjTextFieldMaKH().setText("");
-		panelShop.getTable_Number().setSelectedItem("Chọn bàn"); 
+		panelShop.getTable_Number().setSelectedItem("Chọn bàn");
 		panelShop.getTenNV().setSelectedItem("Tên NV");
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 		LocalDateTime current = LocalDateTime.now();
@@ -377,7 +373,7 @@ public class PanelShopController {
 	public void EnableInput() {
 		panelShop.getjTextFieldMaKH().setEnabled(true);
 		panelShop.getTable_Number().setEnabled(true);
-		//panelShop.getjTextFieldNgayLapHD().setEnabled(true);
+		// panelShop.getjTextFieldNgayLapHD().setEnabled(true);
 		panelShop.getComBox().setEnabled(true);
 		panelShop.getTenNV().setEnabled(true);
 
@@ -393,11 +389,13 @@ public class PanelShopController {
 		panelShop.getTextTien().setEnabled(false);
 		panelShop.getComBox().setEnabled(false);
 	}
+
 	public static boolean checkQuantity(String quantity) {
-	    String regex = "^[0-9]\\d{0,18}$"; // Chuỗi số dương không có ký tự đặc biệt, có tối đa 19 chữ số (từ 1 đến 9999999999999999999)
-	    Pattern pattern = Pattern.compile(regex);
-	    Matcher matcher = pattern.matcher(quantity);
-	    return matcher.matches();
+		String regex = "^[0-9]\\d{0,18}$"; // Chuỗi số dương không có ký tự đặc biệt, có tối đa 19 chữ số (từ 1 đến
+											// 9999999999999999999)
+		Pattern pattern = Pattern.compile(regex);
+		Matcher matcher = pattern.matcher(quantity);
+		return matcher.matches();
 	}
 
 }
