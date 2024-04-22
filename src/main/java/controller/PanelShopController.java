@@ -70,7 +70,7 @@ public class PanelShopController {
 	private DefaultTableModel tableModel = new DefaultTableModel();
 	private Vector<String> data;
 	private ArrayList<ProductModel> list_1 = panelDAO.getInstance().findProductAll();
-	private LinkedHashMap<String, String> List = new LinkedHashMap<String, String>(); 
+	private LinkedHashMap<String, String> List = new LinkedHashMap<String, String>();
 	private float sumMoney;
 	PanelBill panelBill;
 	TableModel taModel = new TableModel();
@@ -85,7 +85,7 @@ public class PanelShopController {
 	}
 
 	public void addEventHeader() {
-		
+
 		DisableInput();
 		DefaultTableModel modelTable = new DefaultTableModel();
 
@@ -99,15 +99,15 @@ public class PanelShopController {
 		for (TableModel x : billDao.findTableByStatus("Available")) {
 			panelShop.getTable_Number().addItem(x.getTableNumber());
 		}
-		
-		for(PaymentModel x : billDao.findAllPayment()) {
+
+		for (PaymentModel x : billDao.findAllPayment()) {
 			panelShop.getComBox().addItem(x.getPaymentName());
 		}
 
 		// Thêm hóa đơn
-		//List<BillModel> model= billDao.findAll();
-		
-		BillModel model= new BillModel();
+		// List<BillModel> model= billDao.findAll();
+
+		BillModel model = new BillModel();
 		panelShop.getjButtonAdd().addActionListener(new ActionListener() {
 
 			@Override
@@ -117,12 +117,8 @@ public class PanelShopController {
 				// reset toàn bộ bảng
 				((DefaultTableModel) panelShop.getJtable().getModel()).setRowCount(0);
 				// lấy mã id lớn nhất
-			int nextID = billDao.findAll().get(billDao.findAll().size()-1).getID()+1;
-				
-				panelShop.getjTextFieldMaHD().setText(nextID +"");
-				
-				//model.setID((int)panelShop.getjTextFieldMaHD());
-				
+				int nextID = billDao.findAll().get(billDao.findAll().size() - 1).getID() + 1;
+				panelShop.getjTextFieldMaHD().setText(nextID + "");
 				resetInput();
 				EnableInput();
 			}
@@ -139,7 +135,7 @@ public class PanelShopController {
 					JOptionPane.showMessageDialog(panelShop, "Vui lòng thêm hóa đơn trước khi thêm sản phẩm.");
 					return;
 				}
-				
+
 				panelShop.myTable();
 				// Trả về thông tin sản phẩm
 				panelShop.getjTable_1().getSelectionModel().addListSelectionListener(new ListSelectionListener() {
@@ -150,7 +146,8 @@ public class PanelShopController {
 							String id = MapUtil.convertObjectToString(panelShop.getjTable_1().getValueAt(selectIdx, 0));
 							String name = MapUtil
 									.convertObjectToString(panelShop.getjTable_1().getValueAt(selectIdx, 1));
-							String price = MapUtil.convertObjectToString(panelShop.getjTable_1().getValueAt(selectIdx, 2));
+							String price = MapUtil
+									.convertObjectToString(panelShop.getjTable_1().getValueAt(selectIdx, 2));
 
 							panelShop.getjTextMaSP().setText(id);
 							panelShop.getjTextTenSP().setText(name);
@@ -181,7 +178,7 @@ public class PanelShopController {
 								int quantity = Integer.parseInt(soLuong);
 								JOptionPane.showMessageDialog(panelShop, "Thêm sản phẩm thành công");
 								JOptionPane.showMessageDialog(panelShop, "Vui lòng ấn xác nhận");
-								
+
 							} catch (NumberFormatException e2) {
 								JOptionPane.showMessageDialog(panelShop, "Số lượng phải là số");
 							}
@@ -238,16 +235,20 @@ public class PanelShopController {
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 
+				float sum = 0;
 				int idx = panelShop.getJtable().getSelectedRow();
 				if (panelShop.getJtable().getSelectedRowCount() == 1) {
-			//		int SoLuong = (int)panelShop.getJtable().getModel().getValueAt(idx, 2);
-					panelShop.getJtable().editCellAt(idx, 2);
-					BillDetailsModel billDetailsModel = new BillDetailsModel();
-//					for(int i = 0; i<= panelShop.getJtable().getModel().getColumnCount();i++) {
-//						String quantity = panelShop.getJtable().getValueAt(i, 2).toString();
-//						billDetailsModel.setQuantityProduct(Integer.parseInt(quantity));
-//						billDetailsDao.update(billDetailsModel);
-//					}
+					String value = (String) JOptionPane.showInputDialog(panelShop, "Nhập số lượng muốn thay đổi",
+							"Thông báo", JOptionPane.PLAIN_MESSAGE);
+					panelShop.getJtable().setValueAt(value, idx, 2);
+					for (int i = 0; i < panelShop.getJtable().getModel().getRowCount(); i++) {
+						float quantity = Float.parseFloat(panelShop.getJtable().getValueAt(i, 2).toString());
+						float price = Float.parseFloat(panelShop.getJtable().getValueAt(i, 3).toString());
+						float sum_row = quantity * price;
+						panelShop.getJtable().setValueAt(sum_row, idx, 4);
+						sum += sum_row;
+					}
+					panelShop.getTextTien().setText(sum + "");
 
 				} else {
 					if (panelShop.getJtable().getRowCount() == 0) {
@@ -257,8 +258,6 @@ public class PanelShopController {
 					}
 
 				}
-				
-
 			}
 		});
 		// Xác nhận thêm vào database
@@ -266,20 +265,24 @@ public class PanelShopController {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				
+				if(panelShop.getJtable().getModel().getRowCount()==0) {
+					JOptionPane.showMessageDialog(panelShop, "Vui lòng thêm sản phẩm trước khi xác nhận");
+					return;
+				}
 				StringBuilder messageError = new StringBuilder("");
 				String Bill_ID = panelShop.getjTextFieldMaKH().getText();
 				String User_Name = panelShop.getTenNV().getSelectedItem().toString();
 				String Table_Number = panelShop.getTable_Number().getSelectedItem().toString();
 				String Cus_ID = panelShop.getjTextFieldMaKH().getText();
 				String Payment_Name = panelShop.getComBox().getSelectedItem().toString();
-				
+
 				BillModel tmp = new BillModel();
-				
+
 				CustomerModel cusDao = customerDao.findByID(Cus_ID);
 				tmp.setCustomer(cusDao);
 				tmp.setCustomerID(cusDao.getID());
-			
-				
+
 				TableModel tablee = billDao.findTableByNumber(Table_Number);
 				tmp.setTable(tablee);
 				tmp.setTableID(tablee.getID());
@@ -287,43 +290,41 @@ public class PanelShopController {
 				UserModel user = billDao.findUserByUserName(User_Name);
 				tmp.setUser(user);
 				tmp.setUserID(user.getID());
-				
+
 				tmp.setBillTotal(Float.parseFloat(panelShop.getTextTien().getText()));
 				PaymentModel payment = billDao.findPaymentByName(Payment_Name);
 				tmp.setPayment(payment);
 				tmp.setPaymentID(payment.getID());
-				
+
 				billDao.insert(tmp);
-				
-				ArrayList<BillDetailsModel > BillDetaList = new ArrayList<BillDetailsModel>();
-				List.forEach((key,value)->{
+
+				ArrayList<BillDetailsModel> BillDetaList = new ArrayList<BillDetailsModel>();
+				List.forEach((key, value) -> {
 					BillDetailsModel tmpBillDetails = new BillDetailsModel();
 					tmpBillDetails.setQuantityProduct(Integer.parseInt(value));
 					tmpBillDetails.setProduct(billDao.findProductByName(key));
 					tmpBillDetails.setProductID(billDao.findProductByName(key).getID());
 					BillDetaList.add(tmpBillDetails);
 				});
-				
 
-				if(ValidateUtils.checkEmptyAndNull(Bill_ID)) {
-        			// them moi
-					int nextID = billDao.findAll().get(billDao.findAll().size()-1).getID()+1;
-					//System.out.println(nextID);
-            		if(validateForm(tmp, messageError)) {
-            			tmp.setID(nextID);
-            			if(panelShop.getJtable().getModel().getRowCount() ==0 )
-    					    JOptionPane.showMessageDialog(panelShop, "Hóa đơn chưa có sản phẩm ");
-    					else
-    					{
-            			billDao.insert(tmp);
-            			JOptionPane.showMessageDialog(panelShop, "Thêm hóa đơn thành công");
-    					}
-            		}
+				if (ValidateUtils.checkEmptyAndNull(Bill_ID)) {
+					// them moi
+					int nextID = billDao.findAll().get(billDao.findAll().size() - 1).getID() + 1;
+					// System.out.println(nextID);
+					if (validateForm(tmp, messageError)) {
+						tmp.setID(nextID);
+						if (panelShop.getJtable().getModel().getRowCount() == 0)
+							JOptionPane.showMessageDialog(panelShop, "Hóa đơn chưa có sản phẩm ");
+						else {
+							billDao.insert(tmp);
+							JOptionPane.showMessageDialog(panelShop, "Thêm hóa đơn thành công");
+						}
+					}
 				}
 				System.out.println(panelShop.getJtable().getModel().getRowCount());
-				//add vào billdetails
+				// add vào billdetails
 				BillDetailsModel billDetailsModel = new BillDetailsModel();
-				for(int i = 0; i< panelShop.getJtable().getModel().getRowCount();i++) {
+				for (int i = 0; i < panelShop.getJtable().getModel().getRowCount(); i++) {
 					billDetailsModel.setBill(tmp);
 
 					String quantity = panelShop.getJtable().getValueAt(i, 2).toString();
@@ -333,14 +334,12 @@ public class PanelShopController {
 					billDetailsModel.setProductID(Integer.parseInt(id_Product));
 					billDetailsDao.insert(billDetailsModel);
 				}
-				
-			
-				
+
 			}
-			
-		}
-		);
+
+		});
 	}
+
 	public void resetInput() {
 		panelShop.getjTextFieldMaKH().setText("");
 		panelShop.getTable_Number().setSelectedItem("Chọn Bàn");
@@ -373,16 +372,17 @@ public class PanelShopController {
 		panelShop.getTextTien().setEnabled(false);
 		panelShop.getComBox().setEnabled(false);
 	}
-	public boolean validateForm(BillModel bill,StringBuilder res) {			
-		if(!billDao.checkUser(bill.getUser().getID()+"")) {
+
+	public boolean validateForm(BillModel bill, StringBuilder res) {
+		if (!billDao.checkUser(bill.getUser().getID() + "")) {
 			res.append("Người dùng không tồn tại \n");
 			return false;
 		}
-		if(!billDao.checkTable(bill.getTable().getID()+"")) {
+		if (!billDao.checkTable(bill.getTable().getID() + "")) {
 			res.append("Bàn không tồn tại \n");
 			return false;
 		}
 		return true;
-		
+
 	}
 }
