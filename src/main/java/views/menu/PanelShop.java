@@ -62,27 +62,25 @@ public class PanelShop extends JPanel {
 	private JTextField jTextTenSP;
 	private JButton jButtonAdd;
 	private DefaultTableModel model = new DefaultTableModel() {
-		public boolean isCellEditable(int row,int column) {
+		public boolean isCellEditable(int row, int column) {
 			return false;
 		}
 	};
 	private JTable jtable;
 	private JTable jTable_1;
 	private JTextField textTien;
-//	private ArrayList<PanelModel> ds;
-//	private PanelModel panelModel;
 	private ArrayList<UserModel> list;
 	private PanelDAO panelDAO;
 	private ProductModel productModel = new ProductModel();
 	private UserDAO userDAO = new UserDAO();
-	private JComboBox<String>Table_Number;
+	private JComboBox<String> Table_Number;
 	private List<ProductModel> li = panelDAO.getInstance().findProductAll();
 	private DefaultTableModel tableModel = new DefaultTableModel() {
 		public boolean isCellEditable(int row, int column) {
 			return false;
 		}
 	};
-	private PanelShopController panelShopController  ;
+	private PanelShopController panelShopController;
 	Font font_0 = new Font("Segoe UI", Font.PLAIN, 14);
 	Font font_1 = new Font("Arials", Font.PLAIN, 9);
 
@@ -112,7 +110,7 @@ public class PanelShop extends JPanel {
 		jPanelHead.add(jTextFieldMaHD);
 
 		// Tao ma kh
-		jLabelMaKH = new JLabel("Tên KH");
+		jLabelMaKH = new JLabel("Ma KH");
 		jLabelMaKH.setFont(font_0);
 		jLabelMaKH.setBounds(165, 0, 60, 30);
 		jTextFieldMaKH = new JTextField();
@@ -126,14 +124,11 @@ public class PanelShop extends JPanel {
 //         //Tao ma nv
 		tenNV = new JLabel("Tên NV");
 		tenNV.setFont(font_0);
-		tenNV.setBounds(347, -3, 50, 30);
+		tenNV.setBounds(347, 0, 50, 30);
 		jPanelHead.add(tenNV);
 		TenNV = new JComboBox<String>();
-		TenNV.addItem("Tên NV");
-		for (UserModel x : list) {
-			TenNV.addItem(x.getUserName());
-		}
-		TenNV.setBounds(416, -1, 100, 30);
+
+		TenNV.setBounds(416, 0, 100, 30);
 		jPanelHead.add(TenNV);
 //
 		// Tao ngay lap hoa don
@@ -150,9 +145,9 @@ public class PanelShop extends JPanel {
 		jLabelBan.setFont(font_0);
 		jLabelBan.setBounds(347, 50, 60, 30);
 		jPanelHead.add(jLabelBan);
-		
+
 		Table_Number = new JComboBox<String>();
-		Table_Number.setBounds(416,50,100,30);
+		Table_Number.setBounds(416, 50, 100, 30);
 		Table_Number.setFont(font_0);
 		jPanelHead.add(Table_Number);
 //         //Button tao xac nhan 
@@ -195,21 +190,21 @@ public class PanelShop extends JPanel {
 		lblNewLabel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 		lblNewLabel.setBounds(540, 0, 77, 30);
 		jPanelHead.add(lblNewLabel);
-		
-				// Tao ma hd
-				jLabelMaHD = new JLabel("Mã HD");
-				jLabelMaHD.setBounds(0, 0, 55, 30);
-				jPanelHead.add(jLabelMaHD);
-				jLabelMaHD.setFont(font_0);
-				
-				 comBox = new JComboBox();
-				comBox.setBounds(830, 0, 100, 30);
-				jPanelHead.add(comBox);
-				
-				JLabel lblNewLabel_1 = new JLabel("Thanh Toán");
-				lblNewLabel_1.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-				lblNewLabel_1.setBounds(740, 0, 90, 30);
-				jPanelHead.add(lblNewLabel_1);
+
+		// Tao ma hd
+		jLabelMaHD = new JLabel("Mã HD");
+		jLabelMaHD.setBounds(0, 0, 55, 30);
+		jPanelHead.add(jLabelMaHD);
+		jLabelMaHD.setFont(font_0);
+
+		comBox = new JComboBox();
+		comBox.setBounds(830, 0, 100, 30);
+		jPanelHead.add(comBox);
+
+		JLabel lblNewLabel_1 = new JLabel("Thanh Toán");
+		lblNewLabel_1.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		lblNewLabel_1.setBounds(740, 0, 90, 30);
+		jPanelHead.add(lblNewLabel_1);
 	}
 
 	public void CenterPage() {
@@ -221,7 +216,7 @@ public class PanelShop extends JPanel {
 		chiTietView.setBackground(null);
 
 		chiTietView.setBounds(30, 190, 1600, 600);
-		
+
 		// Tao Bang
 		model.addColumn("Mã Sản Phẩm");
 		model.addColumn("Tên Sản Phẩm");
@@ -286,9 +281,9 @@ public class PanelShop extends JPanel {
 		jButtonSua.setBackground(Color.gray);
 		jButtonSua.setBounds(new Rectangle(460, 500, 150, 30));
 		chiTietView.add(jButtonSua);
-	
+
 		jButtonXoa = new JButton("Xoá Sản Phẩm");
-		
+
 		jButtonXoa.setFont(font_0);
 		jButtonXoa.setHorizontalAlignment(jButtonXoa.CENTER);
 		jButtonXoa.setBackground(Color.gray);
@@ -523,7 +518,6 @@ public class PanelShop extends JPanel {
 	public void setjButtonXoa(JButton jButtonXoa) {
 		this.jButtonXoa = jButtonXoa;
 	}
-	
 
 	public JComboBox<String> getTable_Number() {
 		return Table_Number;

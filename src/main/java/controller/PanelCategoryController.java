@@ -61,7 +61,7 @@ public class PanelCategoryController {
 	private void renderTable(ArrayList<CategoryModel> rowData) {
 		// TODO Auto-generated method stub
 		DefaultTableModel model = new DefaultTableModel(); 
-		String[] colName = {"Mã loại", "Tên loại","Mô tả"};
+		String[] colName = {"Mã loại","Tên loại","Mô tả"};
 		for(String x : colName) {
 			model.addColumn(x);
 		}	

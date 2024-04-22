@@ -267,24 +267,6 @@ public class PanelEmployeeController {
 				}
 			}
 		});
-		
-		panelEmployee.getBtnDelete().addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				int[] rowSelects = panelEmployee.getTable().getSelectedRows();
-				if(rowSelects.length >0) {
-					int result = JOptionPane.showConfirmDialog(panelEmployee, "Bạn có chắc chắn muốn xóa?");
-					if(result == JOptionPane.OK_OPTION) {
-						for(int x : rowSelects) {
-							String id = MapUtil.convertObjectToString(panelEmployee.getTable().getValueAt(x, 0));
-							UserModel user = userDao.findByID(id);
-							userDao.delete(user);
-						}
-						renderTable(userDao.findAll());
-						resetInput();
-					}
-				}
-			}
-		});
 	}
 	
 	private String generateVerifyCode(){

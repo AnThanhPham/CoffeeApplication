@@ -595,6 +595,17 @@ public class BillDAO extends DAO implements AbstractDAO<BillModel>{
 			e.printStackTrace();
 		}
 	}
+	
+	public void deleteByCustomerID(CustomerModel t) {
+		try {
+    		String sql = "delete from bill where customerId = ?";
+    		PreparedStatement ps = conn.prepareStatement(sql);
+    		ps.setInt(1, t.getID());
+    		ps.executeUpdate();
+    	}catch(Exception ex) {
+    		ex.printStackTrace();
+    	}
+	}
 
 	@Override
 	public void delete(BillModel t) {

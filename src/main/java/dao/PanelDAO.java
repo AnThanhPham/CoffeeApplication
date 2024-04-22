@@ -81,6 +81,7 @@ public class PanelDAO extends DAO implements AbstractDAO<BillModel> {
 				billModel.setUser(userDao.findByID(rs.getInt(6)+""));
 				billModel.setTable(tableDao.findByID(rs.getInt(7)+""));
 				billModel.setPayment(paymentDao.findByID(rs.getInt(8)+""));
+			
 				data.add(billModel);
 			}
 		}catch(Exception ex) {
@@ -154,51 +155,13 @@ public class PanelDAO extends DAO implements AbstractDAO<BillModel> {
     	}
     	return res;
     }
-//	@Override
-	//public void insert(BillDetailsModel t) {
-		// TODO Auto-generated method stub
-//		   String sql = AbstractImpl.buildSqlInsertBillDetails(t);
-//		    System.out.println(sql);
-//		    try {
-//		        PreparedStatement ps = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
-//		        ps.executeUpdate();
-//		        ResultSet rs = ps.getGeneratedKeys();
-//		        if (rs.next()) {
-//		            int ID = rs.getInt(1);
-//		            t.setID(ID);
-//		            int quantity = t.getQuantityProduct(); 
-//		            t.setQuantityProduct(quantity);
-//		            int BillID = rs.getInt(3);
-//		            t.setBillID(BillID);  ;
-//		            int productID = t.getProductID(); 
-//		            t.setProductID(productID);
-//		        }
-//		        ps.close();
-//		    } catch (SQLException e) {
-//		        e.printStackTrace();
-//		    }
 
-//	}
-
-	
 
 
 	@Override
 	public void insert(BillModel t) {
 		// TODO Auto-generated method stub
-		String sql = AbstractImpl.buildSqlInsertBill(t);
-		System.out.println(sql);
-		try {
-			PreparedStatement ps = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
-			ps.executeUpdate();
-			ResultSet rs = ps.getGeneratedKeys();
-			rs.first();
-			int BillID = rs.getInt(1);
-			t.setID(BillID);
-			ps.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+
 	}
 
 

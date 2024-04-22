@@ -136,8 +136,6 @@ public class PanelCustomer extends JPanel {
 		btn_Add.setFont(new Font("Times New Roman", Font.PLAIN, 25));
 		add(btn_Add);
 		
-	
-		
 		btnFix = new JButton("Sửa");
 		btnFix.setBounds(873, 118, 129, 48);
 		btnFix.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
@@ -158,7 +156,7 @@ public class PanelCustomer extends JPanel {
 		btn_Reload.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
 		btn_Reload.setFont(new Font("Times New Roman", Font.PLAIN, 25));
 		btn_Reload.setBackground(Color.WHITE);
-		btn_Reload.setBounds(873, 209, 129, 48);
+		btn_Reload.setBounds(873, 208, 129, 48);
 		add(btn_Reload);
 		
 		

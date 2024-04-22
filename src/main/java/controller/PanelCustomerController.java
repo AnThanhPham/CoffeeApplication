@@ -24,7 +24,10 @@ import javax.swing.table.DefaultTableModel;
 import com.google.protobuf.StringValue;
 import com.google.protobuf.Value;
 
+import dao.BillDAO;
+import dao.BillDetailsDAO;
 import dao.CustomerDao;
+import model.BillDetailsModel;
 import model.CustomerModel;
 import model.CustomerModel;
 import util.MapUtil;
@@ -34,6 +37,8 @@ import views.menu.PanelCustomer;
 public class PanelCustomerController{
 	private PanelCustomer panelCustomer;
 	private CustomerDao customerdao= new CustomerDao();
+	private BillDAO billDAO = new BillDAO();
+	private BillDetailsDAO billdetailsDAO =new BillDetailsDAO();
 	
 	public PanelCustomerController(PanelCustomer panelCustomer) {
 		this.panelCustomer = panelCustomer;
@@ -146,13 +151,13 @@ public class PanelCustomerController{
 					}
 				}
 			});
-								
+
 			panelCustomer.getTextField_Find().addKeyListener(new KeyAdapter() {
 			    public void keyReleased(KeyEvent e) {
 			        JTextField textField = (JTextField) e.getSource();
 			        String text = textField.getText();
 			        String selectedID = (String) panelCustomer.getComboBox_MaKH().getSelectedItem().toString();
-			        if (!("Ma Khach Hang").equals(selectedID)) {
+			        if (!("Mã khách hàng").equals(selectedID)) {
 			            renderTableByFullNameAndID(text, selectedID);
 			        } else {
 			            renderTableByFullName(text);

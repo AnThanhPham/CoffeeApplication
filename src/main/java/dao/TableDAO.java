@@ -10,6 +10,8 @@ import java.util.List;
 import model.CategoryModel;
 import model.ProductModel;
 import model.TableModel;
+import views.menu.PanelOrderTable;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
@@ -97,7 +99,9 @@ public class TableDAO extends DAO implements AbstractDAO<TableModel> {
 				 	"QuantityCustomer =" + t.getQuantityCustomer() +" "+
 				 	" where id= "+ t.getID()   ;
 		 System.out.println("sql"+ sql);
-		stm1.execute(sql);   
+		stm1.execute(sql);
+		PanelOrderTable.getIns().getController().reload();
+		
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
