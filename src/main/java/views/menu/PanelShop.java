@@ -129,10 +129,8 @@ public class PanelShop extends JPanel {
 		tenNV.setBounds(347, -3, 50, 30);
 		jPanelHead.add(tenNV);
 		TenNV = new JComboBox<String>();
-		TenNV.addItem("Tên NV");
-		for (UserModel x : list) {
-			TenNV.addItem(x.getUserName());
-		}
+
+		
 		TenNV.setBounds(416, -1, 100, 30);
 		jPanelHead.add(TenNV);
 //

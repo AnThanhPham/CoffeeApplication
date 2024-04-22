@@ -81,6 +81,7 @@ public class PanelDAO extends DAO implements AbstractDAO<BillModel> {
 				billModel.setUser(userDao.findByID(rs.getInt(6)+""));
 				billModel.setTable(tableDao.findByID(rs.getInt(7)+""));
 				billModel.setPayment(paymentDao.findByID(rs.getInt(8)+""));
+			
 				data.add(billModel);
 			}
 		}catch(Exception ex) {
@@ -186,19 +187,7 @@ public class PanelDAO extends DAO implements AbstractDAO<BillModel> {
 	@Override
 	public void insert(BillModel t) {
 		// TODO Auto-generated method stub
-		String sql = AbstractImpl.buildSqlInsertBill(t);
-		System.out.println(sql);
-		try {
-			PreparedStatement ps = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
-			ps.executeUpdate();
-			ResultSet rs = ps.getGeneratedKeys();
-			rs.first();
-			int BillID = rs.getInt(1);
-			t.setID(BillID);
-			ps.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+
 	}
 
 
