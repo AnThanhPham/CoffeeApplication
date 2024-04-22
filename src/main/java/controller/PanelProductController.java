@@ -76,6 +76,8 @@ public class PanelProductController {
 			panelProduct.getSouthCenterPanel().add(pageNumber[i]);
 		}
 	    showPage(1);
+	    panelProduct.setVisible(false);
+	    panelProduct.setVisible(true);
 	    
 	    
 		

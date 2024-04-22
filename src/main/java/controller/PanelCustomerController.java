@@ -24,7 +24,10 @@ import javax.swing.table.DefaultTableModel;
 import com.google.protobuf.StringValue;
 import com.google.protobuf.Value;
 
+import dao.BillDAO;
+import dao.BillDetailsDAO;
 import dao.CustomerDao;
+import model.BillDetailsModel;
 import model.CustomerModel;
 import model.CustomerModel;
 import util.MapUtil;
@@ -34,6 +37,8 @@ import views.menu.PanelCustomer;
 public class PanelCustomerController{
 	private PanelCustomer panelCustomer;
 	private CustomerDao customerdao= new CustomerDao();
+	private BillDAO billDAO = new BillDAO();
+	private BillDetailsDAO billdetailsDAO =new BillDetailsDAO();
 	
 	public PanelCustomerController(PanelCustomer panelCustomer) {
 		this.panelCustomer = panelCustomer;
@@ -146,60 +151,6 @@ public class PanelCustomerController{
 					}
 				}
 			});
-			
-			
-			panelCustomer.getBtnDelete().addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					int[] rowSelects = panelCustomer.getTable().getSelectedRows();
-					if(rowSelects.length >0) {
-						int result = JOptionPane.showConfirmDialog(panelCustomer, "Bạn có chắc chắn muốn xóa?");
-						if(result == JOptionPane.OK_OPTION) {
-							for(int x : rowSelects) {
-								String id = MapUtil.convertObjectToString(panelCustomer.getTable().getValueAt(x, 0));
-								CustomerModel customer =customerdao.findByID(id);
-								customerdao.delete(customer);
-							}
-							renderTable(CustomerDao.CustomerList());
-							resetInput();
-						}
-					}
-				}
-			});
-			
-//			panelCustomer.getTextField_Find().addKeyListener(new KeyAdapter() {
-//				public void keyReleased(KeyEvent e) {
-//					JTextField textField = (JTextField) e.getSource();
-//					String text = textField.getText();
-//					renderTableByFullName(text);
-//				}
-//
-//				public void keyTyped(KeyEvent e) {
-//				}
-//
-//				public void keyPressed(KeyEvent e) {
-//				}
-//			});
-//			panelCustomer.getComboBox_MaKH().addActionListener(new ActionListener() {
-//		        @SuppressWarnings("unchecked")
-//				@Override
-//		        public void actionPerformed(ActionEvent e) {
-//					JComboBox<Object> comboBox = (JComboBox<Object>) e.getSource();
-//		            String selectedID = (String) comboBox.getSelectedItem().toString();
-//
-//		            if (!("Ma Khach Hang").equals(selectedID)) {
-//		                ArrayList<CustomerModel> filteredData = new ArrayList<>();
-//		                // Lọc dữ liệu tương ứng với ID được chọn
-//		                for (CustomerModel customer : CustomerDao.CustomerList()) {
-//		                    if (selectedID.equals(Integer.toString(customer.getID()))) {
-//		                        filteredData.add(customer);
-//		                    }
-//		                }
-//		                renderTable(filteredData);
-//		            } else {
-//		                renderTable(CustomerDao.CustomerList());
-//		            }
-//		        }
-//		    });
 					
 			panelCustomer.getTextField_Find().addKeyListener(new KeyAdapter() {
 			    public void keyReleased(KeyEvent e) {
@@ -314,7 +265,10 @@ public class PanelCustomerController{
 			res.append("Phone không được để trống\n");
 			return false;
 		}
-		
+		if(!ValidateUtils.checkPhoneNumber(Customer.getPhone())) {
+			res.append("Số điện thoại không hợp lệ\n");
+			return false;
+		}
 		if(ValidateUtils.checkEmptyAndNull(Customer.getAddress())) {
 			res.append("Địa chỉ không được để trống\n");
 			return false;
@@ -368,7 +322,7 @@ public class PanelCustomerController{
 	    for (String x : NameList) {
 	        String tmp = x.substring(0,1);
 	        String tam = x.substring(1);
-	        res += tmp.toUpperCase() + tam + " ";
+	        res += tmp.toUpperCase() + tam.toLowerCase() + " ";
 	    }
 	    return res.trim(); 
 	}

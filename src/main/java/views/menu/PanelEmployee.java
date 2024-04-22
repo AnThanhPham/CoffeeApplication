@@ -49,7 +49,6 @@ public class PanelEmployee extends JPanel {
 	private JButton btnAdd;
 	private JButton btnSave;
 	private JButton btnEdit;
-	private JButton btnDelete;
 	private JTextField Input_Search;
 	private JButton btnSearch;
 	private JTable table;
@@ -198,15 +197,6 @@ public class PanelEmployee extends JPanel {
 		btnEdit.setBackground(new Color(169, 169, 169));
 		btnEdit.setBounds(261, 357, 91, 35);
 		add(btnEdit);
-		
-		btnDelete = new JButton("Xóa");
-		btnDelete.setIcon(new ImageIcon(PanelEmployee.class.getResource("/icon/Trash@0.3x.png")));
-		btnDelete.setForeground(new Color(0, 128, 0));
-		btnDelete.setFont(new Font("SansSerif", Font.PLAIN, 16));
-		btnDelete.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
-		btnDelete.setBackground(new Color(169, 169, 169));
-		btnDelete.setBounds(375, 357, 91, 35);
-		add(btnDelete);
 		
 		Input_Search = new JTextField();
 		Input_Search.setBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(211, 211, 211), new Color(220, 220, 220)));
@@ -397,14 +387,6 @@ public class PanelEmployee extends JPanel {
 
 	public void setBtnEdit(JButton btnEdit) {
 		this.btnEdit = btnEdit;
-	}
-
-	public JButton getBtnDelete() {
-		return btnDelete;
-	}
-
-	public void setBtnDelete(JButton btnDelete) {
-		this.btnDelete = btnDelete;
 	}
 
 	public JTextField getInput_Search() {

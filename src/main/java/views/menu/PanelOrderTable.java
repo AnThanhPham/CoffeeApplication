@@ -35,18 +35,28 @@ import model.TableModel;
 import views.menu.OrderTable.ItemTable;
 
 public class PanelOrderTable extends JPanel {
+	private static PanelOrderTable ins;
+	public static PanelOrderTable getIns() {
+		return ins;
+	}
+	
 	PanelTableController controller= new PanelTableController(this);
+	public PanelTableController getController() {
+		return controller;
+	}
 	public TableDAO tableDao= new TableDAO();
 	JLabel title= new JLabel("Quản Lý Bàn");
 	Font fontTitle= new Font("Consolas", Font.BOLD,22);
 	TableModel model= new TableModel();
 	JPanel centerPanel= new JPanel();
-		
-	java.util.List<TableModel> listTable= TableDAO.selectAll();
+		public JPanel getCenterPanel() {
+			return centerPanel;
+		}
+	
 	 
 		
 	public PanelOrderTable() {
-		
+		ins= this;
 		
 		this.setLayout(new BorderLayout());
 		title.setFont(fontTitle);
@@ -57,13 +67,8 @@ public class PanelOrderTable extends JPanel {
 		
 		
 		centerPanel.setLayout(new GridLayout(4, 4, 30, 30));
-		ItemTable[] ItemTable = new ItemTable[listTable.size()+1];
-		for (int i = 0; i < listTable.size(); i++) {
-			ItemTable[i]= new ItemTable( listTable.get(i));
-			centerPanel.add(ItemTable[i]);
-			// add event
-			controller.addEventItemTable(ItemTable[i]);
-		}
+		// gọi reload
+		controller.reload();
 		this.add(centerPanel,BorderLayout.CENTER);
 		this.setVisible(false);
 		this.setVisible(true);

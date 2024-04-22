@@ -36,6 +36,39 @@ public class BillDetailsDAO extends DAO implements AbstractDAO<BillDetailsModel>
 	    	}
 	    	return res;
 	    }
+	public BillDetailsModel findByProductID(String id) {
+		BillDetailsModel res = null;
+	    	try {
+	    		String sql = "select * from billdetails where ProductID in (select id from product where CategoryID = ?)";
+	    		PreparedStatement ps = conn.prepareStatement(sql);
+	    		ps.setString(1, id);
+	    		ResultSet rs = ps.executeQuery();
+	    		BillDetailsModel tmp = new BillDetailsModel();
+	    		if(rs.next()) {
+	    			tmp.setID(rs.getInt(1));
+	    			tmp.setQuantityProduct(rs.getInt(2));
+	    			tmp.setBill(billDao.findByID(Integer.toString(rs.getInt(3))));
+	    			tmp.setProduct(productDao.findByID(rs.getInt(4)+""));
+	    			
+	    		}
+	    		if(Integer.toString(tmp.getID())!=null) {
+	    			res = tmp;
+	    		}
+	    	}catch(Exception ex) {
+	    		ex.printStackTrace();
+	    	}
+	    	return res;
+	    }
+	public void deletefromProduct(BillDetailsModel t) {
+		try {		
+			String deleteBillDetailSql = "delete from billdetails where ProductID in (select id from product where CategoryID = ?)";
+	        PreparedStatement deleteBillDetailPs = conn.prepareStatement(deleteBillDetailSql);
+	        deleteBillDetailPs.setInt(1, t.getID());
+	        deleteBillDetailPs.executeUpdate();
+    	}catch(Exception ex) {
+    		ex.printStackTrace();
+    	}
+	}
 	
 	public ArrayList<BillDetailsModel> findBillDetailsAll() {
 		ArrayList<BillDetailsModel> data = new ArrayList<BillDetailsModel>();
@@ -89,6 +122,8 @@ public class BillDetailsDAO extends DAO implements AbstractDAO<BillDetailsModel>
     	}
 		
 	}
+	
+
 
 	@Override
 	public void update(BillDetailsModel t) {
